@@ -245,7 +245,7 @@ function TopBar() {
         </div>
         <div className="leading-tight">
           <div className="font-display text-sm font-bold tracking-tight">HyperSci</div>
-          <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Quiz Arena</div>
+          <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">QUIZ ARENA</div>
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -253,7 +253,7 @@ function TopBar() {
           to="/about"
           className="rounded-full border border-border bg-secondary/60 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-foreground transition-colors hover:border-primary/60 hover:text-neon"
         >
-          Why this platform?
+          WHY THIS PLATFORM?
         </Link>
         <button
           onClick={toggleTheme}
@@ -274,15 +274,13 @@ function TopBar() {
 function Footer() {
   return (
     <footer className="mt-10 border-t border-border pt-5 text-xs text-muted-foreground">
-      <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-        <Link to="/about" className="hover:text-foreground transition-colors">Why This Platform?</Link>
-        <span className="opacity-30">·</span>
+      <nav className="flex flex-col items-center justify-center gap-y-2">
         <Link to="/legal" className="hover:text-foreground transition-colors">Legal Notice</Link>
         <span className="opacity-30">·</span>
         <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
       </nav>
-      <div className="mt-3 text-center text-[10px] uppercase tracking-widest opacity-60">
-        © HyperSci Quiz — Science over bro-science
+      <div className="mt-6 text-center text-[10px] uppercase tracking-widest opacity-60">
+        © HYPERSCI QUIZ — SCIENCE OVER BRO-SCIENCE
       </div>
     </footer>
   );
@@ -304,9 +302,9 @@ function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void })
         </p>
       </section>
 
-      <section className="glass rounded-2xl p-5">
-        <div className="text-[10px] uppercase tracking-widest text-cyan-glow">Mission</div>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+      <section className="glass rounded-2xl p-5 my-8">
+        <div className="text-[10px] uppercase tracking-widest text-cyan-glow font-bold">MISSION</div>
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
           Test your knowledge of biomechanics, hypertrophy and sports nutrition with
           questions sourced from peer-reviewed research. Every answer links to a PubMed citation.
         </p>
