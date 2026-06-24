@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
 // ──────────────────────────────────────────────────────────────────────────────
 
 type Difficulty = "Facile" | "Moyen" | "Hardcore";
-type Theme = "Anatomie" | "Biomécanique" | "Nutrition Avancée" | "Physiologie Musculaire";
+type Theme = "Tout" | "Anatomie" | "Biomécanique" | "Nutrition Avancée" | "Physiologie Musculaire";
 
 type Question = {
   id: string;
@@ -343,7 +343,7 @@ function ModeSelect({
   onStart: () => void;
 }) {
   const difficulties: Difficulty[] = ["Facile", "Moyen", "Hardcore"];
-  const themes: Theme[] = ["Anatomie", "Biomécanique", "Nutrition Avancée", "Physiologie Musculaire"];
+  const themes: Theme[] = ["Tout", "Anatomie", "Biomécanique", "Nutrition Avancée", "Physiologie Musculaire"];
 
   return (
     <div className="space-y-6 fade-in-up">
