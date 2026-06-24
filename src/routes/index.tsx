@@ -273,7 +273,7 @@ function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void })
           <span className="text-neon">HyperSci</span> Quiz
         </h1>
         <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-          Hardcore Science-Based Muscle Arena
+          {"\n"}
         </p>
       </section>
 
