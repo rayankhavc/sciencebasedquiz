@@ -1,11 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "HyperSci Quiz — Hardcore Science-Based Muscle Arena" },
-      { name: "description", content: "Quiz compétitif scientifique avancé: anatomie, biomécanique, hypertrophie. Affronte des adversaires en 1v1 et grimpe au classement Elo." },
+      { name: "description", content: "Evidence-based quiz on anatomy, biomechanics, hypertrophy and nutrition. Battle bots and master the science." },
       { property: "og:title", content: "HyperSci Quiz" },
       { property: "og:description", content: "Hardcore Science-Based Muscle Arena" },
     ],
@@ -14,79 +14,107 @@ export const Route = createFileRoute("/")({
 });
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Mock data
+// Question database
 // ──────────────────────────────────────────────────────────────────────────────
 
-type Difficulty = "Facile" | "Moyen" | "Hardcore";
-type Theme = "Tout" | "Anatomie" | "Biomécanique" | "Nutrition Avancée" | "Physiologie Musculaire";
+type Difficulty = "easy" | "medium" | "hardcore";
+type Category = "All" | "Nutrition" | "Biomechanics" | "Hypertrophy" | "Physiology";
 
 type Question = {
   id: string;
   difficulty: Difficulty;
-  theme: Theme;
-  q: string;
+  category: Exclude<Category, "All">;
+  question: string;
   options: string[];
-  answer: number;
-  pmid: string;
+  correct_answer: string;
   explanation: string;
+  source_pmid: string;
+  source_url: string;
 };
 
 const QUESTIONS: Question[] = [
   {
-    id: "q1",
-    difficulty: "Facile",
-    theme: "Nutrition Avancée",
-    q: "Quel supplément a le niveau de preuve scientifique le plus élevé pour la force ?",
-    options: ["BCAA", "Créatine Monohydrate", "Glutamine", "ZMA"],
-    answer: 1,
-    pmid: "28615996",
-    explanation:
-      "La créatine monohydrate est le supplément le plus étudié et démontre des effets significatifs et reproductibles sur la force, la puissance et l'hypertrophie. Position officielle de l'ISSN (Kreider et al., 2017).",
+    id: "e1",
+    difficulty: "easy",
+    category: "Nutrition",
+    question: "Which supplement has the highest level of scientific evidence for increasing ATP recycling during high-intensity muscle contractions?",
+    options: ["Creatine Monohydrate", "BCAA", "Glutamine", "Beta-Alanine"],
+    correct_answer: "Creatine Monohydrate",
+    explanation: "Creatine monohydrate increases phosphocreatine stores, allowing rapid resynthesis of ATP during short bursts of heavy exercise.",
+    source_pmid: "28615996",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/28615996/",
   },
   {
-    id: "q2",
-    difficulty: "Moyen",
-    theme: "Biomécanique",
-    q: "Où la tension est-elle maximale sur un Leg Extension ?",
+    id: "m1",
+    difficulty: "medium",
+    category: "Biomechanics",
+    question: "During a standard leg extension, at which position is the mechanical torque (resistance profile) highest on the rectus femoris?",
     options: [
-      "En position étirée (genou fléchi)",
-      "À mi-amplitude",
-      "En position de contraction maximale (genou tendu)",
-      "Constante sur toute l'amplitude",
+      "Full extension (shortened position)",
+      "90 degrees flexion (stretched position)",
+      "Mid-range (45 degrees)",
+      "The profile is perfectly linear",
     ],
-    answer: 2,
-    pmid: "35041043",
-    explanation:
-      "La courbe de résistance du Leg Extension impose une tension maximale en position de contraction (extension du genou), en raison du bras de levier maximal du poids par rapport à l'axe de rotation.",
+    correct_answer: "Full extension (shortened position)",
+    explanation: "Standard cam-based leg extensions maximize the moment arm when the shin is parallel to the floor, creating peak torque in full knee extension.",
+    source_pmid: "35041043",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/35041043/",
   },
   {
-    id: "q3",
-    difficulty: "Hardcore",
-    theme: "Physiologie Musculaire",
-    q: "Quel type d'hypertrophie augmente le liquide non contractile ?",
-    options: [
-      "Hypertrophie myofibrillaire",
-      "Hypertrophie sarcoplasmique",
-      "Hyperplasie",
-      "Hypertrophie connective",
-    ],
-    answer: 1,
-    pmid: "31618140",
-    explanation:
-      "L'hypertrophie sarcoplasmique correspond à une augmentation du volume du sarcoplasme (liquide non contractile, glycogène, mitochondries), distincte de l'hypertrophie myofibrillaire qui augmente les protéines contractiles.",
+    id: "h1",
+    difficulty: "hardcore",
+    category: "Hypertrophy",
+    question: "Which giant structural protein acts as a mechanosensor and is primarily responsible for generating passive tension during stretch-mediated hypertrophy?",
+    options: ["Titin", "Actin", "Myosin", "Desmin"],
+    correct_answer: "Titin",
+    explanation: "Titin develops passive tension when muscle fibers are elongated, triggering intracellular signaling pathways (like titin kinase) required for stretch-mediated hypertrophy.",
+    source_pmid: "31618140",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/31618140/",
+  },
+  {
+    id: "h2",
+    difficulty: "hardcore",
+    category: "Physiology",
+    question: "What type of cellular adaptation is characterized by an increase in sarcoplasmic volume, including glycogen and water, without a concurrent increase in myofibrillar protein synthesis?",
+    options: ["Sarcoplasmic Hypertrophy", "Myofibrillar Hypertrophy", "Hyperplasia", "Eccentric Remodeling"],
+    correct_answer: "Sarcoplasmic Hypertrophy",
+    explanation: "Sarcoplasmic hypertrophy involves the expansion of the non-contractile fluid and energy stores within the muscle sarcoplasm, independent of myofibrillar protein accretion.",
+    source_pmid: "32174353",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/32174353/",
   },
 ];
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Types & state
+// Bots
 // ──────────────────────────────────────────────────────────────────────────────
 
-type Mode = "solo" | "1v1";
-type Screen = "dashboard" | "select" | "arena" | "results";
+type BotId = "novice" | "researcher" | "hypertrophy";
+type Bot = {
+  id: BotId;
+  name: string;
+  tag: string;
+  accuracy: number;
+  minDelay: number; // ms
+  maxDelay: number;
+  blurb: string;
+};
+
+const BOTS: Bot[] = [
+  { id: "novice", name: "Novice Bot", tag: "Easy", accuracy: 0.5, minDelay: 5000, maxDelay: 8000, blurb: "Just discovered the gym. Slow and unsure." },
+  { id: "researcher", name: "Researcher Bot", tag: "Medium", accuracy: 0.75, minDelay: 3000, maxDelay: 5000, blurb: "Reads abstracts on weekends. Solid opponent." },
+  { id: "hypertrophy", name: "Dr. Hypertrophy Bot", tag: "Hardcore", accuracy: 0.95, minDelay: 1000, maxDelay: 3000, blurb: "PhD in muscle science. Brutal accuracy." },
+];
+
+// ──────────────────────────────────────────────────────────────────────────────
+// State
+// ──────────────────────────────────────────────────────────────────────────────
+
+type Mode = "solo" | "bot";
+type Screen = "dashboard" | "username" | "botSelect" | "categorySelect" | "arena" | "results";
 
 type RoundResult = {
   question: Question;
-  selected: number | null;
+  selectedIndex: number | null;
   correct: boolean;
   opponentCorrect: boolean;
 };
@@ -94,40 +122,29 @@ type RoundResult = {
 const QUESTION_DURATION = 15;
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Root component
+// Root
 // ──────────────────────────────────────────────────────────────────────────────
 
 function App() {
   const [screen, setScreen] = useState<Screen>("dashboard");
   const [mode, setMode] = useState<Mode>("solo");
-  const [difficulty, setDifficulty] = useState<Difficulty>("Moyen");
-  const [theme, setTheme] = useState<Theme>("Physiologie Musculaire");
-  const [elo, setElo] = useState(1480);
-  const [wins, setWins] = useState(34);
-  const [losses, setLosses] = useState(18);
+  const [username, setUsername] = useState("");
+  const [bot, setBot] = useState<Bot>(BOTS[1]);
+  const [category, setCategory] = useState<Category>("All");
   const [results, setResults] = useState<RoundResult[]>([]);
-  const [eloDelta, setEloDelta] = useState(0);
 
-  const startGame = (m: Mode) => {
-    setMode(m);
-    setScreen("select");
+  const startSolo = () => {
+    setMode("solo");
+    setScreen("username");
   };
 
-  const launchArena = () => {
-    setResults([]);
-    setScreen("arena");
+  const startBot = () => {
+    setMode("bot");
+    setScreen("botSelect");
   };
 
   const finishGame = (finalResults: RoundResult[]) => {
     setResults(finalResults);
-    const myScore = finalResults.filter((r) => r.correct).length;
-    const oppScore = finalResults.filter((r) => r.opponentCorrect).length;
-    const won = mode === "solo" ? myScore >= Math.ceil(finalResults.length / 2) : myScore > oppScore;
-    const delta = won ? 25 : -18;
-    setEloDelta(delta);
-    setElo((e) => e + delta);
-    if (won) setWins((w) => w + 1);
-    else setLosses((l) => l + 1);
     setScreen("results");
   };
 
@@ -135,33 +152,65 @@ function App() {
     <div className="min-h-screen text-foreground">
       <div className="mx-auto max-w-2xl px-4 py-6 sm:py-10">
         <TopBar />
+
         {screen === "dashboard" && (
-          <Dashboard elo={elo} wins={wins} losses={losses} onPlay={startGame} />
+          <Dashboard onSolo={startSolo} onBot={startBot} />
         )}
-        {screen === "select" && (
-          <ModeSelect
-            mode={mode}
-            difficulty={difficulty}
-            theme={theme}
-            setDifficulty={setDifficulty}
-            setTheme={setTheme}
+
+        {screen === "username" && (
+          <UsernameScreen
+            username={username}
+            setUsername={setUsername}
             onBack={() => setScreen("dashboard")}
-            onStart={launchArena}
+            onContinue={() => setScreen("categorySelect")}
           />
         )}
-        {screen === "arena" && (
-          <Arena mode={mode} difficulty={difficulty} onFinish={finishGame} onQuit={() => setScreen("dashboard")} />
+
+        {screen === "botSelect" && (
+          <BotSelect
+            selected={bot}
+            setBot={setBot}
+            onBack={() => setScreen("dashboard")}
+            onContinue={() => setScreen("categorySelect")}
+          />
         )}
+
+        {screen === "categorySelect" && (
+          <CategorySelect
+            mode={mode}
+            bot={bot}
+            category={category}
+            setCategory={setCategory}
+            onBack={() => setScreen(mode === "solo" ? "username" : "botSelect")}
+            onStart={() => {
+              setResults([]);
+              setScreen("arena");
+            }}
+          />
+        )}
+
+        {screen === "arena" && (
+          <Arena
+            mode={mode}
+            bot={bot}
+            category={category}
+            onFinish={finishGame}
+            onQuit={() => setScreen("dashboard")}
+          />
+        )}
+
         {screen === "results" && (
           <Results
             results={results}
             mode={mode}
-            eloDelta={eloDelta}
-            elo={elo}
+            username={username || "You"}
+            bot={bot}
             onHome={() => setScreen("dashboard")}
-            onAgain={() => setScreen("select")}
+            onAgain={() => setScreen("categorySelect")}
           />
         )}
+
+        <Footer />
       </div>
     </div>
   );
@@ -185,9 +234,30 @@ function TopBar() {
       </div>
       <div className="flex items-center gap-2 text-xs text-muted-foreground">
         <span className="inline-block h-2 w-2 rounded-full bg-primary pulse-ring" />
-        <span>Live · 2,184 athletes</span>
+        <span>Evidence-based</span>
       </div>
     </header>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Footer with static page links
+// ──────────────────────────────────────────────────────────────────────────────
+
+function Footer() {
+  return (
+    <footer className="mt-10 border-t border-border pt-5 text-xs text-muted-foreground">
+      <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <Link to="/about" className="hover:text-foreground transition-colors">Why This Platform?</Link>
+        <span className="opacity-30">·</span>
+        <Link to="/legal" className="hover:text-foreground transition-colors">Legal Notice</Link>
+        <span className="opacity-30">·</span>
+        <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+      </nav>
+      <div className="mt-3 text-center text-[10px] uppercase tracking-widest opacity-60">
+        © HyperSci Quiz — Science over bro-science
+      </div>
+    </footer>
   );
 }
 
@@ -195,18 +265,7 @@ function TopBar() {
 // Dashboard
 // ──────────────────────────────────────────────────────────────────────────────
 
-function Dashboard({
-  elo,
-  wins,
-  losses,
-  onPlay,
-}: {
-  elo: number;
-  wins: number;
-  losses: number;
-  onPlay: (m: Mode) => void;
-}) {
-  const ratio = (wins / Math.max(1, wins + losses)) * 100;
+function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void }) {
   return (
     <div className="space-y-6 fade-in-up">
       <section>
@@ -219,63 +278,29 @@ function Dashboard({
       </section>
 
       <section className="glass rounded-2xl p-5">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-secondary text-lg font-bold">
-              KX
-            </div>
-            <div className="min-w-0">
-              <div className="truncate font-semibold">@kratos_x</div>
-              <div className="text-xs text-muted-foreground">Rank · Diamant III</div>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Elo</div>
-            <div className="font-display text-2xl font-bold text-neon">{elo}</div>
-          </div>
-        </div>
-        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-          <Stat label="Victoires" value={wins} />
-          <Stat label="Défaites" value={losses} />
-          <Stat label="Ratio" value={`${ratio.toFixed(0)}%`} />
-        </div>
+        <div className="text-[10px] uppercase tracking-widest text-cyan-glow">Mission</div>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Test your knowledge of biomechanics, hypertrophy and sports nutrition with
+          questions sourced from peer-reviewed research. Every answer links to a PubMed citation.
+        </p>
       </section>
 
       <section className="grid gap-3">
         <CTAButton
           variant="primary"
-          onClick={() => onPlay("1v1")}
-          title="1v1 Competitive Arena"
-          subtitle="Affronte un adversaire en direct · Classé"
+          onClick={onBot}
+          title="1v1 Bot Arena"
+          subtitle="Pick a bot and challenge it head-to-head"
           icon={<SwordsIcon />}
         />
         <CTAButton
           variant="ghost"
-          onClick={() => onPlay("solo")}
+          onClick={onSolo}
           title="Solo Mode"
-          subtitle="Entraîne-toi sans pression · Non classé"
+          subtitle="Train at your own pace, no opponent"
           icon={<UserIcon />}
         />
       </section>
-
-      <section className="glass rounded-2xl p-4">
-        <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
-          <span>Saison · S4</span>
-          <span className="text-cyan-glow">Top 12%</span>
-        </div>
-        <div className="h-2 overflow-hidden rounded-full bg-secondary">
-          <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent" style={{ width: "62%" }} />
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="rounded-lg bg-secondary/60 p-2.5">
-      <div className="font-display text-lg font-bold">{value}</div>
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
     </div>
   );
 }
@@ -304,12 +329,7 @@ function CTAButton({
           : "glass hover:border-primary/60 hover:scale-[1.01]")
       }
     >
-      <div
-        className={
-          "grid h-12 w-12 shrink-0 place-items-center rounded-xl " +
-          (isPrimary ? "bg-black/15" : "bg-primary/15 text-primary")
-        }
-      >
+      <div className={"grid h-12 w-12 shrink-0 place-items-center rounded-xl " + (isPrimary ? "bg-black/15" : "bg-primary/15 text-primary")}>
         {icon}
       </div>
       <div className="min-w-0 flex-1">
@@ -322,77 +342,167 @@ function CTAButton({
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Mode select
+// Username screen (Solo flow)
 // ──────────────────────────────────────────────────────────────────────────────
 
-function ModeSelect({
+function UsernameScreen({
+  username,
+  setUsername,
+  onBack,
+  onContinue,
+}: {
+  username: string;
+  setUsername: (v: string) => void;
+  onBack: () => void;
+  onContinue: () => void;
+}) {
+  const valid = username.trim().length >= 2;
+  return (
+    <div className="space-y-6 fade-in-up">
+      <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">← Back</button>
+      <div>
+        <div className="text-[11px] uppercase tracking-widest text-cyan-glow">Solo Mode</div>
+        <h2 className="mt-1 text-3xl font-bold tracking-tight">Enter your username</h2>
+        <p className="mt-2 text-sm text-muted-foreground">It will only appear on your results screen.</p>
+      </div>
+
+      <div className="glass rounded-2xl p-5">
+        <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Username</label>
+        <input
+          autoFocus
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter" && valid) onContinue(); }}
+          placeholder="e.g. iron_lab"
+          className="mt-2 w-full rounded-xl border border-border bg-secondary/60 px-4 py-3 text-base font-medium outline-none focus:border-primary"
+          maxLength={24}
+        />
+      </div>
+
+      <button
+        onClick={onContinue}
+        disabled={!valid}
+        className="w-full rounded-2xl bg-primary px-6 py-5 font-display text-lg font-bold text-primary-foreground neon-glow transition-transform hover:scale-[1.02] disabled:opacity-40 disabled:hover:scale-100"
+      >
+        Continue →
+      </button>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Bot selection
+// ──────────────────────────────────────────────────────────────────────────────
+
+function BotSelect({
+  selected,
+  setBot,
+  onBack,
+  onContinue,
+}: {
+  selected: Bot;
+  setBot: (b: Bot) => void;
+  onBack: () => void;
+  onContinue: () => void;
+}) {
+  return (
+    <div className="space-y-6 fade-in-up">
+      <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">← Back</button>
+      <div>
+        <div className="text-[11px] uppercase tracking-widest text-cyan-glow">1v1 Bot Arena</div>
+        <h2 className="mt-1 text-3xl font-bold tracking-tight">Pick your opponent</h2>
+      </div>
+
+      <div className="grid gap-3">
+        {BOTS.map((b) => {
+          const active = selected.id === b.id;
+          return (
+            <button
+              key={b.id}
+              onClick={() => setBot(b)}
+              className={
+                "rounded-2xl p-5 text-left transition-all " +
+                (active
+                  ? "bg-primary/15 border-2 border-primary neon-glow"
+                  : "glass hover:border-primary/60")
+              }
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-display text-lg font-bold">{b.name}</div>
+                <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-cyan-glow">
+                  {b.tag}
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">{b.blurb}</p>
+              <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+                <div className="rounded-lg bg-secondary/60 p-2">
+                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Accuracy</div>
+                  <div className="font-display font-bold text-neon">{Math.round(b.accuracy * 100)}%</div>
+                </div>
+                <div className="rounded-lg bg-secondary/60 p-2">
+                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Response</div>
+                  <div className="font-display font-bold text-cyan-glow">{b.minDelay / 1000}-{b.maxDelay / 1000}s</div>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      <button
+        onClick={onContinue}
+        className="w-full rounded-2xl bg-primary px-6 py-5 font-display text-lg font-bold text-primary-foreground neon-glow transition-transform hover:scale-[1.02]"
+      >
+        Continue →
+      </button>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Category select
+// ──────────────────────────────────────────────────────────────────────────────
+
+function CategorySelect({
   mode,
-  difficulty,
-  theme,
-  setDifficulty,
-  setTheme,
+  bot,
+  category,
+  setCategory,
   onBack,
   onStart,
 }: {
   mode: Mode;
-  difficulty: Difficulty;
-  theme: Theme;
-  setDifficulty: (d: Difficulty) => void;
-  setTheme: (t: Theme) => void;
+  bot: Bot;
+  category: Category;
+  setCategory: (c: Category) => void;
   onBack: () => void;
   onStart: () => void;
 }) {
-  const difficulties: Difficulty[] = ["Facile", "Moyen", "Hardcore"];
-  const themes: Theme[] = ["Tout", "Anatomie", "Biomécanique", "Nutrition Avancée", "Physiologie Musculaire"];
-
+  const cats: Category[] = ["All", "Nutrition", "Biomechanics", "Hypertrophy", "Physiology"];
   return (
     <div className="space-y-6 fade-in-up">
-      <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">
-        ← Retour
-      </button>
-
+      <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">← Back</button>
       <div>
         <div className="text-[11px] uppercase tracking-widest text-cyan-glow">
-          {mode === "1v1" ? "1v1 Competitive Arena" : "Solo Mode"}
+          {mode === "bot" ? `vs ${bot.name}` : "Solo Mode"}
         </div>
-        <h2 className="mt-1 text-3xl font-bold tracking-tight">Configure ton match</h2>
+        <h2 className="mt-1 text-3xl font-bold tracking-tight">Choose a category</h2>
       </div>
 
-      <section className="glass space-y-3 rounded-2xl p-5">
-        <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Difficulté</div>
-        <div className="grid grid-cols-3 gap-2">
-          {difficulties.map((d) => (
-            <button
-              key={d}
-              onClick={() => setDifficulty(d)}
-              className={
-                "rounded-xl px-3 py-3 text-sm font-semibold transition-all " +
-                (difficulty === d
-                  ? "bg-primary text-primary-foreground neon-glow"
-                  : "bg-secondary text-foreground hover:bg-secondary/60")
-              }
-            >
-              {d}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="glass space-y-3 rounded-2xl p-5">
-        <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Thèmes</div>
+      <section className="glass rounded-2xl p-5">
         <div className="flex flex-wrap gap-2">
-          {themes.map((t) => (
+          {cats.map((c) => (
             <button
-              key={t}
-              onClick={() => setTheme(t)}
+              key={c}
+              onClick={() => setCategory(c)}
               className={
                 "rounded-full px-4 py-2 text-xs font-semibold transition-all " +
-                (theme === t
+                (category === c
                   ? "border border-accent bg-accent/15 text-cyan-glow"
                   : "border border-border bg-secondary/60 text-muted-foreground hover:text-foreground")
               }
             >
-              {t}
+              {c}
             </button>
           ))}
         </div>
@@ -402,7 +512,7 @@ function ModeSelect({
         onClick={onStart}
         className="w-full rounded-2xl bg-primary px-6 py-5 font-display text-lg font-bold text-primary-foreground neon-glow transition-transform hover:scale-[1.02]"
       >
-        {mode === "1v1" ? "🥊 Trouver un adversaire" : "🚀 Lancer le quiz"}
+        {mode === "bot" ? "Start the match" : "Start the quiz"}
       </button>
     </div>
   );
@@ -414,25 +524,26 @@ function ModeSelect({
 
 function Arena({
   mode,
-  difficulty,
+  bot,
+  category,
   onFinish,
   onQuit,
 }: {
   mode: Mode;
-  difficulty: Difficulty;
+  bot: Bot;
+  category: Category;
   onFinish: (r: RoundResult[]) => void;
   onQuit: () => void;
 }) {
   const questions = useMemo(() => {
-    // Demo: always run all 3 questions; just put preferred difficulty first
-    const sorted = [...QUESTIONS].sort((a, b) => (a.difficulty === difficulty ? -1 : b.difficulty === difficulty ? 1 : 0));
-    return sorted;
-  }, [difficulty]);
+    const pool = category === "All" ? QUESTIONS : QUESTIONS.filter((q) => q.category === category);
+    return pool.length > 0 ? pool : QUESTIONS;
+  }, [category]);
 
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
-  const [opponentAnswered, setOpponentAnswered] = useState<boolean>(false);
-  const [opponentCorrect, setOpponentCorrect] = useState<boolean>(false);
+  const [opponentAnswered, setOpponentAnswered] = useState(false);
+  const [opponentCorrect, setOpponentCorrect] = useState(false);
   const [timeLeft, setTimeLeft] = useState(QUESTION_DURATION);
   const [showSource, setShowSource] = useState(false);
   const [results, setResults] = useState<RoundResult[]>([]);
@@ -440,9 +551,10 @@ function Arena({
   const [oppScore, setOppScore] = useState(0);
 
   const q = questions[idx];
+  const correctIndex = q.options.indexOf(q.correct_answer);
   const opponentTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Tick
+  // Timer
   useEffect(() => {
     if (selected !== null) return;
     if (timeLeft <= 0) {
@@ -451,14 +563,15 @@ function Arena({
     }
     const t = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
     return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, selected]);
 
-  // Opponent simulation
+  // Bot answer simulation
   useEffect(() => {
-    if (mode !== "1v1") return;
-    const delay = 2000 + Math.random() * 4000;
+    if (mode !== "bot") return;
+    const delay = bot.minDelay + Math.random() * (bot.maxDelay - bot.minDelay);
     opponentTimerRef.current = setTimeout(() => {
-      const correct = Math.random() < 0.75;
+      const correct = Math.random() < bot.accuracy;
       setOpponentAnswered(true);
       setOpponentCorrect(correct);
       if (correct) setOppScore((s) => s + 1);
@@ -472,29 +585,25 @@ function Arena({
   const handleAnswer = (i: number) => {
     if (selected !== null) return;
     setSelected(i);
-    const correct = i === q.answer;
+    const correct = i === correctIndex;
     if (correct) setMyScore((s) => s + 1);
-    // If opponent hasn't answered yet, lock their result now
+
     let finalOppCorrect = opponentCorrect;
-    let finalOppAnswered = opponentAnswered;
-    if (mode === "1v1" && !opponentAnswered) {
-      // 50/50 quick reaction
-      const oc = Math.random() < 0.6;
+    if (mode === "bot" && !opponentAnswered) {
+      // Lock the bot in immediately based on its accuracy
+      const oc = Math.random() < bot.accuracy;
       finalOppCorrect = oc;
-      finalOppAnswered = true;
       setOpponentAnswered(true);
       setOpponentCorrect(oc);
       if (oc) setOppScore((s) => s + 1);
+      if (opponentTimerRef.current) clearTimeout(opponentTimerRef.current);
     }
-    if (mode === "solo") {
-      finalOppCorrect = false;
-      finalOppAnswered = true;
-    }
+
     const result: RoundResult = {
       question: q,
-      selected: i === -1 ? null : i,
+      selectedIndex: i === -1 ? null : i,
       correct,
-      opponentCorrect: mode === "1v1" ? finalOppCorrect : false,
+      opponentCorrect: mode === "bot" ? finalOppCorrect : false,
     };
     setResults((prev) => [...prev, result]);
   };
@@ -520,46 +629,47 @@ function Arena({
   return (
     <div className="space-y-5 no-select fade-in-up">
       <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <button onClick={onQuit} className="uppercase tracking-widest hover:text-foreground">← Quitter</button>
+        <button onClick={onQuit} className="uppercase tracking-widest hover:text-foreground">← Quit</button>
         <div className="uppercase tracking-widest">
           Question <span className="text-foreground">{idx + 1}</span>/{total}
         </div>
       </div>
 
-      {/* Score bars */}
       <section className="glass rounded-2xl p-4">
-        <ScoreBar label="Toi" score={myScore} pct={myPct} accent="primary" />
-        {mode === "1v1" && (
+        <ScoreBar label="You" score={myScore} pct={myPct} accent="primary" />
+        {mode === "bot" && (
           <div className="mt-3">
-            <ScoreBar label="@iron_lab" score={oppScore} pct={oppPct} accent="cyan" indicator={opponentAnswered ? "answered" : "thinking"} />
+            <ScoreBar
+              label={bot.name}
+              score={oppScore}
+              pct={oppPct}
+              accent="cyan"
+              indicator={opponentAnswered ? "answered" : "thinking"}
+            />
           </div>
         )}
       </section>
 
-      {/* Timer */}
       <div className="flex justify-center">
         <CountdownRing seconds={timeLeft} total={QUESTION_DURATION} critical={timerCritical} />
       </div>
 
-      {/* Question */}
       <section className="glass rounded-2xl p-5">
         <div className="mb-3 flex flex-wrap gap-2">
           <Badge>{q.difficulty}</Badge>
-          <Badge variant="cyan">{q.theme}</Badge>
+          <Badge variant="cyan">{q.category}</Badge>
         </div>
-        <h3 className="text-xl font-semibold leading-snug sm:text-2xl">{q.q}</h3>
+        <h3 className="text-xl font-semibold leading-snug sm:text-2xl">{q.question}</h3>
       </section>
 
-      {/* Answers */}
       <section className="grid gap-2.5">
         {q.options.map((opt, i) => {
           const isSelected = selected === i;
-          const isCorrect = i === q.answer;
+          const isCorrect = i === correctIndex;
           const revealed = selected !== null;
           let cls = "glass hover:border-primary/60";
           if (revealed && isCorrect) cls = "border-2 border-primary bg-primary/15 text-foreground neon-glow";
-          else if (revealed && isSelected && !isCorrect)
-            cls = "border-2 border-destructive bg-destructive/15 text-foreground";
+          else if (revealed && isSelected && !isCorrect) cls = "border-2 border-destructive bg-destructive/15 text-foreground";
           else if (revealed) cls = "glass opacity-50";
           return (
             <button
@@ -589,13 +699,13 @@ function Arena({
             onClick={() => setShowSource(true)}
             className="flex-1 rounded-xl border border-accent/50 bg-accent/10 px-4 py-3 text-sm font-semibold text-cyan-glow transition-colors hover:bg-accent/20"
           >
-            📚 Voir la source scientifique (PMID)
+            📚 View scientific source (PMID)
           </button>
           <button
             onClick={next}
             className="flex-1 rounded-xl bg-primary px-4 py-3 font-display text-sm font-bold text-primary-foreground neon-glow transition-transform hover:scale-[1.02]"
           >
-            {idx + 1 >= total ? "Voir les résultats →" : "Question suivante →"}
+            {idx + 1 >= total ? "See results →" : "Next question →"}
           </button>
         </div>
       )}
@@ -625,11 +735,11 @@ function ScoreBar({
           <span className="font-semibold">{label}</span>
           {indicator === "thinking" && (
             <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground">
-              <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-accent" /> réfléchit…
+              <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-accent" /> thinking…
             </span>
           )}
           {indicator === "answered" && (
-            <span className="text-[10px] uppercase tracking-wider text-cyan-glow">a répondu</span>
+            <span className="text-[10px] uppercase tracking-wider text-cyan-glow">answered</span>
           )}
         </div>
         <span className="font-display font-bold">{score}</span>
@@ -672,10 +782,7 @@ function CountdownRing({ seconds, total, critical }: { seconds: number; total: n
         />
       </svg>
       <div className="absolute text-center">
-        <div
-          className="font-display text-2xl font-bold"
-          style={{ color: critical ? "var(--danger)" : "var(--neon)" }}
-        >
+        <div className="font-display text-2xl font-bold" style={{ color: critical ? "var(--danger)" : "var(--neon)" }}>
           {seconds}
         </div>
         <div className="text-[9px] uppercase tracking-widest text-muted-foreground">sec</div>
@@ -689,9 +796,7 @@ function Badge({ children, variant = "primary" }: { children: React.ReactNode; v
     <span
       className={
         "rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest " +
-        (variant === "primary"
-          ? "bg-primary/15 text-neon"
-          : "bg-accent/15 text-cyan-glow")
+        (variant === "primary" ? "bg-primary/15 text-neon" : "bg-accent/15 text-cyan-glow")
       }
     >
       {children}
@@ -705,22 +810,22 @@ function SourceModal({ q, onClose }: { q: Question; onClose: () => void }) {
       <div className="slide-up w-full max-w-lg rounded-t-3xl bg-card p-6 sm:rounded-3xl">
         <div className="mx-auto mb-4 h-1 w-12 rounded-full bg-border sm:hidden" />
         <div className="mb-2 flex items-center justify-between">
-          <div className="text-[10px] uppercase tracking-widest text-cyan-glow">Source scientifique</div>
+          <div className="text-[10px] uppercase tracking-widest text-cyan-glow">Scientific source</div>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">✕</button>
         </div>
-        <h4 className="font-display text-lg font-bold">PMID: {q.pmid}</h4>
+        <h4 className="font-display text-lg font-bold">PMID: {q.source_pmid}</h4>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{q.explanation}</p>
         <div className="mt-5 rounded-xl bg-secondary p-3 text-xs">
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Réponse correcte</div>
-          <div className="mt-1 font-semibold text-primary">{q.options[q.answer]}</div>
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Correct answer</div>
+          <div className="mt-1 font-semibold text-primary">{q.correct_answer}</div>
         </div>
         <a
-          href={`https://pubmed.ncbi.nlm.nih.gov/${q.pmid}/`}
+          href={q.source_url}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-5 block w-full rounded-xl bg-primary px-4 py-3 text-center font-display text-sm font-bold text-primary-foreground neon-glow"
         >
-          Ouvrir sur PubMed ↗
+          Open on PubMed ↗
         </a>
       </div>
     </div>
@@ -734,74 +839,53 @@ function SourceModal({ q, onClose }: { q: Question; onClose: () => void }) {
 function Results({
   results,
   mode,
-  eloDelta,
-  elo,
+  username,
+  bot,
   onHome,
   onAgain,
 }: {
   results: RoundResult[];
   mode: Mode;
-  eloDelta: number;
-  elo: number;
+  username: string;
+  bot: Bot;
   onHome: () => void;
   onAgain: () => void;
 }) {
   const myScore = results.filter((r) => r.correct).length;
   const oppScore = results.filter((r) => r.opponentCorrect).length;
-  const won = mode === "solo" ? myScore >= Math.ceil(results.length / 2) : myScore > oppScore;
+  const total = results.length;
+  const won = mode === "bot" ? myScore > oppScore : myScore >= Math.ceil(total / 2);
   const [reviewing, setReviewing] = useState(false);
   const mistakes = results.filter((r) => !r.correct);
-
-  const [animMy, setAnimMy] = useState(0);
-  const [animOpp, setAnimOpp] = useState(0);
-  useEffect(() => {
-    let i = 0;
-    const t = setInterval(() => {
-      i++;
-      setAnimMy(Math.min(i, myScore));
-      setAnimOpp(Math.min(i, oppScore));
-      if (i >= Math.max(myScore, oppScore)) clearInterval(t);
-    }, 220);
-    return () => clearInterval(t);
-  }, [myScore, oppScore]);
 
   return (
     <div className="space-y-6 fade-in-up">
       <div className="text-center">
-        <div className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">Résultat du match</div>
+        <div className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+          {mode === "bot" ? "Match result" : "Quiz complete"}
+        </div>
         <h2
-          className={
-            "mt-2 font-display text-5xl font-bold tracking-tight sm:text-6xl count-pop " +
-            (won ? "text-neon" : "text-danger")
-          }
+          className={"mt-2 font-display text-5xl font-bold tracking-tight sm:text-6xl count-pop " + (won ? "text-neon" : "text-danger")}
           style={!won ? { color: "var(--danger)", textShadow: "0 0 18px color-mix(in oklab, var(--danger) 60%, transparent)" } : {}}
         >
-          {won ? "VICTORY" : "DEFEAT"}
+          {mode === "bot" ? (won ? "VICTORY" : "DEFEAT") : "DONE"}
         </h2>
       </div>
 
       <section className="glass rounded-2xl p-6">
-        <div className="grid grid-cols-3 items-center gap-3">
-          <ScoreColumn label="Toi" value={animMy} accent="primary" />
-          <div className="text-center font-display text-xl text-muted-foreground">VS</div>
-          <ScoreColumn label={mode === "1v1" ? "@iron_lab" : "Cible"} value={mode === "1v1" ? animOpp : Math.ceil(results.length / 2)} accent="cyan" />
-        </div>
-      </section>
-
-      <section className="glass flex items-center justify-between rounded-2xl p-5">
-        <div>
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Nouvelle Elo</div>
-          <div className="font-display text-3xl font-bold">{elo}</div>
-        </div>
-        <div
-          className={
-            "rounded-xl px-4 py-2 font-display text-lg font-bold count-pop " +
-            (eloDelta >= 0 ? "bg-primary/15 text-neon" : "bg-destructive/15 text-danger")
-          }
-          style={eloDelta < 0 ? { color: "var(--danger)" } : {}}
-        >
-          {eloDelta >= 0 ? `+${eloDelta}` : eloDelta} Elo
-        </div>
+        {mode === "bot" ? (
+          <div className="grid grid-cols-3 items-center gap-3">
+            <ScoreColumn label={username} value={myScore} accent="primary" />
+            <div className="text-center font-display text-xl text-muted-foreground">VS</div>
+            <ScoreColumn label={bot.name} value={oppScore} accent="cyan" />
+          </div>
+        ) : (
+          <div className="text-center">
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{username}</div>
+            <div className="mt-1 font-display text-6xl font-bold text-neon">{myScore}<span className="text-muted-foreground text-3xl">/{total}</span></div>
+            <div className="mt-1 text-xs text-muted-foreground">Correct answers</div>
+          </div>
+        )}
       </section>
 
       {!reviewing ? (
@@ -811,49 +895,43 @@ function Results({
               onClick={() => setReviewing(true)}
               className="rounded-xl border border-accent/50 bg-accent/10 px-4 py-3 text-sm font-semibold text-cyan-glow"
             >
-              🔬 Revoir mes {mistakes.length} erreur{mistakes.length > 1 ? "s" : ""}
+              🔬 Review my {mistakes.length} mistake{mistakes.length > 1 ? "s" : ""}
             </button>
           )}
-          <button
-            onClick={onAgain}
-            className="rounded-xl bg-primary px-4 py-3 font-display text-sm font-bold text-primary-foreground neon-glow"
-          >
-            Rejouer
+          <button onClick={onAgain} className="rounded-xl bg-primary px-4 py-3 font-display text-sm font-bold text-primary-foreground neon-glow">
+            Play again
           </button>
-          <button
-            onClick={onHome}
-            className="rounded-xl bg-secondary px-4 py-3 text-sm font-semibold text-foreground sm:col-span-2"
-          >
-            ← Retour au tableau de bord
+          <button onClick={onHome} className="rounded-xl bg-secondary px-4 py-3 text-sm font-semibold text-foreground sm:col-span-2">
+            ← Back to dashboard
           </button>
         </div>
       ) : (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="font-display text-lg font-bold">Révision des erreurs</h3>
+            <h3 className="font-display text-lg font-bold">Mistake review</h3>
             <button onClick={() => setReviewing(false)} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">
-              Fermer
+              Close
             </button>
           </div>
           {mistakes.map((m) => (
             <div key={m.question.id} className="glass rounded-2xl p-4">
               <div className="mb-2 flex flex-wrap gap-2">
                 <Badge>{m.question.difficulty}</Badge>
-                <Badge variant="cyan">{m.question.theme}</Badge>
+                <Badge variant="cyan">{m.question.category}</Badge>
               </div>
-              <div className="text-sm font-semibold">{m.question.q}</div>
+              <div className="text-sm font-semibold">{m.question.question}</div>
               <div className="mt-3 rounded-lg bg-secondary p-3 text-xs">
-                <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Bonne réponse</div>
-                <div className="mt-1 font-semibold text-primary">{m.question.options[m.question.answer]}</div>
+                <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Correct answer</div>
+                <div className="mt-1 font-semibold text-primary">{m.question.correct_answer}</div>
               </div>
               <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{m.question.explanation}</p>
               <a
-                href={`https://pubmed.ncbi.nlm.nih.gov/${m.question.pmid}/`}
+                href={m.question.source_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-3 inline-block text-xs font-semibold text-cyan-glow hover:underline"
               >
-                PMID: {m.question.pmid} ↗
+                PMID: {m.question.source_pmid} ↗
               </a>
             </div>
           ))}
@@ -866,10 +944,8 @@ function Results({
 function ScoreColumn({ label, value, accent }: { label: string; value: number; accent: "primary" | "cyan" }) {
   return (
     <div className="text-center">
-      <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
-      <div
-        className={"mt-1 font-display text-5xl font-bold " + (accent === "primary" ? "text-neon" : "text-cyan-glow")}
-      >
+      <div className="truncate text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
+      <div className={"mt-1 font-display text-5xl font-bold " + (accent === "primary" ? "text-neon" : "text-cyan-glow")}>
         {value}
       </div>
     </div>
@@ -881,9 +957,7 @@ function ScoreColumn({ label, value, accent }: { label: string; value: number; a
 // ──────────────────────────────────────────────────────────────────────────────
 
 function BoltIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" /></svg>
-  );
+  return (<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" /></svg>);
 }
 function SwordsIcon() {
   return (
