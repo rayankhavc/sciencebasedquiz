@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StaticPage } from "./about";
+import { StaticPage } from "../components/StaticPage";
 
 export const Route = createFileRoute("/legal")({
   head: () => ({
