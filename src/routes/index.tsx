@@ -396,12 +396,10 @@ function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void })
     <div className="space-y-6 fade-in-up">
       <section>
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-          <span className="text-neon">HyperSci</span> Quiz
+          <span className="text-neon">Science</span> Based Quiz
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-          {"\n"}
-        </p>
       </section>
+
 
       <section className="glass rounded-2xl p-5 my-8">
         <div className="text-[10px] uppercase tracking-widest text-cyan-glow font-bold">MISSION</div>
