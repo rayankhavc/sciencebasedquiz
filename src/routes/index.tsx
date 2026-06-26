@@ -344,9 +344,10 @@ function TopBar() {
           <BoltIcon />
         </div>
         <div className="leading-tight">
-          <div className="font-display text-sm font-bold tracking-tight">HyperSci</div>
-          <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">QUIZ ARENA</div>
+          <div className="font-display text-sm font-bold tracking-tight">Science Based</div>
+          <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">QUIZ</div>
         </div>
+
       </div>
       <div className="flex items-center gap-2">
         <Link
