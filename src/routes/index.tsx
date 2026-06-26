@@ -4,14 +4,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HyperSci Quiz — \n" },
+      { title: "Science Based Quiz" },
       { name: "description", content: "Evidence-based quiz on anatomy, biomechanics, hypertrophy and nutrition. Battle bots and master the science." },
-      { property: "og:title", content: "HyperSci Quiz" },
-      { property: "og:description", content: "\n" },
+      { property: "og:title", content: "Science Based Quiz" },
+      { property: "og:description", content: "Evidence-based quiz on anatomy, biomechanics, hypertrophy and nutrition." },
     ],
   }),
   component: App,
 });
+
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Question database
@@ -33,6 +34,7 @@ type Question = {
 };
 
 const QUESTIONS: Question[] = [
+  // ── EASY ──
   {
     id: "e1",
     difficulty: "easy",
@@ -44,6 +46,41 @@ const QUESTIONS: Question[] = [
     source_pmid: "28615996",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/28615996/",
   },
+  {
+    id: "e2",
+    difficulty: "easy",
+    category: "Nutrition",
+    question: "What is the commonly recommended daily protein intake range to maximize muscle protein synthesis in resistance-trained individuals?",
+    options: ["0.8 g/kg/day", "1.6–2.2 g/kg/day", "3.5–4.0 g/kg/day", "0.4 g/kg/day"],
+    correct_answer: "1.6–2.2 g/kg/day",
+    explanation: "Meta-analyses converge on roughly 1.6–2.2 g/kg/day as the range that maximizes resistance-training adaptations; intake above this offers diminishing returns.",
+    source_pmid: "28698222",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/28698222/",
+  },
+  {
+    id: "e3",
+    difficulty: "easy",
+    category: "Physiology",
+    question: "Which energy system dominates during a maximal effort lasting about 10 seconds?",
+    options: ["Oxidative (aerobic)", "Glycolytic", "Phosphagen (ATP-PCr)", "Lipolytic"],
+    correct_answer: "Phosphagen (ATP-PCr)",
+    explanation: "The ATP-phosphocreatine system supplies the vast majority of energy during all-out efforts under ~10 seconds before glycolysis takes over.",
+    source_pmid: "11252467",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/11252467/",
+  },
+  {
+    id: "e4",
+    difficulty: "easy",
+    category: "Hypertrophy",
+    question: "What is the minimum weekly set count per muscle group generally associated with significant hypertrophy gains in trained lifters?",
+    options: ["2 sets", "10 sets", "30 sets", "50 sets"],
+    correct_answer: "10 sets",
+    explanation: "Schoenfeld et al. show a dose-response where ~10+ hard sets per muscle per week clearly outperforms low-volume work for hypertrophy.",
+    source_pmid: "27433992",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/27433992/",
+  },
+
+  // ── MEDIUM ──
   {
     id: "m1",
     difficulty: "medium",
@@ -60,6 +97,41 @@ const QUESTIONS: Question[] = [
     source_pmid: "35041043",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/35041043/",
   },
+  {
+    id: "m2",
+    difficulty: "medium",
+    category: "Hypertrophy",
+    question: "Within how many reps of failure must sets typically be taken to maximize hypertrophy in trained individuals?",
+    options: ["0–5 reps of failure", "8–10 reps of failure", "12–15 reps of failure", "Failure is irrelevant"],
+    correct_answer: "0–5 reps of failure",
+    explanation: "Evidence indicates sets taken within roughly 0–5 reps of momentary muscular failure are needed to maximize stimulus per set in trained lifters.",
+    source_pmid: "34822137",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/34822137/",
+  },
+  {
+    id: "m3",
+    difficulty: "medium",
+    category: "Nutrition",
+    question: "What is the approximate per-meal leucine threshold thought to maximally trigger muscle protein synthesis in young adults?",
+    options: ["~0.5 g", "~1.0 g", "~2.5–3 g", "~6 g"],
+    correct_answer: "~2.5–3 g",
+    explanation: "Roughly 2.5–3 g of leucine per feeding is needed to robustly trigger mTORC1 signaling and maximize MPS in young adults.",
+    source_pmid: "22451437",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/22451437/",
+  },
+  {
+    id: "m4",
+    difficulty: "medium",
+    category: "Physiology",
+    question: "Delayed onset muscle soreness (DOMS) is primarily attributed to:",
+    options: ["Lactic acid accumulation", "Microscopic damage from eccentric contractions", "Dehydration", "Glycogen depletion"],
+    correct_answer: "Microscopic damage from eccentric contractions",
+    explanation: "DOMS is driven by ultrastructural muscle damage and inflammation following unaccustomed eccentric loading, not by lactate.",
+    source_pmid: "12617692",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/12617692/",
+  },
+
+  // ── HARDCORE ──
   {
     id: "h1",
     difficulty: "hardcore",
@@ -82,7 +154,35 @@ const QUESTIONS: Question[] = [
     source_pmid: "32174353",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/32174353/",
   },
+  {
+    id: "h3",
+    difficulty: "hardcore",
+    category: "Hypertrophy",
+    question: "Which signaling pathway is the central anabolic regulator activated by mechanical tension and amino acids to drive muscle protein synthesis?",
+    options: ["AMPK", "mTORC1", "FOXO3", "Myostatin/SMAD"],
+    correct_answer: "mTORC1",
+    explanation: "mTORC1 integrates mechanical and nutrient signals (leucine, IGF-1, mechanotransduction) to upregulate translation initiation and drive hypertrophy.",
+    source_pmid: "21157483",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/21157483/",
+  },
+  {
+    id: "h4",
+    difficulty: "hardcore",
+    category: "Biomechanics",
+    question: "According to the force-length relationship, where is active isometric force production of a sarcomere maximal?",
+    options: [
+      "At very short sarcomere lengths (~1.6 µm)",
+      "On the plateau of optimal myofilament overlap (~2.0–2.25 µm)",
+      "At fully stretched lengths (~3.6 µm)",
+      "Force is constant regardless of length",
+    ],
+    correct_answer: "On the plateau of optimal myofilament overlap (~2.0–2.25 µm)",
+    explanation: "Gordon, Huxley & Julian's classic work shows peak active tension on the descending plateau where cross-bridge overlap between actin and myosin is optimal.",
+    source_pmid: "5969491",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/5969491/",
+  },
 ];
+
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Bots
@@ -244,9 +344,10 @@ function TopBar() {
           <BoltIcon />
         </div>
         <div className="leading-tight">
-          <div className="font-display text-sm font-bold tracking-tight">HyperSci</div>
-          <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">QUIZ ARENA</div>
+          <div className="font-display text-sm font-bold tracking-tight">Science Based</div>
+          <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">QUIZ</div>
         </div>
+
       </div>
       <div className="flex items-center gap-2">
         <Link
@@ -274,15 +375,15 @@ function TopBar() {
 function Footer() {
   return (
     <footer className="mt-10 border-t border-border pt-5 text-xs text-muted-foreground">
-      <nav className="flex flex-col items-center justify-center gap-y-2">
+      <nav className="flex items-center justify-center gap-4">
         <Link to="/legal" className="hover:text-foreground transition-colors">Legal Notice</Link>
-        <span className="opacity-30">·</span>
         <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
       </nav>
       <div className="mt-6 text-center text-[10px] uppercase tracking-widest opacity-60">
-        © HYPERSCI QUIZ — SCIENCE OVER BRO-SCIENCE
+        © Science Based Quiz
       </div>
     </footer>
+
   );
 }
 
@@ -295,12 +396,10 @@ function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void })
     <div className="space-y-6 fade-in-up">
       <section>
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-          <span className="text-neon">HyperSci</span> Quiz
+          <span className="text-neon">Science</span> Based Quiz
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-          {"\n"}
-        </p>
       </section>
+
 
       <section className="glass rounded-2xl p-5 my-8">
         <div className="text-[10px] uppercase tracking-widest text-cyan-glow font-bold">MISSION</div>
