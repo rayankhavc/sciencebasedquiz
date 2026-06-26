@@ -4,14 +4,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HyperSci Quiz — \n" },
+      { title: "Science Based Quiz" },
       { name: "description", content: "Evidence-based quiz on anatomy, biomechanics, hypertrophy and nutrition. Battle bots and master the science." },
-      { property: "og:title", content: "HyperSci Quiz" },
-      { property: "og:description", content: "\n" },
+      { property: "og:title", content: "Science Based Quiz" },
+      { property: "og:description", content: "Evidence-based quiz on anatomy, biomechanics, hypertrophy and nutrition." },
     ],
   }),
   component: App,
 });
+
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Question database
