@@ -375,15 +375,15 @@ function TopBar() {
 function Footer() {
   return (
     <footer className="mt-10 border-t border-border pt-5 text-xs text-muted-foreground">
-      <nav className="flex flex-col items-center justify-center gap-y-2">
+      <nav className="flex items-center justify-center gap-4">
         <Link to="/legal" className="hover:text-foreground transition-colors">Legal Notice</Link>
-        <span className="opacity-30">·</span>
         <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
       </nav>
       <div className="mt-6 text-center text-[10px] uppercase tracking-widest opacity-60">
-        © HYPERSCI QUIZ — SCIENCE OVER BRO-SCIENCE
+        © Science Based Quiz
       </div>
     </footer>
+
   );
 }
 
