@@ -914,6 +914,8 @@ function App() {
             bot={bot}
             category={category}
             setCategory={setCategory}
+            quizLength={quizLength}
+            setQuizLength={setQuizLength}
             onBack={() => setScreen(mode === "solo" ? "username" : "botSelect")}
             onStart={() => {
               setResults([]);
@@ -927,6 +929,7 @@ function App() {
             mode={mode}
             bot={bot}
             category={category}
+            quizLength={quizLength}
             onFinish={finishGame}
             onQuit={() => setScreen("dashboard")}
           />
