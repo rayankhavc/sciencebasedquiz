@@ -362,6 +362,457 @@ const QUESTIONS: Question[] = [
     source_pmid: "30580468",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/30580468/",
   },
+
+  // ─── Easy (additional) ──────────────────────────────────────────────
+  {
+    id: "e5",
+    difficulty: "easy",
+    category: "Nutrition",
+    question: "According to the ISSN position stand, what is a reasonable daily protein intake range to maximize resistance-training adaptations in healthy trained adults?",
+    options: ["0.8 g/kg/day", "1.4–2.0 g/kg/day", "3.5–4.0 g/kg/day", "< 1.0 g/kg/day"],
+    correct_answer: "1.4–2.0 g/kg/day",
+    explanation: "The ISSN concludes that 1.4–2.0 g/kg/day is safe and sufficient for most training individuals, with higher intakes useful during energy deficit or aggressive recomposition.",
+    source_pmid: "28642676",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/28642676/",
+  },
+  {
+    id: "e6",
+    difficulty: "easy",
+    category: "Physiology",
+    question: "Which energy system is the primary contributor to a maximal effort lasting roughly 5–10 seconds?",
+    options: ["Oxidative phosphorylation", "Phosphagen (ATP–PCr) system", "Anaerobic glycolysis (lactate)", "Beta-oxidation"],
+    correct_answer: "Phosphagen (ATP–PCr) system",
+    explanation: "Phosphocreatine breakdown provides the fastest ATP resynthesis pathway and dominates very short, maximal efforts before glycolysis takes over.",
+    source_pmid: "24791915",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/24791915/",
+  },
+  {
+    id: "e7",
+    difficulty: "easy",
+    category: "Biomechanics",
+    question: "What is the stretch-shortening cycle (SSC)?",
+    options: [
+      "A passive stretching routine before lifting",
+      "A rapid eccentric–concentric coupling that augments concentric output",
+      "The relaxation phase between two sets",
+      "A slow tempo eccentric used for hypertrophy",
+    ],
+    correct_answer: "A rapid eccentric–concentric coupling that augments concentric output",
+    explanation: "The SSC stores elastic energy and uses reflex potentiation during a fast eccentric to enhance the immediately following concentric action.",
+    source_pmid: "10778660",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/10778660/",
+  },
+  {
+    id: "e8",
+    difficulty: "easy",
+    category: "Nutrition",
+    question: "Per the ISSN, an ergogenic caffeine dose for endurance and strength performance is roughly:",
+    options: ["0.1–0.5 mg/kg", "3–6 mg/kg", "15–20 mg/kg", "> 25 mg/kg"],
+    correct_answer: "3–6 mg/kg",
+    explanation: "Doses of about 3–6 mg/kg taken ~60 min pre-exercise reliably improve endurance and have modest benefits on strength and power.",
+    source_pmid: "33388079",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/33388079/",
+  },
+  {
+    id: "e9",
+    difficulty: "easy",
+    category: "Physiology",
+    question: "On average, type II (fast-twitch) muscle fibers compared to type I fibers tend to have:",
+    options: [
+      "A smaller cross-sectional area",
+      "A larger cross-sectional area and greater hypertrophic potential",
+      "Identical CSA in trained individuals",
+      "Higher mitochondrial density",
+    ],
+    correct_answer: "A larger cross-sectional area and greater hypertrophic potential",
+    explanation: "Type II fibers are typically larger than type I and show greater absolute hypertrophy with resistance training.",
+    source_pmid: "17313189",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/17313189/",
+  },
+  {
+    id: "e10",
+    difficulty: "easy",
+    category: "Hypertrophy",
+    question: "Comparing full vs. partial range of motion, what does the evidence generally suggest for hypertrophy?",
+    options: [
+      "Partial ROM is universally superior",
+      "Full ROM tends to produce equal or greater hypertrophy in most cases",
+      "ROM is irrelevant when load is matched",
+      "Only isometrics maximize hypertrophy",
+    ],
+    correct_answer: "Full ROM tends to produce equal or greater hypertrophy in most cases",
+    explanation: "Meta-analytic data favor full ROM (especially training at long muscle lengths) over short partials for whole-muscle hypertrophy.",
+    source_pmid: "32058014",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/32058014/",
+  },
+  {
+    id: "e11",
+    difficulty: "easy",
+    category: "Physiology",
+    question: "Dehydration of roughly what magnitude begins to measurably impair endurance performance?",
+    options: ["0.1% body mass", "≥ 2% body mass", "10% body mass", "Hydration has no effect"],
+    correct_answer: "≥ 2% body mass",
+    explanation: "ACSM and subsequent reviews note that fluid losses of ≥ ~2% body mass impair aerobic performance and thermoregulation.",
+    source_pmid: "17277604",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/17277604/",
+  },
+  {
+    id: "e12",
+    difficulty: "easy",
+    category: "Nutrition",
+    question: "What is the most consistently reported effect of vitamin D deficiency on skeletal muscle?",
+    options: [
+      "Improved type II fiber function",
+      "Proximal weakness and impaired contractile function",
+      "Accelerated hypertrophy",
+      "No measurable muscular effect",
+    ],
+    correct_answer: "Proximal weakness and impaired contractile function",
+    explanation: "Deficiency is associated with type II fiber atrophy and proximal weakness; repletion improves strength in deficient individuals.",
+    source_pmid: "24587329",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/24587329/",
+  },
+  {
+    id: "e13",
+    difficulty: "easy",
+    category: "Biomechanics",
+    question: "Surface EMG amplitude during a lift is best interpreted as:",
+    options: [
+      "A direct measure of long-term hypertrophy",
+      "A proxy of muscle activation that does not predict hypertrophy outcomes",
+      "An exact count of activated motor units",
+      "A measurement of mechanical tension on the fiber",
+    ],
+    correct_answer: "A proxy of muscle activation that does not predict hypertrophy outcomes",
+    explanation: "Vigotsky et al. caution that EMG amplitude is a noisy proxy for neural drive and should not be used to infer hypertrophic stimulus.",
+    source_pmid: "28486337",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/28486337/",
+  },
+  {
+    id: "e14",
+    difficulty: "easy",
+    category: "Hypertrophy",
+    question: "Across the literature, what is a sensible weekly hard-set range per muscle to drive hypertrophy in trained lifters?",
+    options: ["1–2 sets", "Roughly 10–20 sets", "50+ sets", "Volume is irrelevant"],
+    correct_answer: "Roughly 10–20 sets",
+    explanation: "Dose–response meta-analyses by Schoenfeld and colleagues place most trained individuals in a productive band of about 10–20 hard sets per muscle per week.",
+    source_pmid: "27433992",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/27433992/",
+  },
+
+  // ─── Medium (additional) ────────────────────────────────────────────
+  {
+    id: "m5",
+    difficulty: "medium",
+    category: "Hypertrophy",
+    question: "When total weekly volume is equated, what does the evidence say about training a muscle 2× vs. 1× per week?",
+    options: [
+      "1× is clearly superior",
+      "2× is at least as effective and often slightly better",
+      "Frequency has no effect under any condition",
+      "≥ 4× per week is required for any hypertrophy",
+    ],
+    correct_answer: "2× is at least as effective and often slightly better",
+    explanation: "Schoenfeld et al.'s meta-analysis shows that, with equated volume, splitting sets across ≥ 2 sessions/week tends to yield slightly greater hypertrophy than 1×.",
+    source_pmid: "27102172",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/27102172/",
+  },
+  {
+    id: "m6",
+    difficulty: "medium",
+    category: "Hypertrophy",
+    question: "For maximizing strength and hypertrophy on compound lifts, what rest interval is best supported?",
+    options: [
+      "≤ 30 seconds",
+      "About 2–3 minutes or more",
+      "Exactly 60 seconds",
+      "Rest length does not matter",
+    ],
+    correct_answer: "About 2–3 minutes or more",
+    explanation: "Longer rest (≥ 2 min) preserves per-set performance and produced greater hypertrophy and strength than 1-min rest in trained men.",
+    source_pmid: "26605807",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/26605807/",
+  },
+  {
+    id: "m7",
+    difficulty: "medium",
+    category: "Nutrition",
+    question: "What is the approximate per-meal leucine threshold thought to maximally trigger muscle protein synthesis in young adults?",
+    options: ["~0.3 g", "~3 g", "~10 g", "~30 g"],
+    correct_answer: "~3 g",
+    explanation: "Roughly 2.5–3 g of leucine per meal (≈ 0.3 g/kg of high-quality protein) appears to robustly stimulate MPS in young adults.",
+    source_pmid: "22150425",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/22150425/",
+  },
+  {
+    id: "m8",
+    difficulty: "medium",
+    category: "Hypertrophy",
+    question: "Pareja-Blanco et al. showed that high intra-set velocity loss (e.g., 40%) compared to low velocity loss (e.g., 10–20%):",
+    options: [
+      "Always produces more hypertrophy and strength",
+      "Produces similar or smaller strength gains with more fatigue and fiber-type shifts",
+      "Has no effect on adaptations",
+      "Eliminates the need for progressive overload",
+    ],
+    correct_answer: "Produces similar or smaller strength gains with more fatigue and fiber-type shifts",
+    explanation: "Low velocity loss thresholds matched or beat high VL for strength/power, with less neuromuscular fatigue and preservation of type IIX fibers.",
+    source_pmid: "27038416",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/27038416/",
+  },
+  {
+    id: "m9",
+    difficulty: "medium",
+    category: "Biomechanics",
+    question: "Maeo et al. (2023) compared training at long vs. short muscle lengths and reported:",
+    options: [
+      "Short-length training produced more hypertrophy",
+      "Long-length partials produced equal or greater hypertrophy, especially regionally",
+      "ROM and length had no effect",
+      "Only isometrics induced hypertrophy",
+    ],
+    correct_answer: "Long-length partials produced equal or greater hypertrophy, especially regionally",
+    explanation: "Training in lengthened positions biased greater regional hypertrophy compared to short-length work at matched volume.",
+    source_pmid: "36242755",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/36242755/",
+  },
+  {
+    id: "m10",
+    difficulty: "medium",
+    category: "Nutrition",
+    question: "What is the best-supported mechanism by which beta-alanine improves high-intensity performance?",
+    options: [
+      "Increasing intramuscular ATP stores",
+      "Raising muscle carnosine and improving intramuscular H+ buffering",
+      "Acting as a direct vasodilator",
+      "Inhibiting lactate production",
+    ],
+    correct_answer: "Raising muscle carnosine and improving intramuscular H+ buffering",
+    explanation: "Beta-alanine is the rate-limiting precursor of carnosine, which buffers protons during high-intensity efforts lasting ~1–4 min.",
+    source_pmid: "25739105",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/25739105/",
+  },
+  {
+    id: "m11",
+    difficulty: "medium",
+    category: "Biomechanics",
+    question: "What does Schoenfeld & Grgic's review on squat depth conclude about deep squats and hypertrophy/strength?",
+    options: [
+      "Partial squats are uniformly superior",
+      "Deeper squats tend to favor lower-limb hypertrophy with no greater injury risk in healthy lifters",
+      "Squat depth is biomechanically irrelevant",
+      "Only quarter squats build the quadriceps",
+    ],
+    correct_answer: "Deeper squats tend to favor lower-limb hypertrophy with no greater injury risk in healthy lifters",
+    explanation: "Greater squat depth increases hip and knee extensor demand and is associated with superior lower-limb hypertrophy without elevated injury rates in healthy populations.",
+    source_pmid: "32624324",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/32624324/",
+  },
+  {
+    id: "m12",
+    difficulty: "medium",
+    category: "Physiology",
+    question: "Greater muscle pennation angle generally results in:",
+    options: [
+      "Reduced contractile force capacity",
+      "More contractile material in a given anatomical CSA, increasing force at the expense of fiber excursion",
+      "Higher fiber shortening velocity",
+      "No mechanical consequence",
+    ],
+    correct_answer: "More contractile material in a given anatomical CSA, increasing force at the expense of fiber excursion",
+    explanation: "Pennation packs more sarcomeres in parallel (greater PCSA) increasing force capacity, while reducing the fiber's effective shortening range.",
+    source_pmid: "11460867",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/11460867/",
+  },
+  {
+    id: "m13",
+    difficulty: "medium",
+    category: "Hypertrophy",
+    question: "How does training to (or very near) momentary failure compare to stopping with reps in reserve for hypertrophy?",
+    options: [
+      "Failure is required for any hypertrophy",
+      "Stopping a few reps short generally produces similar hypertrophy with less fatigue",
+      "Stopping short produces zero hypertrophy",
+      "Only failure training builds type I fibers",
+    ],
+    correct_answer: "Stopping a few reps short generally produces similar hypertrophy with less fatigue",
+    explanation: "Recent meta-analyses (Grgic et al.) show that stopping 1–3 reps short of failure yields hypertrophy outcomes broadly comparable to training to failure with lower fatigue cost.",
+    source_pmid: "34669519",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/34669519/",
+  },
+  {
+    id: "m14",
+    difficulty: "medium",
+    category: "Physiology",
+    question: "VO2max is best described mechanistically as limited primarily by:",
+    options: [
+      "Skeletal muscle mitochondrial density alone",
+      "Central cardiovascular oxygen delivery (cardiac output × arterial O2 content) in most healthy people",
+      "Lung diffusing capacity exclusively",
+      "Hemoglobin affinity alone",
+    ],
+    correct_answer: "Central cardiovascular oxygen delivery (cardiac output × arterial O2 content) in most healthy people",
+    explanation: "Bassett & Howley summarize that, in most healthy individuals, maximal cardiac output and arterial O2 content are the primary limiters of VO2max.",
+    source_pmid: "10647532",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/10647532/",
+  },
+
+  // ─── Hardcore (additional) ──────────────────────────────────────────
+  {
+    id: "h6",
+    difficulty: "hardcore",
+    category: "Hypertrophy",
+    question: "Which molecular mechanism best explains mechanical-tension-induced mTORC1 activation in skeletal muscle?",
+    options: [
+      "Insulin receptor autophosphorylation",
+      "Diacylglycerol kinase ζ–mediated phosphatidic acid production at the membrane",
+      "Direct ATP binding to mTOR kinase",
+      "Cortisol receptor translocation",
+    ],
+    correct_answer: "Diacylglycerol kinase ζ–mediated phosphatidic acid production at the membrane",
+    explanation: "Hornberger and colleagues showed DGKζ-derived phosphatidic acid is a key second messenger linking mechanical loading to mTORC1 activation.",
+    source_pmid: "31375607",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/31375607/",
+  },
+  {
+    id: "h7",
+    difficulty: "hardcore",
+    category: "Hypertrophy",
+    question: "What is the current view of satellite cells in long-term overload hypertrophy?",
+    options: [
+      "They are dispensable in all conditions",
+      "They are required to add myonuclei and support hypertrophy beyond a ceiling defined by myonuclear domain",
+      "They only contribute to fiber repair after injury, never to hypertrophy",
+      "They differentiate into adipocytes during overload",
+    ],
+    correct_answer: "They are required to add myonuclei and support hypertrophy beyond a ceiling defined by myonuclear domain",
+    explanation: "Murach et al. argue satellite-cell-mediated myonuclear accretion is needed to sustain hypertrophy past a domain ceiling, especially under prolonged overload.",
+    source_pmid: "29687895",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/29687895/",
+  },
+  {
+    id: "h8",
+    difficulty: "hardcore",
+    category: "Physiology",
+    question: "Muscle protein synthesis remains elevated above baseline following an intense bout of resistance exercise for approximately:",
+    options: ["1–2 hours", "Up to 24–48 hours, with greater duration in untrained individuals", "1 week", "It does not change after exercise"],
+    correct_answer: "Up to 24–48 hours, with greater duration in untrained individuals",
+    explanation: "Burd et al. showed MPS remains elevated up to 24–48 h after resistance exercise, with longer/larger responses in untrained subjects.",
+    source_pmid: "21289204",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/21289204/",
+  },
+  {
+    id: "h9",
+    difficulty: "hardcore",
+    category: "Hypertrophy",
+    question: "Across the training literature, eccentric vs. concentric-only resistance training tends to produce:",
+    options: [
+      "Identical hypertrophy in all studies",
+      "A small but consistent advantage for eccentric training, partly via greater regional/whole-muscle hypertrophy",
+      "Greater hypertrophy with concentric-only training",
+      "Hypertrophy only in eccentric-trained limbs, zero in concentric limbs",
+    ],
+    correct_answer: "A small but consistent advantage for eccentric training, partly via greater regional/whole-muscle hypertrophy",
+    explanation: "Schoenfeld et al.'s meta-analysis reports a small effect favoring eccentric training for hypertrophy compared to concentric-only protocols.",
+    source_pmid: "28755103",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/28755103/",
+  },
+  {
+    id: "h10",
+    difficulty: "hardcore",
+    category: "Biomechanics",
+    question: "Heavy eccentric training tends to induce which structural adaptation in the muscle?",
+    options: [
+      "A net decrease in pennation angle and fascicle length",
+      "An increase in fascicle length via in-series sarcomerogenesis",
+      "Replacement of titin by desmin",
+      "Conversion of type II fibers into tendon",
+    ],
+    correct_answer: "An increase in fascicle length via in-series sarcomerogenesis",
+    explanation: "Eccentric loading at long muscle lengths increases fascicle length by adding sarcomeres in series, as shown by Blazevich and others.",
+    source_pmid: "17313281",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/17313281/",
+  },
+  {
+    id: "h11",
+    difficulty: "hardcore",
+    category: "Physiology",
+    question: "In concurrent training, the molecular 'interference' between strength and endurance adaptations is largely attributed to:",
+    options: [
+      "AMPK-mediated suppression of mTORC1 signaling after high-volume endurance work",
+      "Glycogen-independent insulin resistance only",
+      "Permanent inhibition of satellite cell activity",
+      "Increased androgen receptor density",
+    ],
+    correct_answer: "AMPK-mediated suppression of mTORC1 signaling after high-volume endurance work",
+    explanation: "Activation of AMPK by endurance work can blunt downstream mTORC1 signaling, although programming (mode, intensity, timing) modulates real-world interference.",
+    source_pmid: "24728927",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/24728927/",
+  },
+  {
+    id: "h12",
+    difficulty: "hardcore",
+    category: "Nutrition",
+    question: "Compared to whey, plant proteins (e.g., soy) typically show a:",
+    options: [
+      "Higher acute leucine-driven MPS response at matched doses",
+      "Lower acute MPS response, mitigated by higher doses or blends to match leucine content",
+      "Identical MPS response in all conditions",
+      "Anti-anabolic effect at any dose",
+    ],
+    correct_answer: "Lower acute MPS response, mitigated by higher doses or blends to match leucine content",
+    explanation: "Differences in leucine content and digestion kinetics make many plant proteins less anabolic per gram, but matching leucine via higher doses or blends can close the gap.",
+    source_pmid: "29722584",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/29722584/",
+  },
+  {
+    id: "h13",
+    difficulty: "hardcore",
+    category: "Hypertrophy",
+    question: "Within a sensible range, how does total weekly set volume relate to hypertrophy?",
+    options: [
+      "A flat, no-dose response",
+      "An approximate dose–response up to an individual ceiling, after which gains plateau or decline",
+      "Strictly linear with no upper limit",
+      "Inverse: less volume always produces more hypertrophy",
+    ],
+    correct_answer: "An approximate dose–response up to an individual ceiling, after which gains plateau or decline",
+    explanation: "Meta-regressions (Schoenfeld, Baz-Valle) describe a dose–response that flattens and can invert at very high weekly set counts, with substantial inter-individual variability.",
+    source_pmid: "27433992",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/27433992/",
+  },
+  {
+    id: "h14",
+    difficulty: "hardcore",
+    category: "Biomechanics",
+    question: "Force–velocity profiling in sprinting (Morin & Samozino) is primarily used to:",
+    options: [
+      "Predict VO2max from a single sprint",
+      "Identify whether an athlete is force- or velocity-deficient to guide individualized training",
+      "Replace strength testing entirely",
+      "Estimate body fat percentage",
+    ],
+    correct_answer: "Identify whether an athlete is force- or velocity-deficient to guide individualized training",
+    explanation: "The F–v profile derived from sprint mechanics flags force or velocity deficits, allowing training to target the limiting end of the profile.",
+    source_pmid: "26222600",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/26222600/",
+  },
+  {
+    id: "h15",
+    difficulty: "hardcore",
+    category: "Physiology",
+    question: "Resistance training is most consistently shown to increase which mitochondrial property in skeletal muscle?",
+    options: [
+      "A large increase in mitochondrial density comparable to endurance training",
+      "Modest improvements in mitochondrial respiration and quality without large density gains",
+      "Total ablation of mitochondria",
+      "Conversion of mitochondria to peroxisomes",
+    ],
+    correct_answer: "Modest improvements in mitochondrial respiration and quality without large density gains",
+    explanation: "Groennebaek & Vissing reviewed evidence that resistance training improves mitochondrial respiration and quality control with only modest changes in volume density.",
+    source_pmid: "28507483",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/28507483/",
+  },
 ];
 
 
@@ -842,7 +1293,34 @@ function Arena({
 }) {
   const questions = useMemo(() => {
     const pool = category === "All" ? QUESTIONS : QUESTIONS.filter((q) => q.category === category);
-    return pool.length > 0 ? pool : QUESTIONS;
+    const source = pool.length > 0 ? pool : QUESTIONS;
+
+    // Fisher–Yates shuffle
+    const shuffled = [...source];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    // Category interleave: avoid two consecutive questions from the same category when possible
+    const buckets = new Map<string, typeof shuffled>();
+    for (const q of shuffled) {
+      const k = q.category;
+      if (!buckets.has(k)) buckets.set(k, []);
+      buckets.get(k)!.push(q);
+    }
+    const ordered: typeof shuffled = [];
+    let lastCat = "";
+    while (ordered.length < shuffled.length) {
+      // pick the largest bucket whose category differs from lastCat
+      const candidates = [...buckets.entries()].filter(([c, arr]) => arr.length > 0 && c !== lastCat);
+      const pickFrom = candidates.length > 0 ? candidates : [...buckets.entries()].filter(([, arr]) => arr.length > 0);
+      pickFrom.sort((a, b) => b[1].length - a[1].length);
+      const [cat, arr] = pickFrom[0];
+      ordered.push(arr.shift()!);
+      lastCat = cat;
+    }
+    return ordered;
   }, [category]);
 
   const [idx, setIdx] = useState(0);
