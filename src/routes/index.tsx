@@ -1293,7 +1293,34 @@ function Arena({
 }) {
   const questions = useMemo(() => {
     const pool = category === "All" ? QUESTIONS : QUESTIONS.filter((q) => q.category === category);
-    return pool.length > 0 ? pool : QUESTIONS;
+    const source = pool.length > 0 ? pool : QUESTIONS;
+
+    // Fisher–Yates shuffle
+    const shuffled = [...source];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    // Category interleave: avoid two consecutive questions from the same category when possible
+    const buckets = new Map<string, typeof shuffled>();
+    for (const q of shuffled) {
+      const k = q.category;
+      if (!buckets.has(k)) buckets.set(k, []);
+      buckets.get(k)!.push(q);
+    }
+    const ordered: typeof shuffled = [];
+    let lastCat = "";
+    while (ordered.length < shuffled.length) {
+      // pick the largest bucket whose category differs from lastCat
+      const candidates = [...buckets.entries()].filter(([c, arr]) => arr.length > 0 && c !== lastCat);
+      const pickFrom = candidates.length > 0 ? candidates : [...buckets.entries()].filter(([, arr]) => arr.length > 0);
+      pickFrom.sort((a, b) => b[1].length - a[1].length);
+      const [cat, arr] = pickFrom[0];
+      ordered.push(arr.shift()!);
+      lastCat = cat;
+    }
+    return ordered;
   }, [category]);
 
   const [idx, setIdx] = useState(0);
