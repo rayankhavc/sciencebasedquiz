@@ -1326,12 +1326,14 @@ function Arena({
   mode,
   bot,
   category,
+  quizLength,
   onFinish,
   onQuit,
 }: {
   mode: Mode;
   bot: Bot;
   category: Category;
+  quizLength: number;
   onFinish: (r: RoundResult[]) => void;
   onQuit: () => void;
 }) {
@@ -1364,8 +1366,9 @@ function Arena({
       ordered.push(arr.shift()!);
       lastCat = cat;
     }
-    return ordered;
-  }, [category]);
+    return ordered.slice(0, Math.min(quizLength, ordered.length));
+  }, [category, quizLength]);
+
 
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
