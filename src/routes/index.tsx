@@ -863,6 +863,7 @@ function App() {
   const [username, setUsername] = useState("");
   const [bot, setBot] = useState<Bot>(BOTS[1]);
   const [category, setCategory] = useState<Category>("All");
+  const [quizLength, setQuizLength] = useState<number>(10);
   const [results, setResults] = useState<RoundResult[]>([]);
 
   const startSolo = () => {
