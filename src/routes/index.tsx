@@ -1228,6 +1228,8 @@ function CategorySelect({
   bot,
   category,
   setCategory,
+  quizLength,
+  setQuizLength,
   onBack,
   onStart,
 }: {
@@ -1235,10 +1237,18 @@ function CategorySelect({
   bot: Bot;
   category: Category;
   setCategory: (c: Category) => void;
+  quizLength: number;
+  setQuizLength: (n: number) => void;
   onBack: () => void;
   onStart: () => void;
 }) {
   const cats: Category[] = ["All", "Nutrition", "Biomechanics", "Hypertrophy", "Physiology"];
+  const lengths = [5, 10, 15, 20, 25, 30, 40, 50];
+  const available = useMemo(
+    () => (category === "All" ? QUESTIONS.length : QUESTIONS.filter((q) => q.category === category).length),
+    [category],
+  );
+  const effectiveLength = Math.min(quizLength, available);
   return (
     <div className="space-y-6 fade-in-up">
       <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">← Back</button>
@@ -1268,11 +1278,41 @@ function CategorySelect({
         </div>
       </section>
 
+      <section className="glass rounded-2xl p-5 space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground">Quiz length</h3>
+          <span className="text-[11px] text-muted-foreground">{available} available</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {lengths.map((n) => {
+            const disabled = n > available;
+            const active = quizLength === n;
+            return (
+              <button
+                key={n}
+                disabled={disabled}
+                onClick={() => setQuizLength(n)}
+                className={
+                  "rounded-full px-4 py-2 text-xs font-semibold transition-all " +
+                  (disabled
+                    ? "border border-border/40 bg-secondary/30 text-muted-foreground/40 cursor-not-allowed"
+                    : active
+                    ? "border border-accent bg-accent/15 text-cyan-glow"
+                    : "border border-border bg-secondary/60 text-muted-foreground hover:text-foreground")
+                }
+              >
+                {n}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       <button
         onClick={onStart}
         className="w-full rounded-2xl bg-primary px-6 py-5 font-display text-lg font-bold text-primary-foreground neon-glow transition-transform hover:scale-[1.02]"
       >
-        {mode === "bot" ? "Start the match" : "Start the quiz"}
+        {mode === "bot" ? `Start the match (${effectiveLength} Q)` : `Start the quiz (${effectiveLength} Q)`}
       </button>
     </div>
   );
