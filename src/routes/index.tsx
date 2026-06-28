@@ -1600,6 +1600,7 @@ function App() {
 
 function TopBar() {
   const [isDark, setIsDark] = useState(true);
+  const { lang, setLang, t } = useLang();
 
   useEffect(() => {
     const stored = typeof window !== "undefined" ? window.localStorage.getItem("hypersci-theme") : null;
@@ -1615,6 +1616,8 @@ function TopBar() {
     try { window.localStorage.setItem("hypersci-theme", next ? "dark" : "light"); } catch {}
   };
 
+  const toggleLang = () => setLang(lang === "en" ? "fr" : "en");
+
   return (
     <header className="mb-6 flex items-center justify-between gap-3">
       <div className="flex items-center gap-2.5">
@@ -1625,21 +1628,28 @@ function TopBar() {
           <div className="font-display text-sm font-bold tracking-tight">Science Based</div>
           <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">QUIZ</div>
         </div>
-
       </div>
       <div className="flex items-center gap-2">
         <Link
           to="/about"
           className="rounded-full border border-border bg-secondary/60 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-foreground transition-colors hover:border-primary/60 hover:text-neon"
         >
-          WHY THIS PLATFORM?
+          {t("why_platform")}
         </Link>
         <button
           onClick={toggleTheme}
-          aria-label="Toggle theme"
+          aria-label={t("toggle_theme")}
           className="grid h-8 w-8 place-items-center rounded-full border border-border bg-secondary/60 text-foreground transition-colors hover:border-primary/60 hover:text-neon"
         >
           {isDark ? <SunIcon /> : <MoonIcon />}
+        </button>
+        <button
+          onClick={toggleLang}
+          aria-label={t("toggle_lang")}
+          title={t("toggle_lang")}
+          className="grid h-8 min-w-[2.5rem] place-items-center rounded-full border border-border bg-secondary/60 px-2 font-display text-[11px] font-bold uppercase tracking-wider text-foreground transition-colors hover:border-primary/60 hover:text-neon"
+        >
+          {lang === "en" ? "FR" : "EN"}
         </button>
       </div>
     </header>
@@ -1651,16 +1661,18 @@ function TopBar() {
 // ──────────────────────────────────────────────────────────────────────────────
 
 function Footer() {
+  const { t } = useLang();
   return (
     <footer className="mt-10 border-t border-border pt-5 text-xs text-muted-foreground">
       <nav className="flex items-center justify-center gap-4">
-        <Link to="/legal" className="hover:text-foreground transition-colors">Legal Notice</Link>
-        <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+        <Link to="/legal" className="hover:text-foreground transition-colors">{t("legal")}</Link>
+        <Link to="/privacy" className="hover:text-foreground transition-colors">{t("privacy")}</Link>
       </nav>
       <div className="mt-6 text-center text-[10px] uppercase tracking-widest opacity-60">
-        © Science Based Quiz
+        {t("copyright")}
       </div>
     </footer>
+
 
   );
 }
