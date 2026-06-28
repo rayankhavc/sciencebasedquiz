@@ -2013,6 +2013,7 @@ function Arena({
   bot,
   category,
   quizLength,
+  questionDuration,
   onFinish,
   onQuit,
 }: {
@@ -2020,9 +2021,11 @@ function Arena({
   bot: Bot;
   category: Category;
   quizLength: number;
+  questionDuration: number;
   onFinish: (r: RoundResult[]) => void;
   onQuit: () => void;
 }) {
+
   const questions = useMemo(() => {
     const pool = category === "All" ? QUESTIONS : QUESTIONS.filter((q) => q.category === category);
     const source = pool.length > 0 ? pool : QUESTIONS;
