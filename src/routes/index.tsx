@@ -1682,6 +1682,7 @@ function Footer() {
 // ──────────────────────────────────────────────────────────────────────────────
 
 function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void }) {
+  const { t } = useLang();
   return (
     <div className="space-y-6 fade-in-up">
       <section>
@@ -1692,10 +1693,9 @@ function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void })
 
 
       <section className="glass rounded-2xl p-5 my-8">
-        <div className="text-[10px] uppercase tracking-widest text-cyan-glow font-bold">MISSION</div>
+        <div className="text-[10px] uppercase tracking-widest text-cyan-glow font-bold">{t("mission")}</div>
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          Test your knowledge of biomechanics, hypertrophy and sports nutrition with
-          questions sourced from peer-reviewed research. Every answer links to a PubMed citation.
+          {t("mission_body")}
         </p>
       </section>
 
@@ -1703,21 +1703,22 @@ function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void })
         <CTAButton
           variant="primary"
           onClick={onBot}
-          title="1v1 Bot Arena"
-          subtitle="Pick a bot and challenge it head-to-head"
+          title={t("bot_arena")}
+          subtitle={t("bot_arena_sub")}
           icon={<SwordsIcon />}
         />
         <CTAButton
           variant="ghost"
           onClick={onSolo}
-          title="Solo Mode"
-          subtitle="Train at your own pace, no opponent"
+          title={t("solo_mode")}
+          subtitle={t("solo_mode_sub")}
           icon={<UserIcon />}
         />
       </section>
     </div>
   );
 }
+
 
 function CTAButton({
   title,
