@@ -1499,6 +1499,7 @@ function App() {
   const [bot, setBot] = useState<Bot>(BOTS[1]);
   const [category, setCategory] = useState<Category>("All");
   const [quizLength, setQuizLength] = useState<number>(10);
+  const [questionDuration, setQuestionDuration] = useState<number>(DEFAULT_DURATION);
   const [results, setResults] = useState<RoundResult[]>([]);
 
   const startSolo = () => {
@@ -1517,75 +1518,81 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen text-foreground">
-      <div className="mx-auto max-w-2xl px-4 py-6 sm:py-10">
-        <TopBar />
+    <LangProvider>
+      <div className="min-h-screen text-foreground">
+        <div className="mx-auto max-w-2xl px-4 py-6 sm:py-10">
+          <TopBar />
 
-        {screen === "dashboard" && (
-          <Dashboard onSolo={startSolo} onBot={startBot} />
-        )}
+          {screen === "dashboard" && (
+            <Dashboard onSolo={startSolo} onBot={startBot} />
+          )}
 
-        {screen === "username" && (
-          <UsernameScreen
-            username={username}
-            setUsername={setUsername}
-            onBack={() => setScreen("dashboard")}
-            onContinue={() => setScreen("categorySelect")}
-          />
-        )}
+          {screen === "username" && (
+            <UsernameScreen
+              username={username}
+              setUsername={setUsername}
+              onBack={() => setScreen("dashboard")}
+              onContinue={() => setScreen("categorySelect")}
+            />
+          )}
 
-        {screen === "botSelect" && (
-          <BotSelect
-            selected={bot}
-            setBot={setBot}
-            onBack={() => setScreen("dashboard")}
-            onContinue={() => setScreen("categorySelect")}
-          />
-        )}
+          {screen === "botSelect" && (
+            <BotSelect
+              selected={bot}
+              setBot={setBot}
+              onBack={() => setScreen("dashboard")}
+              onContinue={() => setScreen("categorySelect")}
+            />
+          )}
 
-        {screen === "categorySelect" && (
-          <CategorySelect
-            mode={mode}
-            bot={bot}
-            category={category}
-            setCategory={setCategory}
-            quizLength={quizLength}
-            setQuizLength={setQuizLength}
-            onBack={() => setScreen(mode === "solo" ? "username" : "botSelect")}
-            onStart={() => {
-              setResults([]);
-              setScreen("arena");
-            }}
-          />
-        )}
+          {screen === "categorySelect" && (
+            <CategorySelect
+              mode={mode}
+              bot={bot}
+              category={category}
+              setCategory={setCategory}
+              quizLength={quizLength}
+              setQuizLength={setQuizLength}
+              questionDuration={questionDuration}
+              setQuestionDuration={setQuestionDuration}
+              onBack={() => setScreen(mode === "solo" ? "username" : "botSelect")}
+              onStart={() => {
+                setResults([]);
+                setScreen("arena");
+              }}
+            />
+          )}
 
-        {screen === "arena" && (
-          <Arena
-            mode={mode}
-            bot={bot}
-            category={category}
-            quizLength={quizLength}
-            onFinish={finishGame}
-            onQuit={() => setScreen("dashboard")}
-          />
-        )}
+          {screen === "arena" && (
+            <Arena
+              mode={mode}
+              bot={bot}
+              category={category}
+              quizLength={quizLength}
+              questionDuration={questionDuration}
+              onFinish={finishGame}
+              onQuit={() => setScreen("dashboard")}
+            />
+          )}
 
-        {screen === "results" && (
-          <Results
-            results={results}
-            mode={mode}
-            username={username || "You"}
-            bot={bot}
-            onHome={() => setScreen("dashboard")}
-            onAgain={() => setScreen("categorySelect")}
-          />
-        )}
+          {screen === "results" && (
+            <Results
+              results={results}
+              mode={mode}
+              username={username || "You"}
+              bot={bot}
+              onHome={() => setScreen("dashboard")}
+              onAgain={() => setScreen("categorySelect")}
+            />
+          )}
 
-        <Footer />
+          <Footer />
+        </div>
       </div>
-    </div>
+    </LangProvider>
   );
 }
+
 
 // ──────────────────────────────────────────────────────────────────────────────
 // TopBar
