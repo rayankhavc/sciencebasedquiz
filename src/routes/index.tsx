@@ -2080,7 +2080,7 @@ function Arena({
       handleAnswer(-1);
       return;
     }
-    const t = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
+    const t = setTimeout(() => setTimeLeft((s: number) => s - 1), 1000);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, selected]);
