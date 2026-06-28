@@ -834,7 +834,7 @@ type Bot = {
 const BOTS: Bot[] = [
   { id: "novice", name: "Novice Bot", tag: "Easy", accuracy: 0.5, minDelay: 5000, maxDelay: 8000, blurb: "Just discovered the gym. Slow and unsure." },
   { id: "researcher", name: "Researcher Bot", tag: "Medium", accuracy: 0.75, minDelay: 3000, maxDelay: 5000, blurb: "Reads abstracts on weekends. Solid opponent." },
-  { id: "hypertrophy", name: "Dr. Hypertrophy Bot", tag: "Hardcore", accuracy: 0.95, minDelay: 1000, maxDelay: 3000, blurb: "PhD in muscle science. Brutal accuracy." },
+  { id: "hypertrophy", name: "Dr. Hypertrophy", tag: "Hardcore", accuracy: 0.95, minDelay: 1000, maxDelay: 3000, blurb: "PhD in muscle science. Brutal accuracy." },
 ];
 
 // ──────────────────────────────────────────────────────────────────────────────
