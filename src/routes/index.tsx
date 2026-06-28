@@ -1771,24 +1771,23 @@ function UsernameScreen({
   onBack: () => void;
   onContinue: () => void;
 }) {
+  const { t } = useLang();
   const valid = username.trim().length >= 2;
   return (
     <div className="space-y-6 fade-in-up">
-      <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">← Back</button>
+      <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">{t("back")}</button>
       <div>
-        <div className="text-[11px] uppercase tracking-widest text-cyan-glow">Solo Mode</div>
-        <h2 className="mt-1 text-3xl font-bold tracking-tight">Enter your username</h2>
-        <p className="mt-2 text-sm text-muted-foreground">It will only appear on your results screen.</p>
+        <div className="text-[11px] uppercase tracking-widest text-cyan-glow">{t("solo_label")}</div>
+        <h2 className="mt-1 text-3xl font-bold tracking-tight">{t("enter_username")}</h2>
       </div>
 
       <div className="glass rounded-2xl p-5">
-        <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Username</label>
         <input
           autoFocus
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && valid) onContinue(); }}
-          placeholder="e.g. iron_lab"
+          placeholder={t("username_placeholder")}
           className="mt-2 w-full rounded-xl border border-border bg-secondary/60 px-4 py-3 text-base font-medium outline-none focus:border-primary"
           maxLength={24}
         />
@@ -1799,11 +1798,12 @@ function UsernameScreen({
         disabled={!valid}
         className="w-full rounded-2xl bg-primary px-6 py-5 font-display text-lg font-bold text-primary-foreground neon-glow transition-transform hover:scale-[1.02] disabled:opacity-40 disabled:hover:scale-100"
       >
-        Continue →
+        {t("continue")}
       </button>
     </div>
   );
 }
+
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Bot selection
