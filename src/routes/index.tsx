@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { LangProvider, useLang, localizeQuestion } from "@/lib/i18n";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
