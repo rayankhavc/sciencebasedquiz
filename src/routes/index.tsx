@@ -2152,14 +2152,15 @@ function Arena({
   return (
     <div className="space-y-5 no-select fade-in-up">
       <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <button onClick={onQuit} className="uppercase tracking-widest hover:text-foreground">← Quit</button>
+        <button onClick={onQuit} className="uppercase tracking-widest hover:text-foreground">{t("quit")}</button>
         <div className="uppercase tracking-widest">
-          Question <span className="text-foreground">{idx + 1}</span>/{total}
+          {t("question_n")} <span className="text-foreground">{idx + 1}</span>/{total}
         </div>
       </div>
 
       <section className="glass rounded-2xl p-4">
-        <ScoreBar label="You" score={myScore} pct={myPct} accent="primary" />
+        <ScoreBar label={t("you")} score={myScore} pct={myPct} accent="primary" />
+
         {mode === "bot" && (
           <div className="mt-3">
             <ScoreBar
