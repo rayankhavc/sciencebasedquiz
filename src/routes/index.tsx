@@ -2069,9 +2069,13 @@ function Arena({
   const [myScore, setMyScore] = useState(0);
   const [oppScore, setOppScore] = useState(0);
 
-  const q = questions[idx];
+  const { lang, t } = useLang();
+  const rawQ = questions[idx];
+  const loc = localizeQuestion(rawQ, lang);
+  const q = { ...rawQ, question: loc.question, options: loc.options, correct_answer: loc.correct_answer, explanation: loc.explanation };
   const correctIndex = q.options.indexOf(q.correct_answer);
   const opponentTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
 
   // Timer
   useEffect(() => {
