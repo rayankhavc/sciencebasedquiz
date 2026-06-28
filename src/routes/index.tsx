@@ -2063,7 +2063,7 @@ function Arena({
   const [selected, setSelected] = useState<number | null>(null);
   const [opponentAnswered, setOpponentAnswered] = useState(false);
   const [opponentCorrect, setOpponentCorrect] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(QUESTION_DURATION);
+  const [timeLeft, setTimeLeft] = useState(questionDuration);
   const [showSource, setShowSource] = useState(false);
   const [results, setResults] = useState<RoundResult[]>([]);
   const [myScore, setMyScore] = useState(0);
@@ -2136,7 +2136,7 @@ function Arena({
     setSelected(null);
     setOpponentAnswered(false);
     setOpponentCorrect(false);
-    setTimeLeft(QUESTION_DURATION);
+    setTimeLeft(questionDuration);
     setShowSource(false);
   };
 
@@ -2170,7 +2170,7 @@ function Arena({
       </section>
 
       <div className="flex justify-center">
-        <CountdownRing seconds={timeLeft} total={QUESTION_DURATION} critical={timerCritical} />
+        <CountdownRing seconds={timeLeft} total={questionDuration} critical={timerCritical} />
       </div>
 
       <section className="glass rounded-2xl p-5">
