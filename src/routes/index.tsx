@@ -33,7 +33,12 @@ type Question = {
   explanation: string;
   source_pmid: string;
   source_url: string;
+  // Optional French translations
+  question_fr?: string;
+  options_fr?: string[];
+  explanation_fr?: string;
 };
+
 
 const QUESTIONS: Question[] = [
   // ── EASY ──
