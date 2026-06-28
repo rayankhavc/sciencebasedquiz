@@ -1485,7 +1485,8 @@ type RoundResult = {
   opponentCorrect: boolean;
 };
 
-const QUESTION_DURATION = 15;
+const DURATION_OPTIONS = [10, 15, 20, 30, 45, 60] as const;
+const DEFAULT_DURATION = 15;
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Root
