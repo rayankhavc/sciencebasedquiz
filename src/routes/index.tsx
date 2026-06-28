@@ -1820,12 +1820,13 @@ function BotSelect({
   onBack: () => void;
   onContinue: () => void;
 }) {
+  const { t } = useLang();
   return (
     <div className="space-y-6 fade-in-up">
-      <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">← Back</button>
+      <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">{t("back")}</button>
       <div>
-        <div className="text-[11px] uppercase tracking-widest text-cyan-glow">1v1 Bot Arena</div>
-        <h2 className="mt-1 text-3xl font-bold tracking-tight">Pick your opponent</h2>
+        <div className="text-[11px] uppercase tracking-widest text-cyan-glow">{t("bot_arena")}</div>
+        <h2 className="mt-1 text-3xl font-bold tracking-tight">{t("choose_opponent")}</h2>
       </div>
 
       <div className="grid gap-3">
@@ -1868,7 +1869,7 @@ function BotSelect({
         onClick={onContinue}
         className="w-full rounded-2xl bg-primary px-6 py-5 font-display text-lg font-bold text-primary-foreground neon-glow transition-transform hover:scale-[1.02]"
       >
-        Continue →
+        {t("continue")}
       </button>
     </div>
   );
@@ -1885,6 +1886,8 @@ function CategorySelect({
   setCategory,
   quizLength,
   setQuizLength,
+  questionDuration,
+  setQuestionDuration,
   onBack,
   onStart,
 }: {
@@ -1894,9 +1897,12 @@ function CategorySelect({
   setCategory: (c: Category) => void;
   quizLength: number;
   setQuizLength: (n: number) => void;
+  questionDuration: number;
+  setQuestionDuration: (n: number) => void;
   onBack: () => void;
   onStart: () => void;
 }) {
+  const { t } = useLang();
   const cats: Category[] = ["All", "Nutrition", "Biomechanics", "Hypertrophy", "Physiology"];
   const lengths = [5, 10, 15, 20, 25, 30, 40, 50];
   const available = useMemo(
@@ -1906,12 +1912,12 @@ function CategorySelect({
   const effectiveLength = Math.min(quizLength, available);
   return (
     <div className="space-y-6 fade-in-up">
-      <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">← Back</button>
+      <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">{t("back")}</button>
       <div>
         <div className="text-[11px] uppercase tracking-widest text-cyan-glow">
-          {mode === "bot" ? `vs ${bot.name}` : "Solo Mode"}
+          {mode === "bot" ? `${t("vs_label")} ${bot.name}` : t("solo_label")}
         </div>
-        <h2 className="mt-1 text-3xl font-bold tracking-tight">Choose a category</h2>
+        <h2 className="mt-1 text-3xl font-bold tracking-tight">{t("choose_category")}</h2>
       </div>
 
       <section className="glass rounded-2xl p-5">
@@ -1935,8 +1941,8 @@ function CategorySelect({
 
       <section className="glass rounded-2xl p-5 space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs uppercase tracking-widest text-muted-foreground">Quiz length</h3>
-          <span className="text-[11px] text-muted-foreground">{available} available</span>
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground">{t("quiz_length")}</h3>
+          <span className="text-[11px] text-muted-foreground">{available} {t("available")}</span>
         </div>
         <div className="flex flex-wrap gap-2">
           {lengths.map((n) => {
@@ -1963,15 +1969,40 @@ function CategorySelect({
         </div>
       </section>
 
+      <section className="glass rounded-2xl p-5 space-y-3">
+        <h3 className="text-xs uppercase tracking-widest text-muted-foreground">{t("question_time")}</h3>
+        <div className="flex flex-wrap gap-2">
+          {DURATION_OPTIONS.map((n) => {
+            const active = questionDuration === n;
+            return (
+              <button
+                key={n}
+                onClick={() => setQuestionDuration(n)}
+                className={
+                  "rounded-full px-4 py-2 text-xs font-semibold transition-all " +
+                  (active
+                    ? "border border-accent bg-accent/15 text-cyan-glow"
+                    : "border border-border bg-secondary/60 text-muted-foreground hover:text-foreground")
+                }
+              >
+                {n}{t("seconds_short")}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       <button
         onClick={onStart}
         className="w-full rounded-2xl bg-primary px-6 py-5 font-display text-lg font-bold text-primary-foreground neon-glow transition-transform hover:scale-[1.02]"
       >
-        {mode === "bot" ? `Start the match (${effectiveLength} Q)` : `Start the quiz (${effectiveLength} Q)`}
+        {(mode === "bot" ? t("start_match") : t("start_quiz"))} ({effectiveLength} Q · {questionDuration}{t("seconds_short")})
       </button>
     </div>
   );
 }
+
+
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Arena
