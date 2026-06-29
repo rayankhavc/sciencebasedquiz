@@ -2220,7 +2220,20 @@ function Arena({
       ordered.push(arr.shift()!);
       lastCat = cat;
     }
-    return ordered.slice(0, Math.min(quizLength, ordered.length));
+
+    // Shuffle answer options per question (keep both languages aligned via shared index permutation)
+    const finalList = ordered.slice(0, Math.min(quizLength, ordered.length)).map((q) => {
+      const n = q.options.length;
+      const perm = Array.from({ length: n }, (_, i) => i);
+      for (let i = perm.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [perm[i], perm[j]] = [perm[j], perm[i]];
+      }
+      const newOptions = perm.map((i) => q.options[i]);
+      const newOptionsFr = q.options_fr ? perm.map((i) => q.options_fr![i]) : undefined;
+      return { ...q, options: newOptions, options_fr: newOptionsFr };
+    });
+    return finalList;
   }, [category, quizLength]);
 
 
