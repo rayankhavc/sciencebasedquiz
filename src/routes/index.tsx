@@ -52,6 +52,9 @@ const QUESTIONS: Question[] = [
     explanation: "Creatine monohydrate increases phosphocreatine stores, allowing rapid resynthesis of ATP during short bursts of heavy exercise.",
     source_pmid: "28615996",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/28615996/",
+    question_fr: "Quel supplément possède le plus haut niveau de preuves scientifiques pour augmenter la resynthèse d'ATP lors de contractions musculaires de haute intensité ?",
+    options_fr: ["Créatine Monohydrate", "BCAA", "Glutamine", "Bêta-Alanine"],
+    explanation_fr: "La créatine monohydrate augmente les stocks de phosphocréatine, permettant une resynthèse rapide de l'ATP lors d'efforts intenses et brefs.",
   },
   {
     id: "e2",
@@ -63,6 +66,9 @@ const QUESTIONS: Question[] = [
     explanation: "Meta-analyses converge on roughly 1.6–2.2 g/kg/day as the range that maximizes resistance-training adaptations; intake above this offers diminishing returns.",
     source_pmid: "28698222",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/28698222/",
+    question_fr: "Quelle est la fourchette d'apport quotidien en protéines généralement recommandée pour maximiser la synthèse protéique musculaire chez les pratiquants de musculation ?",
+    options_fr: ["0,8 g/kg/jour", "1,6–2,2 g/kg/jour", "3,5–4,0 g/kg/jour", "0,4 g/kg/jour"],
+    explanation_fr: "Les méta-analyses convergent autour de 1,6–2,2 g/kg/jour pour maximiser les adaptations à la musculation ; au-delà, les bénéfices diminuent.",
   },
   {
     id: "e3",
@@ -74,6 +80,9 @@ const QUESTIONS: Question[] = [
     explanation: "The ATP-phosphocreatine system supplies the vast majority of energy during all-out efforts under ~10 seconds before glycolysis takes over.",
     source_pmid: "11252467",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/11252467/",
+    question_fr: "Quel système énergétique domine lors d'un effort maximal d'environ 10 secondes ?",
+    options_fr: ["Oxydatif (aérobie)", "Glycolytique", "Phosphagène (ATP-PCr)", "Lipolytique"],
+    explanation_fr: "Le système ATP-phosphocréatine fournit l'essentiel de l'énergie lors des efforts maximaux de moins de ~10 s, avant le relais de la glycolyse.",
   },
   {
     id: "e4",
@@ -85,6 +94,9 @@ const QUESTIONS: Question[] = [
     explanation: "Schoenfeld et al. show a dose-response where ~10+ hard sets per muscle per week clearly outperforms low-volume work for hypertrophy.",
     source_pmid: "27433992",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/27433992/",
+    question_fr: "Quel volume hebdomadaire minimal de séries par groupe musculaire est généralement associé à des gains hypertrophiques significatifs chez les pratiquants entraînés ?",
+    options_fr: ["2 séries", "10 séries", "30 séries", "50 séries"],
+    explanation_fr: "Les travaux de Schoenfeld montrent une relation dose-réponse où ~10 séries dures par muscle/semaine surpassent nettement un faible volume pour l'hypertrophie.",
   },
 
   // ── MEDIUM ──
@@ -103,6 +115,9 @@ const QUESTIONS: Question[] = [
     explanation: "Standard cam-based leg extensions maximize the moment arm when the shin is parallel to the floor, creating peak torque in full knee extension.",
     source_pmid: "35041043",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/35041043/",
+    question_fr: "Lors d'un leg extension classique, à quelle position le couple mécanique (profil de résistance) est-il maximal sur le rectus femoris ?",
+    options_fr: ["Extension complète (position raccourcie)", "90 degrés de flexion (position étirée)", "Mi-amplitude (45 degrés)", "Le profil est parfaitement linéaire"],
+    explanation_fr: "Les leg extensions à came maximisent le bras de levier lorsque le tibia est parallèle au sol, créant un couple maximal en extension complète du genou.",
   },
   {
     id: "m2",
@@ -114,6 +129,9 @@ const QUESTIONS: Question[] = [
     explanation: "Evidence indicates sets taken within roughly 0–5 reps of momentary muscular failure are needed to maximize stimulus per set in trained lifters.",
     source_pmid: "34822137",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/34822137/",
+    question_fr: "À combien de répétitions de l'échec faut-il généralement aller pour maximiser l'hypertrophie chez les pratiquants entraînés ?",
+    options_fr: ["0–5 reps de l'échec", "8–10 reps de l'échec", "12–15 reps de l'échec", "L'échec est sans importance"],
+    explanation_fr: "Les données indiquent qu'il faut aller à environ 0–5 reps de l'échec musculaire momentané pour maximiser le stimulus par série chez les sujets entraînés.",
   },
   {
     id: "m3",
@@ -125,6 +143,9 @@ const QUESTIONS: Question[] = [
     explanation: "Roughly 2.5–3 g of leucine per feeding is needed to robustly trigger mTORC1 signaling and maximize MPS in young adults.",
     source_pmid: "22451437",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/22451437/",
+    question_fr: "Quel est le seuil approximatif de leucine par repas censé déclencher de manière maximale la synthèse protéique musculaire chez le jeune adulte ?",
+    options_fr: ["~0,5 g", "~1,0 g", "~2,5–3 g", "~6 g"],
+    explanation_fr: "Environ 2,5–3 g de leucine par prise sont nécessaires pour déclencher fortement la voie mTORC1 et maximiser la SPM chez le jeune adulte.",
   },
   {
     id: "m4",
@@ -136,6 +157,9 @@ const QUESTIONS: Question[] = [
     explanation: "DOMS is driven by ultrastructural muscle damage and inflammation following unaccustomed eccentric loading, not by lactate.",
     source_pmid: "12617692",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/12617692/",
+    question_fr: "Les courbatures (DOMS) sont principalement attribuées à :",
+    options_fr: ["L'accumulation d'acide lactique", "Des micro-lésions liées aux contractions excentriques", "La déshydratation", "L'épuisement du glycogène"],
+    explanation_fr: "Les DOMS résultent de lésions ultrastructurales et d'inflammation suite à un travail excentrique inhabituel, et non du lactate.",
   },
 
   // ── HARDCORE ──
@@ -149,6 +173,9 @@ const QUESTIONS: Question[] = [
     explanation: "Titin develops passive tension when muscle fibers are elongated, triggering intracellular signaling pathways (like titin kinase) required for stretch-mediated hypertrophy.",
     source_pmid: "31618140",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/31618140/",
+    question_fr: "Quelle protéine structurale géante agit comme mécanorécepteur et est principalement responsable de la tension passive lors de l'hypertrophie médiée par l'étirement ?",
+    options_fr: ["Titine", "Actine", "Myosine", "Desmine"],
+    explanation_fr: "La titine développe une tension passive lors de l'allongement des fibres et déclenche des voies (titin kinase) nécessaires à l'hypertrophie par étirement.",
   },
   {
     id: "h2",
@@ -160,6 +187,9 @@ const QUESTIONS: Question[] = [
     explanation: "Sarcoplasmic hypertrophy involves the expansion of the non-contractile fluid and energy stores within the muscle sarcoplasm, independent of myofibrillar protein accretion.",
     source_pmid: "32174353",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/32174353/",
+    question_fr: "Quel type d'adaptation cellulaire se caractérise par une augmentation du volume sarcoplasmique (glycogène, eau) sans hausse concomitante de la synthèse des protéines myofibrillaires ?",
+    options_fr: ["Hypertrophie sarcoplasmique", "Hypertrophie myofibrillaire", "Hyperplasie", "Remodelage excentrique"],
+    explanation_fr: "L'hypertrophie sarcoplasmique correspond à l'expansion des fluides et stocks énergétiques non contractiles du sarcoplasme, indépendamment de l'accrétion myofibrillaire.",
   },
   {
     id: "h3",
@@ -171,6 +201,9 @@ const QUESTIONS: Question[] = [
     explanation: "mTORC1 integrates mechanical and nutrient signals (leucine, IGF-1, mechanotransduction) to upregulate translation initiation and drive hypertrophy.",
     source_pmid: "21157483",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/21157483/",
+    question_fr: "Quelle voie de signalisation est le régulateur anabolique central activé par la tension mécanique et les acides aminés pour déclencher la synthèse protéique musculaire ?",
+    options_fr: ["AMPK", "mTORC1", "FOXO3", "Myostatine/SMAD"],
+    explanation_fr: "mTORC1 intègre les signaux mécaniques et nutritionnels (leucine, IGF-1, mécanotransduction) pour augmenter l'initiation de la traduction et l'hypertrophie.",
   },
   {
     id: "h4",
@@ -187,6 +220,9 @@ const QUESTIONS: Question[] = [
     explanation: "Gordon, Huxley & Julian's classic work shows peak active tension on the descending plateau where cross-bridge overlap between actin and myosin is optimal.",
     source_pmid: "5969491",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/5969491/",
+    question_fr: "Selon la relation force–longueur, où la production de force isométrique active d'un sarcomère est-elle maximale ?",
+    options_fr: ["À très courte longueur sarcomérique (~1,6 µm)", "Sur le plateau de chevauchement optimal des myofilaments (~2,0–2,25 µm)", "À pleine extension (~3,6 µm)", "La force est constante quelle que soit la longueur"],
+    explanation_fr: "Les travaux classiques de Gordon, Huxley & Julian montrent une tension active maximale sur le plateau où le chevauchement actine–myosine est optimal.",
   },
   // ===== Additional EASY =====
   {
@@ -199,6 +235,9 @@ const QUESTIONS: Question[] = [
     explanation: "Meta-analyses (Schoenfeld et al.) show a dose–response up to roughly 10–20 hard sets per muscle per week before returns diminish.",
     source_pmid: "27433992",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/27433992/",
+    question_fr: "Quelle fourchette de volume hebdomadaire par muscle est la plus communément associée à la maximisation de l'hypertrophie chez les pratiquants entraînés ?",
+    options_fr: ["1–3 séries", "4–6 séries", "10–20 séries", "30–40 séries"],
+    explanation_fr: "Les méta-analyses (Schoenfeld et al.) montrent une dose-réponse jusqu'à environ 10–20 séries dures par muscle/semaine avant rendements décroissants.",
   },
   {
     id: "e6",
@@ -210,6 +249,9 @@ const QUESTIONS: Question[] = [
     explanation: "Maximal efforts under ~10 seconds rely almost entirely on stored ATP and phosphocreatine (the alactic anaerobic system).",
     source_pmid: "11583104",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/11583104/",
+    question_fr: "Quel est le carburant principal de la contraction musculaire lors d'un effort à 1RM ?",
+    options_fr: ["Acides gras libres", "Système ATP–phosphocréatine", "Glycolyse aérobie", "Corps cétoniques"],
+    explanation_fr: "Les efforts maximaux de moins de ~10 s reposent presque entièrement sur l'ATP stocké et la phosphocréatine (système anaérobie alactique).",
   },
   {
     id: "e7",
@@ -221,6 +263,9 @@ const QUESTIONS: Question[] = [
     explanation: "Morton et al.'s 2018 meta-analysis identified ~1.6 g/kg/day as the plateau, with little added benefit beyond ~2.2 g/kg.",
     source_pmid: "28698222",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/28698222/",
+    question_fr: "Quelle fourchette d'apport protéique (g/kg/jour) est recommandée pour maximiser la synthèse protéique musculaire chez les pratiquants entraînés ?",
+    options_fr: ["0,4–0,8", "1,6–2,2", "3,0–4,0", "5,0+"],
+    explanation_fr: "La méta-analyse de Morton et al. (2018) identifie ~1,6 g/kg/jour comme plateau, avec peu de bénéfices au-delà de ~2,2 g/kg.",
   },
   {
     id: "e8",
@@ -232,6 +277,9 @@ const QUESTIONS: Question[] = [
     explanation: "The biceps brachii produces elbow flexion (and forearm supination); concentric = muscle shortens while producing force.",
     source_pmid: "26849784",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/26849784/",
+    question_fr: "Quelle action articulaire décrit le mieux la phase concentrique d'un curl biceps à la barre ?",
+    options_fr: ["Extension du coude", "Flexion du coude", "Abduction de l'épaule", "Pronation du poignet"],
+    explanation_fr: "Le biceps brachial produit la flexion du coude (et la supination de l'avant-bras) ; concentrique = le muscle se raccourcit en produisant de la force.",
   },
   // ===== Additional MEDIUM =====
   {
@@ -249,6 +297,9 @@ const QUESTIONS: Question[] = [
     explanation: "Grgic et al. found comparable hypertrophy between failure and non-failure protocols when volume is matched, but failure increases fatigue and recovery cost.",
     source_pmid: "34822137",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/34822137/",
+    question_fr: "Comparé au fait de s'arrêter à 1–3 répétitions de la marge (RIR), aller jusqu'à l'échec produit quel effet sur l'hypertrophie à long terme chez les sujets entraînés ?",
+    options_fr: ["L'échec est dramatiquement supérieur", "Hypertrophie similaire avec plus de fatigue lors de l'échec", "Le RIR provoque une perte musculaire", "Seul l'échec recrute les unités motrices à haut seuil"],
+    explanation_fr: "Grgic et al. ont trouvé une hypertrophie comparable entre l'échec et le non-échec à volume égal, mais l'échec augmente la fatigue et le coût de récupération.",
   },
   {
     id: "m6",
@@ -260,6 +311,9 @@ const QUESTIONS: Question[] = [
     explanation: "The 'leucine trigger' hypothesis (Phillips, Witard et al.) — ~2–3 g leucine, ≈20–40 g protein per meal saturates MPS in most young adults.",
     source_pmid: "24257722",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/24257722/",
+    question_fr: "Quel seuil de leucine par repas est généralement cité pour stimuler de manière maximale la synthèse protéique chez le jeune adulte ?",
+    options_fr: ["~0,7–3 g de leucine (≈20–40 g de protéines de qualité)", "0,1 g de leucine", "10 g de leucine", "La leucine n'a aucun rôle"],
+    explanation_fr: "L'hypothèse du « déclencheur leucine » (Phillips, Witard et al.) — ~2–3 g de leucine, ≈20–40 g de protéines par repas saturent la SPM chez la plupart des jeunes adultes.",
   },
   {
     id: "m7",
@@ -276,6 +330,9 @@ const QUESTIONS: Question[] = [
     explanation: "Henneman (1965) — smaller, lower-threshold motor units are recruited first; high-threshold units join as force/fatigue increases.",
     source_pmid: "14328454",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/14328454/",
+    question_fr: "Quelle proposition décrit le mieux le principe de taille de Henneman concernant le recrutement des unités motrices ?",
+    options_fr: ["Les unités motrices sont recrutées aléatoirement", "Les grandes unités motrices sont recrutées en premier", "Le recrutement va des plus petites aux plus grandes selon la demande de force", "Seules les fibres de type II sont recrutées sous charge"],
+    explanation_fr: "Henneman (1965) — les unités motrices à bas seuil sont recrutées en premier ; les unités à haut seuil entrent en jeu quand la force/fatigue augmente.",
   },
   {
     id: "m8",
@@ -292,6 +349,9 @@ const QUESTIONS: Question[] = [
     explanation: "Van den Tillaar & Ettema describe the sticking region just above the chest where shoulder/elbow moment arms create the lowest mechanical advantage.",
     source_pmid: "20093961",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/20093961/",
+    question_fr: "Comment se manifeste généralement le point critique (sticking point) au développé couché ?",
+    options_fr: ["Au verrouillage, par faiblesse des triceps", "Juste au-dessus du torse, à cause de grands bras de levier et d'un faible avantage mécanique", "Le sticking point n'existe pas au développé couché", "À mi-course, par inhibition musculaire"],
+    explanation_fr: "Van den Tillaar & Ettema décrivent la zone de sticking juste au-dessus de la poitrine, où les bras de levier épaule/coude créent le plus faible avantage mécanique.",
   },
   // ===== Additional HARDCORE =====
   {
@@ -309,6 +369,9 @@ const QUESTIONS: Question[] = [
     explanation: "Maeo, Pedrosa, Wolf et al. show long-length partials can match or exceed full ROM for hypertrophy, especially in distal regions of biarticular muscles.",
     source_pmid: "36029271",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/36029271/",
+    question_fr: "Travail partiel à grande longueur (position étirée) vs amplitude complète : que suggèrent les données récentes ?",
+    options_fr: ["L'amplitude complète est toujours supérieure", "L'entraînement à grande longueur musculaire peut produire une hypertrophie régionale égale ou supérieure", "Les partiels causent une perte de sarcomères", "L'amplitude n'a aucun effet sur l'hypertrophie"],
+    explanation_fr: "Maeo, Pedrosa, Wolf et al. montrent que les partiels en position étirée peuvent égaler ou dépasser l'amplitude complète, surtout dans les régions distales des muscles biarticulaires.",
   },
   {
     id: "h6",
@@ -320,6 +383,9 @@ const QUESTIONS: Question[] = [
     explanation: "Mechanical tension and leucine activate mTORC1 → phosphorylation of p70S6K1 and 4E-BP1 → increased translation initiation and MPS.",
     source_pmid: "21795434",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/21795434/",
+    question_fr: "Quelle voie moléculaire est le régulateur central de la synthèse protéique musculaire en réponse à la charge mécanique et aux acides aminés ?",
+    options_fr: ["AMPK/PGC-1α", "mTORC1 (via p70S6K et 4E-BP1)", "Voie inflammatoire NF-κB", "Myostatine/SMAD3"],
+    explanation_fr: "La tension mécanique et la leucine activent mTORC1 → phosphorylation de p70S6K1 et 4E-BP1 → augmentation de l'initiation de traduction et de la SPM.",
   },
   {
     id: "h7",
@@ -336,6 +402,9 @@ const QUESTIONS: Question[] = [
     explanation: "A.V. Hill's classic model: concentric force falls as velocity rises (fewer attached cross-bridges per unit time); eccentric force exceeds isometric.",
     source_pmid: "0",
     source_url: "https://royalsocietypublishing.org/doi/10.1098/rspb.1938.0050",
+    question_fr: "Sur la courbe force–vitesse du muscle squelettique, qu'arrive-t-il à la force active quand la vitesse de raccourcissement concentrique augmente ?",
+    options_fr: ["La force augmente linéairement avec la vitesse", "La force diminue de manière hyperbolique (équation de Hill)", "La force est indépendante de la vitesse", "La force monte puis plafonne"],
+    explanation_fr: "Le modèle classique d'A.V. Hill : la force concentrique chute quand la vitesse augmente (moins de ponts d'union par unité de temps) ; la force excentrique dépasse l'isométrique.",
   },
   {
     id: "h8",
@@ -352,6 +421,9 @@ const QUESTIONS: Question[] = [
     explanation: "Hultman et al. (1996) showed 20 g/day × 6 d and 3 g/day × 28 d reach equivalent muscle creatine saturation.",
     source_pmid: "8828669",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/8828669/",
+    question_fr: "Que disent les données actuelles sur la charge en créatine monohydrate vs un protocole d'entretien seul (3–5 g/jour) ?",
+    options_fr: ["La charge est obligatoire pour obtenir un bénéfice", "Les deux saturent la créatine musculaire ; la charge y parvient juste plus vite (~7 j vs ~28 j)", "L'entretien seul n'augmente pas la créatine musculaire", "La charge élève les stocks de créatine de façon permanente"],
+    explanation_fr: "Hultman et al. (1996) ont montré que 20 g/j × 6 j et 3 g/j × 28 j atteignent la même saturation musculaire en créatine.",
   },
   {
     id: "h9",
@@ -368,11 +440,14 @@ const QUESTIONS: Question[] = [
     explanation: "More recent reviews (Schoenfeld, Wackerhage) argue mechanical tension via mechanotransduction is the primary driver; damage and acute hormones contribute little independently.",
     source_pmid: "30580468",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/30580468/",
+    question_fr: "Tension mécanique, stress métabolique et dommage musculaire ont été proposés comme moteurs de l'hypertrophie (Schoenfeld 2010). Le consensus actuel met l'accent sur lequel ?",
+    options_fr: ["Le dommage musculaire comme moteur principal", "Le stress métabolique seul", "La tension mécanique comme stimulus dominant, voire le seul nécessaire", "Les pics hormonaux (testostérone/GH) post-séance"],
+    explanation_fr: "Les revues récentes (Schoenfeld, Wackerhage) soutiennent que la tension mécanique via la mécanotransduction est le moteur principal ; le dommage et les pics hormonaux contribuent peu.",
   },
 
   // ─── Easy (additional) ──────────────────────────────────────────────
   {
-    id: "e5",
+    id: "e5_2",
     difficulty: "easy",
     category: "Nutrition",
     question: "According to the ISSN position stand, what is a reasonable daily protein intake range to maximize resistance-training adaptations in healthy trained adults?",
@@ -381,9 +456,12 @@ const QUESTIONS: Question[] = [
     explanation: "The ISSN concludes that 1.4–2.0 g/kg/day is safe and sufficient for most training individuals, with higher intakes useful during energy deficit or aggressive recomposition.",
     source_pmid: "28642676",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/28642676/",
+    question_fr: "Selon la position de l'ISSN, quel apport quotidien en protéines est raisonnable pour maximiser les adaptations à la musculation chez l'adulte entraîné en bonne santé ?",
+    options_fr: ["0,8 g/kg/jour", "1,4–2,0 g/kg/jour", "3,5–4,0 g/kg/jour", "< 1,0 g/kg/jour"],
+    explanation_fr: "L'ISSN conclut que 1,4–2,0 g/kg/jour est sûr et suffisant pour la plupart des pratiquants, avec des apports plus élevés utiles en déficit énergétique ou recomposition.",
   },
   {
-    id: "e6",
+    id: "e6_2",
     difficulty: "easy",
     category: "Physiology",
     question: "Which energy system is the primary contributor to a maximal effort lasting roughly 5–10 seconds?",
@@ -392,9 +470,12 @@ const QUESTIONS: Question[] = [
     explanation: "Phosphocreatine breakdown provides the fastest ATP resynthesis pathway and dominates very short, maximal efforts before glycolysis takes over.",
     source_pmid: "24791915",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/24791915/",
+    question_fr: "Quel système énergétique contribue principalement à un effort maximal d'environ 5–10 secondes ?",
+    options_fr: ["Phosphorylation oxydative", "Système phosphagène (ATP–PCr)", "Glycolyse anaérobie (lactate)", "Bêta-oxydation"],
+    explanation_fr: "La dégradation de la phosphocréatine fournit la voie la plus rapide de resynthèse d'ATP et domine les efforts maximaux très courts.",
   },
   {
-    id: "e7",
+    id: "e7_2",
     difficulty: "easy",
     category: "Biomechanics",
     question: "What is the stretch-shortening cycle (SSC)?",
@@ -408,9 +489,12 @@ const QUESTIONS: Question[] = [
     explanation: "The SSC stores elastic energy and uses reflex potentiation during a fast eccentric to enhance the immediately following concentric action.",
     source_pmid: "10778660",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/10778660/",
+    question_fr: "Qu'est-ce que le cycle étirement–raccourcissement (SSC) ?",
+    options_fr: ["Une routine d'étirements passifs avant l'entraînement", "Un couplage rapide excentrique–concentrique qui augmente la sortie concentrique", "La phase de repos entre deux séries", "Un tempo excentrique lent utilisé pour l'hypertrophie"],
+    explanation_fr: "Le SSC stocke de l'énergie élastique et utilise la potentiation réflexe lors d'un excentrique rapide pour améliorer le concentrique qui suit immédiatement.",
   },
   {
-    id: "e8",
+    id: "e8_2",
     difficulty: "easy",
     category: "Nutrition",
     question: "Per the ISSN, an ergogenic caffeine dose for endurance and strength performance is roughly:",
@@ -419,6 +503,9 @@ const QUESTIONS: Question[] = [
     explanation: "Doses of about 3–6 mg/kg taken ~60 min pre-exercise reliably improve endurance and have modest benefits on strength and power.",
     source_pmid: "33388079",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/33388079/",
+    question_fr: "Selon l'ISSN, la dose ergogénique de caféine pour la performance d'endurance et de force est environ :",
+    options_fr: ["0,1–0,5 mg/kg", "3–6 mg/kg", "15–20 mg/kg", "> 25 mg/kg"],
+    explanation_fr: "Des doses d'environ 3–6 mg/kg prises ~60 min avant l'effort améliorent fiablement l'endurance et apportent des bénéfices modestes en force et puissance.",
   },
   {
     id: "e9",
@@ -435,6 +522,9 @@ const QUESTIONS: Question[] = [
     explanation: "Type II fibers are typically larger than type I and show greater absolute hypertrophy with resistance training.",
     source_pmid: "17313189",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/17313189/",
+    question_fr: "En moyenne, les fibres de type II (rapides) comparées aux fibres de type I tendent à avoir :",
+    options_fr: ["Une plus petite section transversale", "Une plus grande section transversale et un plus grand potentiel hypertrophique", "Une section identique chez les entraînés", "Une plus grande densité mitochondriale"],
+    explanation_fr: "Les fibres de type II sont typiquement plus grosses que les fibres de type I et présentent une plus grande hypertrophie absolue à la musculation.",
   },
   {
     id: "e10",
@@ -451,6 +541,9 @@ const QUESTIONS: Question[] = [
     explanation: "Meta-analytic data favor full ROM (especially training at long muscle lengths) over short partials for whole-muscle hypertrophy.",
     source_pmid: "32058014",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/32058014/",
+    question_fr: "Comparant amplitude complète vs partielle, que suggèrent généralement les preuves pour l'hypertrophie ?",
+    options_fr: ["L'amplitude partielle est universellement supérieure", "L'amplitude complète tend à produire une hypertrophie égale ou supérieure dans la plupart des cas", "L'amplitude est sans importance à charge égale", "Seuls les isométriques maximisent l'hypertrophie"],
+    explanation_fr: "Les données méta-analytiques favorisent l'amplitude complète (surtout l'entraînement à grande longueur musculaire) pour l'hypertrophie globale.",
   },
   {
     id: "e11",
@@ -462,6 +555,9 @@ const QUESTIONS: Question[] = [
     explanation: "ACSM and subsequent reviews note that fluid losses of ≥ ~2% body mass impair aerobic performance and thermoregulation.",
     source_pmid: "17277604",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/17277604/",
+    question_fr: "Une déshydratation d'environ quel ordre commence à dégrader mesurablement la performance d'endurance ?",
+    options_fr: ["0,1% de la masse corporelle", "≥ 2% de la masse corporelle", "10% de la masse corporelle", "L'hydratation n'a aucun effet"],
+    explanation_fr: "L'ACSM note que des pertes hydriques ≥ ~2% de la masse corporelle dégradent la performance aérobie et la thermorégulation.",
   },
   {
     id: "e12",
@@ -478,6 +574,9 @@ const QUESTIONS: Question[] = [
     explanation: "Deficiency is associated with type II fiber atrophy and proximal weakness; repletion improves strength in deficient individuals.",
     source_pmid: "24587329",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/24587329/",
+    question_fr: "Quel est l'effet le plus constamment rapporté d'une carence en vitamine D sur le muscle squelettique ?",
+    options_fr: ["Amélioration de la fonction des fibres de type II", "Faiblesse proximale et altération de la fonction contractile", "Hypertrophie accélérée", "Aucun effet musculaire mesurable"],
+    explanation_fr: "La carence est associée à une atrophie des fibres de type II et à une faiblesse proximale ; la supplémentation améliore la force chez les déficients.",
   },
   {
     id: "e13",
@@ -494,6 +593,9 @@ const QUESTIONS: Question[] = [
     explanation: "Vigotsky et al. caution that EMG amplitude is a noisy proxy for neural drive and should not be used to infer hypertrophic stimulus.",
     source_pmid: "28486337",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/28486337/",
+    question_fr: "L'amplitude EMG de surface pendant un exercice s'interprète au mieux comme :",
+    options_fr: ["Une mesure directe de l'hypertrophie à long terme", "Un proxy de l'activation musculaire qui ne prédit pas les résultats hypertrophiques", "Un comptage exact des unités motrices activées", "Une mesure de la tension mécanique sur la fibre"],
+    explanation_fr: "Vigotsky et al. soulignent que l'amplitude EMG est un proxy bruité du drive neural et ne devrait pas servir à déduire le stimulus hypertrophique.",
   },
   {
     id: "e14",
@@ -505,11 +607,14 @@ const QUESTIONS: Question[] = [
     explanation: "Dose–response meta-analyses by Schoenfeld and colleagues place most trained individuals in a productive band of about 10–20 hard sets per muscle per week.",
     source_pmid: "27433992",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/27433992/",
+    question_fr: "Dans la littérature, quelle est une fourchette sensée de séries dures hebdomadaires par muscle pour stimuler l'hypertrophie chez les entraînés ?",
+    options_fr: ["1–2 séries", "Environ 10–20 séries", "50+ séries", "Le volume est sans importance"],
+    explanation_fr: "Les méta-analyses dose-réponse de Schoenfeld et collègues situent la majorité des entraînés dans une bande productive d'environ 10–20 séries dures par muscle/semaine.",
   },
 
   // ─── Medium (additional) ────────────────────────────────────────────
   {
-    id: "m5",
+    id: "m5_2",
     difficulty: "medium",
     category: "Hypertrophy",
     question: "When total weekly volume is equated, what does the evidence say about training a muscle 2× vs. 1× per week?",
@@ -523,9 +628,12 @@ const QUESTIONS: Question[] = [
     explanation: "Schoenfeld et al.'s meta-analysis shows that, with equated volume, splitting sets across ≥ 2 sessions/week tends to yield slightly greater hypertrophy than 1×.",
     source_pmid: "27102172",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/27102172/",
+    question_fr: "À volume hebdomadaire total égal, que disent les preuves sur entraîner un muscle 2× vs 1× par semaine ?",
+    options_fr: ["1× est clairement supérieur", "2× est au moins aussi efficace et souvent légèrement meilleur", "La fréquence n'a aucun effet", "≥ 4× par semaine est requis pour toute hypertrophie"],
+    explanation_fr: "La méta-analyse de Schoenfeld et al. montre qu'à volume égal, répartir sur ≥ 2 séances/semaine donne tendance à un peu plus d'hypertrophie.",
   },
   {
-    id: "m6",
+    id: "m6_2",
     difficulty: "medium",
     category: "Hypertrophy",
     question: "For maximizing strength and hypertrophy on compound lifts, what rest interval is best supported?",
@@ -539,9 +647,12 @@ const QUESTIONS: Question[] = [
     explanation: "Longer rest (≥ 2 min) preserves per-set performance and produced greater hypertrophy and strength than 1-min rest in trained men.",
     source_pmid: "26605807",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/26605807/",
+    question_fr: "Pour maximiser la force et l'hypertrophie sur les exercices polyarticulaires, quel intervalle de repos est le mieux soutenu ?",
+    options_fr: ["≤ 30 secondes", "Environ 2–3 minutes ou plus", "Exactement 60 secondes", "La durée du repos n'a pas d'importance"],
+    explanation_fr: "Des repos plus longs (≥ 2 min) préservent la performance par série et ont produit plus d'hypertrophie et de force que 1 min de repos chez les hommes entraînés.",
   },
   {
-    id: "m7",
+    id: "m7_2",
     difficulty: "medium",
     category: "Nutrition",
     question: "What is the approximate per-meal leucine threshold thought to maximally trigger muscle protein synthesis in young adults?",
@@ -550,9 +661,12 @@ const QUESTIONS: Question[] = [
     explanation: "Roughly 2.5–3 g of leucine per meal (≈ 0.3 g/kg of high-quality protein) appears to robustly stimulate MPS in young adults.",
     source_pmid: "22150425",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/22150425/",
+    question_fr: "Quel est le seuil approximatif de leucine par repas censé déclencher de manière maximale la synthèse protéique musculaire chez le jeune adulte ?",
+    options_fr: ["~0,3 g", "~3 g", "~10 g", "~30 g"],
+    explanation_fr: "Environ 2,5–3 g de leucine par repas (≈ 0,3 g/kg de protéines de qualité) stimulent robustement la SPM chez le jeune adulte.",
   },
   {
-    id: "m8",
+    id: "m8_2",
     difficulty: "medium",
     category: "Hypertrophy",
     question: "Pareja-Blanco et al. showed that high intra-set velocity loss (e.g., 40%) compared to low velocity loss (e.g., 10–20%):",
@@ -566,6 +680,9 @@ const QUESTIONS: Question[] = [
     explanation: "Low velocity loss thresholds matched or beat high VL for strength/power, with less neuromuscular fatigue and preservation of type IIX fibers.",
     source_pmid: "27038416",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/27038416/",
+    question_fr: "Pareja-Blanco et al. ont montré qu'une perte de vitesse intra-série élevée (40%) comparée à une faible (10–20%) :",
+    options_fr: ["Produit toujours plus d'hypertrophie et de force", "Produit des gains de force similaires ou moindres avec plus de fatigue et des bascules de typologie de fibres", "N'a aucun effet sur les adaptations", "Élimine le besoin de surcharge progressive"],
+    explanation_fr: "Des seuils faibles de perte de vitesse égalaient ou battaient les seuils élevés pour la force/puissance, avec moins de fatigue et préservation des fibres IIX.",
   },
   {
     id: "m9",
@@ -582,6 +699,9 @@ const QUESTIONS: Question[] = [
     explanation: "Training in lengthened positions biased greater regional hypertrophy compared to short-length work at matched volume.",
     source_pmid: "36242755",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/36242755/",
+    question_fr: "Maeo et al. (2023) ont comparé l'entraînement à grande vs courte longueur musculaire et ont rapporté :",
+    options_fr: ["L'entraînement à courte longueur a produit plus d'hypertrophie", "Les partiels à grande longueur ont produit une hypertrophie égale ou supérieure, surtout régionalement", "L'amplitude et la longueur n'avaient pas d'effet", "Seuls les isométriques ont induit de l'hypertrophie"],
+    explanation_fr: "L'entraînement en position étirée a favorisé une plus grande hypertrophie régionale par rapport au travail en position raccourcie à volume égal.",
   },
   {
     id: "m10",
@@ -598,6 +718,9 @@ const QUESTIONS: Question[] = [
     explanation: "Beta-alanine is the rate-limiting precursor of carnosine, which buffers protons during high-intensity efforts lasting ~1–4 min.",
     source_pmid: "25739105",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/25739105/",
+    question_fr: "Quel est le mécanisme le mieux soutenu par lequel la bêta-alanine améliore la performance haute intensité ?",
+    options_fr: ["Augmenter les stocks d'ATP intramusculaires", "Augmenter la carnosine musculaire et améliorer le tampon intramusculaire des H+", "Agir comme vasodilatateur direct", "Inhiber la production de lactate"],
+    explanation_fr: "La bêta-alanine est le précurseur limitant de la carnosine, qui tamponne les protons lors d'efforts haute intensité de ~1–4 min.",
   },
   {
     id: "m11",
@@ -614,6 +737,9 @@ const QUESTIONS: Question[] = [
     explanation: "Greater squat depth increases hip and knee extensor demand and is associated with superior lower-limb hypertrophy without elevated injury rates in healthy populations.",
     source_pmid: "32624324",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/32624324/",
+    question_fr: "Que conclut la revue de Schoenfeld & Grgic sur la profondeur de squat et l'hypertrophie/force ?",
+    options_fr: ["Les squats partiels sont uniformément supérieurs", "Les squats plus profonds tendent à favoriser l'hypertrophie des membres inférieurs sans risque de blessure accru chez les sujets sains", "La profondeur est sans pertinence biomécanique", "Seuls les quart-squats développent les quadriceps"],
+    explanation_fr: "Une plus grande profondeur augmente la demande sur les extenseurs de hanche et de genou et est associée à une meilleure hypertrophie sans hausse des blessures chez les sujets sains.",
   },
   {
     id: "m12",
@@ -630,6 +756,9 @@ const QUESTIONS: Question[] = [
     explanation: "Pennation packs more sarcomeres in parallel (greater PCSA) increasing force capacity, while reducing the fiber's effective shortening range.",
     source_pmid: "11460867",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/11460867/",
+    question_fr: "Un angle de pennation musculaire plus élevé entraîne généralement :",
+    options_fr: ["Une capacité de force contractile réduite", "Plus de matériel contractile pour une section anatomique donnée, augmentant la force au prix de l'amplitude de fibre", "Une vitesse de raccourcissement de fibre plus élevée", "Aucune conséquence mécanique"],
+    explanation_fr: "La pennation regroupe plus de sarcomères en parallèle (PCSA accrue), augmentant la capacité de force tout en réduisant l'amplitude effective de la fibre.",
   },
   {
     id: "m13",
@@ -646,6 +775,9 @@ const QUESTIONS: Question[] = [
     explanation: "Recent meta-analyses (Grgic et al.) show that stopping 1–3 reps short of failure yields hypertrophy outcomes broadly comparable to training to failure with lower fatigue cost.",
     source_pmid: "34669519",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/34669519/",
+    question_fr: "Comment se compare l'entraînement à (ou très près de) l'échec momentané vs s'arrêter avec des reps en réserve pour l'hypertrophie ?",
+    options_fr: ["L'échec est requis pour toute hypertrophie", "S'arrêter quelques reps avant produit généralement une hypertrophie similaire avec moins de fatigue", "S'arrêter avant produit zéro hypertrophie", "Seul l'entraînement à l'échec construit les fibres de type I"],
+    explanation_fr: "Les méta-analyses récentes (Grgic et al.) montrent que s'arrêter 1–3 reps avant l'échec donne une hypertrophie comparable à l'échec avec moins de coût de fatigue.",
   },
   {
     id: "m14",
@@ -662,11 +794,14 @@ const QUESTIONS: Question[] = [
     explanation: "Bassett & Howley summarize that, in most healthy individuals, maximal cardiac output and arterial O2 content are the primary limiters of VO2max.",
     source_pmid: "10647532",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/10647532/",
+    question_fr: "Mécanistiquement, la VO2max est mieux décrite comme principalement limitée par :",
+    options_fr: ["La densité mitochondriale du muscle squelettique seule", "La livraison centrale d'oxygène (débit cardiaque × contenu artériel en O2) chez la plupart des sujets sains", "Exclusivement la capacité de diffusion pulmonaire", "Uniquement l'affinité de l'hémoglobine"],
+    explanation_fr: "Bassett & Howley résument que chez la plupart des sujets sains, le débit cardiaque maximal et le contenu artériel en O2 sont les principaux facteurs limitants de la VO2max.",
   },
 
   // ─── Hardcore (additional) ──────────────────────────────────────────
   {
-    id: "h6",
+    id: "h6_2",
     difficulty: "hardcore",
     category: "Hypertrophy",
     question: "Which molecular mechanism best explains mechanical-tension-induced mTORC1 activation in skeletal muscle?",
@@ -680,9 +815,12 @@ const QUESTIONS: Question[] = [
     explanation: "Hornberger and colleagues showed DGKζ-derived phosphatidic acid is a key second messenger linking mechanical loading to mTORC1 activation.",
     source_pmid: "31375607",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/31375607/",
+    question_fr: "Quel mécanisme moléculaire explique le mieux l'activation de mTORC1 induite par la tension mécanique dans le muscle squelettique ?",
+    options_fr: ["Autophosphorylation du récepteur de l'insuline", "Production d'acide phosphatidique par la diacylglycérol kinase ζ à la membrane", "Liaison directe de l'ATP à la kinase mTOR", "Translocation du récepteur du cortisol"],
+    explanation_fr: "Hornberger et coll. ont montré que l'acide phosphatidique dérivé de la DGKζ est un second messager clé liant la charge mécanique à l'activation de mTORC1.",
   },
   {
-    id: "h7",
+    id: "h7_2",
     difficulty: "hardcore",
     category: "Hypertrophy",
     question: "What is the current view of satellite cells in long-term overload hypertrophy?",
@@ -696,9 +834,12 @@ const QUESTIONS: Question[] = [
     explanation: "Murach et al. argue satellite-cell-mediated myonuclear accretion is needed to sustain hypertrophy past a domain ceiling, especially under prolonged overload.",
     source_pmid: "29687895",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/29687895/",
+    question_fr: "Quelle est la vision actuelle des cellules satellites dans l'hypertrophie de surcharge à long terme ?",
+    options_fr: ["Elles sont superflues dans toutes les conditions", "Elles sont requises pour ajouter des myonoyaux et soutenir l'hypertrophie au-delà d'un plafond défini par le domaine myonucléaire", "Elles ne contribuent qu'à la réparation, jamais à l'hypertrophie", "Elles se différencient en adipocytes lors de la surcharge"],
+    explanation_fr: "Murach et al. soutiennent que l'accrétion myonucléaire médiée par les cellules satellites est nécessaire pour soutenir l'hypertrophie au-delà du plafond du domaine, surtout en surcharge prolongée.",
   },
   {
-    id: "h8",
+    id: "h8_2",
     difficulty: "hardcore",
     category: "Physiology",
     question: "Muscle protein synthesis remains elevated above baseline following an intense bout of resistance exercise for approximately:",
@@ -707,9 +848,12 @@ const QUESTIONS: Question[] = [
     explanation: "Burd et al. showed MPS remains elevated up to 24–48 h after resistance exercise, with longer/larger responses in untrained subjects.",
     source_pmid: "21289204",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/21289204/",
+    question_fr: "La synthèse protéique musculaire reste élevée au-dessus du niveau de base après une séance intense de musculation pendant environ :",
+    options_fr: ["1–2 heures", "Jusqu'à 24–48 heures, avec une durée plus longue chez les non-entraînés", "1 semaine", "Elle ne change pas après l'exercice"],
+    explanation_fr: "Burd et al. ont montré que la SPM reste élevée jusqu'à 24–48 h après l'exercice, avec une réponse plus longue/plus importante chez les non-entraînés.",
   },
   {
-    id: "h9",
+    id: "h9_2",
     difficulty: "hardcore",
     category: "Hypertrophy",
     question: "Across the training literature, eccentric vs. concentric-only resistance training tends to produce:",
@@ -723,6 +867,9 @@ const QUESTIONS: Question[] = [
     explanation: "Schoenfeld et al.'s meta-analysis reports a small effect favoring eccentric training for hypertrophy compared to concentric-only protocols.",
     source_pmid: "28755103",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/28755103/",
+    question_fr: "Dans la littérature, la musculation excentrique vs concentrique seule tend à produire :",
+    options_fr: ["Une hypertrophie identique dans toutes les études", "Un petit avantage constant pour l'excentrique, en partie via une plus grande hypertrophie régionale/globale", "Plus d'hypertrophie avec le concentrique seul", "De l'hypertrophie uniquement dans les membres excentriques, zéro dans les concentriques"],
+    explanation_fr: "La méta-analyse de Schoenfeld et al. rapporte un petit effet favorisant l'entraînement excentrique pour l'hypertrophie comparé aux protocoles concentriques seuls.",
   },
   {
     id: "h10",
@@ -739,6 +886,9 @@ const QUESTIONS: Question[] = [
     explanation: "Eccentric loading at long muscle lengths increases fascicle length by adding sarcomeres in series, as shown by Blazevich and others.",
     source_pmid: "17313281",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/17313281/",
+    question_fr: "L'entraînement excentrique lourd tend à induire quelle adaptation structurelle dans le muscle ?",
+    options_fr: ["Une diminution nette de l'angle de pennation et de la longueur des fascicules", "Une augmentation de la longueur des fascicules via la sarcomérogenèse en série", "Le remplacement de la titine par la desmine", "La conversion des fibres de type II en tendon"],
+    explanation_fr: "La charge excentrique à grande longueur musculaire augmente la longueur des fascicules par ajout de sarcomères en série, comme montré par Blazevich et d'autres.",
   },
   {
     id: "h11",
@@ -755,6 +905,9 @@ const QUESTIONS: Question[] = [
     explanation: "Activation of AMPK by endurance work can blunt downstream mTORC1 signaling, although programming (mode, intensity, timing) modulates real-world interference.",
     source_pmid: "24728927",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/24728927/",
+    question_fr: "Dans l'entraînement concurrent, « l'interférence » moléculaire entre adaptations force et endurance est largement attribuée à :",
+    options_fr: ["La suppression médiée par l'AMPK de la signalisation mTORC1 après un travail d'endurance à fort volume", "Uniquement une insulino-résistance indépendante du glycogène", "Une inhibition permanente de l'activité des cellules satellites", "Une augmentation de la densité des récepteurs aux androgènes"],
+    explanation_fr: "L'activation de l'AMPK par le travail d'endurance peut atténuer la signalisation mTORC1 en aval, bien que la programmation module l'interférence en pratique.",
   },
   {
     id: "h12",
@@ -771,6 +924,9 @@ const QUESTIONS: Question[] = [
     explanation: "Differences in leucine content and digestion kinetics make many plant proteins less anabolic per gram, but matching leucine via higher doses or blends can close the gap.",
     source_pmid: "29722584",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/29722584/",
+    question_fr: "Comparées à la whey, les protéines végétales (ex. soja) montrent typiquement :",
+    options_fr: ["Une réponse SPM aiguë plus élevée à dose égale", "Une réponse SPM aiguë plus faible, atténuée par des doses plus élevées ou des mélanges pour égaler la teneur en leucine", "Une réponse SPM identique dans toutes les conditions", "Un effet anti-anabolique à toute dose"],
+    explanation_fr: "Les différences de teneur en leucine et cinétique de digestion rendent beaucoup de protéines végétales moins anaboliques par gramme, mais ajuster la leucine peut combler l'écart.",
   },
   {
     id: "h13",
@@ -787,6 +943,9 @@ const QUESTIONS: Question[] = [
     explanation: "Meta-regressions (Schoenfeld, Baz-Valle) describe a dose–response that flattens and can invert at very high weekly set counts, with substantial inter-individual variability.",
     source_pmid: "27433992",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/27433992/",
+    question_fr: "Dans une fourchette raisonnable, comment le volume hebdomadaire total de séries se rapporte-t-il à l'hypertrophie ?",
+    options_fr: ["Une réponse plate, sans dose-réponse", "Une dose-réponse approximative jusqu'à un plafond individuel, après quoi les gains plafonnent ou déclinent", "Strictement linéaire sans limite supérieure", "Inverse : moins de volume produit toujours plus d'hypertrophie"],
+    explanation_fr: "Les méta-régressions (Schoenfeld, Baz-Valle) décrivent une dose-réponse qui s'aplatit et peut s'inverser à très haut volume, avec une grande variabilité interindividuelle.",
   },
   {
     id: "h14",
@@ -803,6 +962,9 @@ const QUESTIONS: Question[] = [
     explanation: "The F–v profile derived from sprint mechanics flags force or velocity deficits, allowing training to target the limiting end of the profile.",
     source_pmid: "26222600",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/26222600/",
+    question_fr: "Le profilage force–vitesse en sprint (Morin & Samozino) sert principalement à :",
+    options_fr: ["Prédire la VO2max à partir d'un sprint unique", "Identifier si un athlète est déficitaire en force ou en vitesse pour individualiser l'entraînement", "Remplacer entièrement les tests de force", "Estimer le pourcentage de graisse corporelle"],
+    explanation_fr: "Le profil F–v dérivé de la mécanique du sprint signale les déficits de force ou de vitesse, permettant de cibler l'entraînement vers la limite du profil.",
   },
   {
     id: "h15",
@@ -819,6 +981,9 @@ const QUESTIONS: Question[] = [
     explanation: "Groennebaek & Vissing reviewed evidence that resistance training improves mitochondrial respiration and quality control with only modest changes in volume density.",
     source_pmid: "28507483",
     source_url: "https://pubmed.ncbi.nlm.nih.gov/28507483/",
+    question_fr: "La musculation est le plus constamment montrée comme augmentant quelle propriété mitochondriale du muscle squelettique ?",
+    options_fr: ["Une grande augmentation de la densité mitochondriale comparable à l'endurance", "Des améliorations modestes de la respiration et de la qualité mitochondriales sans grands gains de densité", "Une ablation totale des mitochondries", "La conversion des mitochondries en peroxysomes"],
+    explanation_fr: "Groennebaek & Vissing ont revu les preuves que la musculation améliore la respiration mitochondriale et le contrôle qualité avec des changements modestes de densité volumique.",
   },
 
   // ─── Easy (Wave 3) ─────────────────────────────────────────────────
