@@ -120,6 +120,18 @@ const DICT: Dict = {
   online_tie: { en: "TIE GAME", fr: "MATCH NUL" },
   final_score: { en: "Final Score", fr: "Score final" },
   play_again_online: { en: "Play again online", fr: "Rejouer en ligne" },
+  new_rating: { en: "New rating", fr: "Nouveau rating" },
+
+  // Leaderboard
+  leaderboard_title: { en: "Global Leaderboard", fr: "Classement global" },
+  leaderboard_sub: { en: "Live rankings updated in real time across all players", fr: "Classement en direct, mis à jour en temps réel pour tous les joueurs" },
+  view_leaderboard: { en: "🏆 Leaderboard", fr: "🏆 Classement" },
+  live: { en: "LIVE", fr: "EN DIRECT" },
+  no_data: { en: "No ranked matches yet. Be the first!", fr: "Aucun match classé pour l'instant. Soyez le premier !" },
+  wins_short: { en: "W", fr: "V" },
+  losses_short: { en: "L", fr: "D" },
+  ties_short: { en: "T", fr: "N" },
+  win_rate: { en: "win rate", fr: "victoires" },
 };
 
 const LangCtx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof DICT) => string }>({

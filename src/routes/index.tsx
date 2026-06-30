@@ -1948,6 +1948,13 @@ function Dashboard({ onSolo, onBot, onOnline }: { onSolo: () => void; onBot: () 
           icon={<UserIcon />}
         />
       </section>
+
+      <Link
+        to="/leaderboard"
+        className="block rounded-xl border border-border bg-secondary/40 px-4 py-3 text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground hover:border-accent/60 hover:text-cyan-glow"
+      >
+        {t("view_leaderboard")}
+      </Link>
     </div>
   );
 }

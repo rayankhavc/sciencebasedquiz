@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { LangProvider, useLang, localizeCategory, localizeDifficulty, localizeQuestion } from "@/lib/i18n";
 import { supabase } from "@/lib/supabase";
+import { ensureAnonSession, getOrCreateProfile, recordMatchResult, type MatchOutcome } from "@/lib/leaderboard";
 import { QUESTIONS, type Question } from "./index";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
@@ -23,6 +24,7 @@ type PlayerInfo = {
   playerId: string;
   playerName: string;
   isReady: boolean;
+  rating: number;
 };
 
 type RoundResult = {
@@ -44,7 +46,7 @@ function generateRoomCode(): string {
   return code;
 }
 
-function generatePlayerId(): string {
+function generateFallbackId(): string {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -148,12 +150,17 @@ function OnlineApp() {
   const [playerName, setPlayerName] = useState("");
   const [isHost, setIsHost] = useState(false);
   const [roomCode, setRoomCode] = useState("");
-  const [playerId] = useState(() => generatePlayerId());
+  const [playerId, setPlayerId] = useState<string>(() => generateFallbackId());
+  const [myRating, setMyRating] = useState(1000);
   const [opponent, setOpponent] = useState<PlayerInfo | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [roundResults, setRoundResults] = useState<RoundResult[]>([]);
   const [countdownSecs, setCountdownSecs] = useState(3);
   const channelRef = useRef<RealtimeChannel | null>(null);
+
+  useEffect(() => {
+    ensureAnonSession().then(setPlayerId).catch(() => {});
+  }, []);
 
   const leaveChannel = useCallback(() => {
     if (channelRef.current) {
@@ -171,6 +178,7 @@ function OnlineApp() {
         setPlayerName={setPlayerName}
         playerId={playerId}
         channelRef={channelRef}
+        onProfileReady={(rating) => setMyRating(rating)}
         onRoomCreated={(code) => {
           setRoomCode(code);
           setIsHost(true);
@@ -191,6 +199,7 @@ function OnlineApp() {
         roomCode={roomCode}
         playerId={playerId}
         playerName={playerName}
+        myRating={myRating}
         isHost={isHost}
         channelRef={channelRef}
         opponent={opponent}
@@ -244,7 +253,9 @@ function OnlineApp() {
   return (
     <ResultsScreen
       roundResults={roundResults}
+      playerId={playerId}
       playerName={playerName}
+      myRating={myRating}
       opponent={opponent}
       onPlayAgain={() => {
         setRoundResults([]);
@@ -263,6 +274,7 @@ function SetupScreen({
   setPlayerName,
   playerId,
   channelRef,
+  onProfileReady,
   onRoomCreated,
   onRoomJoined,
 }: {
@@ -270,6 +282,7 @@ function SetupScreen({
   setPlayerName: (v: string) => void;
   playerId: string;
   channelRef: React.MutableRefObject<RealtimeChannel | null>;
+  onProfileReady: (rating: number) => void;
   onRoomCreated: (code: string) => void;
   onRoomJoined: (code: string) => void;
 }) {
@@ -280,7 +293,7 @@ function SetupScreen({
   const valid = playerName.trim().length >= 2;
 
   const createChannel = (code: string, payload: PlayerInfo): RealtimeChannel => {
-    const channel = supabase.channel(`game-room:${code}`, { config: { presence: { key: playerId } } });
+    const channel = supabase.channel(`game-room:${code}`, { config: { presence: { key: payload.playerId } } });
     channelRef.current = channel;
     channel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {
@@ -290,12 +303,25 @@ function SetupScreen({
     return channel;
   };
 
+  const resolveProfile = async (): Promise<{ id: string; rating: number }> => {
+    try {
+      const profile = await getOrCreateProfile(playerName.trim());
+      onProfileReady(profile.rating);
+      return { id: profile.player_id, rating: profile.rating };
+    } catch {
+      // Leaderboard unavailable (e.g. Supabase not configured) — fall back to a local id, no ranking.
+      onProfileReady(1000);
+      return { id: playerId, rating: 1000 };
+    }
+  };
+
   const handleCreate = async () => {
     if (!valid) return;
     setLoading("create");
     setError("");
+    const profile = await resolveProfile();
     const code = generateRoomCode();
-    createChannel(code, { playerId, playerName: playerName.trim(), isReady: false });
+    createChannel(code, { playerId: profile.id, playerName: playerName.trim(), isReady: false, rating: profile.rating });
     onRoomCreated(code);
     setLoading(null);
   };
@@ -305,8 +331,9 @@ function SetupScreen({
     setLoading("join");
     setError("");
     const code = joinCode.trim().toUpperCase();
+    const profile = await resolveProfile();
 
-    const tempChannel = supabase.channel(`game-room:${code}`, { config: { presence: { key: playerId } } });
+    const tempChannel = supabase.channel(`game-room:${code}`, { config: { presence: { key: profile.id } } });
     channelRef.current = tempChannel;
 
     let resolved = false;
@@ -323,11 +350,11 @@ function SetupScreen({
     tempChannel.on("presence", { event: "sync" }, () => {
       if (resolved) return;
       const state = tempChannel.presenceState<PlayerInfo>();
-      const others = Object.values(state).flat().filter((p) => p.playerId !== playerId);
+      const others = Object.values(state).flat().filter((p) => p.playerId !== profile.id);
       if (others.length > 0) {
         resolved = true;
         clearTimeout(timeout);
-        tempChannel.track({ playerId, playerName: playerName.trim(), isReady: false });
+        tempChannel.track({ playerId: profile.id, playerName: playerName.trim(), isReady: false, rating: profile.rating });
         onRoomJoined(code);
         setLoading(null);
       }
@@ -398,6 +425,7 @@ function LobbyScreen({
   roomCode,
   playerId,
   playerName,
+  myRating,
   isHost,
   channelRef,
   opponent,
@@ -408,6 +436,7 @@ function LobbyScreen({
   roomCode: string;
   playerId: string;
   playerName: string;
+  myRating: number;
   isHost: boolean;
   channelRef: React.MutableRefObject<RealtimeChannel | null>;
   opponent: PlayerInfo | null;
@@ -429,7 +458,7 @@ function LobbyScreen({
       const others = Object.values(state).flat().filter((p) => p.playerId !== playerId);
       if (others.length > 0) {
         const opp = others[0];
-        setOpponent({ playerId: opp.playerId, playerName: opp.playerName, isReady: opp.isReady });
+        setOpponent({ playerId: opp.playerId, playerName: opp.playerName, isReady: opp.isReady, rating: opp.rating ?? 1000 });
         setOpponentReady(opp.isReady);
       } else {
         setOpponent(null);
@@ -451,7 +480,7 @@ function LobbyScreen({
     const channel = channelRef.current;
     if (!channel) return;
     setIAmReady(true);
-    await channel.track({ playerId, playerName, isReady: true });
+    await channel.track({ playerId, playerName, isReady: true, rating: myRating });
 
     if (isHost && opponentReady) {
       startGame(channel);
@@ -776,13 +805,17 @@ function ArenaScreen({
 
 function ResultsScreen({
   roundResults,
+  playerId,
   playerName,
+  myRating,
   opponent,
   onPlayAgain,
   onHome,
 }: {
   roundResults: RoundResult[];
+  playerId: string;
   playerName: string;
+  myRating: number;
   opponent: PlayerInfo | null;
   onPlayAgain: () => void;
   onHome: () => void;
@@ -793,6 +826,16 @@ function ResultsScreen({
   const won = myScore > oppScore;
   const tie = myScore === oppScore;
   const [shared, setShared] = useState(false);
+  const [ratingDelta, setRatingDelta] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!opponent) return;
+    const outcome: MatchOutcome = tie ? 0.5 : won ? 1 : 0;
+    recordMatchResult(playerId, myRating, opponent.rating, outcome)
+      .then((newRating) => setRatingDelta(newRating - myRating))
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const shareText = lang === "fr"
     ? `J'ai gagné ${myScore}-${oppScore} contre ${opponent?.playerName ?? "mon adversaire"} sur Science Based Quiz !`
@@ -838,7 +881,21 @@ function ResultsScreen({
             <div className="mt-1 font-display text-5xl font-bold text-cyan-glow">{oppScore}</div>
           </div>
         </div>
+        {ratingDelta !== null && (
+          <div className="mt-4 text-center text-sm font-semibold">
+            {t("new_rating")}: <span className={ratingDelta >= 0 ? "text-neon" : "text-destructive"}>
+              {myRating + ratingDelta} ({ratingDelta >= 0 ? "+" : ""}{ratingDelta})
+            </span>
+          </div>
+        )}
       </section>
+
+      <Link
+        to="/leaderboard"
+        className="block rounded-xl border border-accent/40 bg-accent/10 px-4 py-3 text-center text-sm font-semibold text-cyan-glow"
+      >
+        {t("view_leaderboard")}
+      </Link>
 
       <div className="grid gap-2.5">
         <button onClick={onPlayAgain} className="rounded-xl bg-primary px-4 py-3 font-display text-sm font-bold text-primary-foreground neon-glow">
