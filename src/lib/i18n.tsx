@@ -43,6 +43,8 @@ const DICT: Dict = {
   seconds_short: { en: "s", fr: "s" },
   start_match: { en: "Start the match", fr: "Lancer le match" },
   start_quiz: { en: "Start the quiz", fr: "Lancer le quiz" },
+  accuracy: { en: "Accuracy", fr: "Précision" },
+  response: { en: "Response", fr: "Réponse" },
 
   // Arena
   quit: { en: "← Quit", fr: "← Quitter" },
@@ -53,6 +55,9 @@ const DICT: Dict = {
   view_source: { en: "📚 View scientific source (PMID)", fr: "📚 Voir la source scientifique (PMID)" },
   next_question: { en: "Next question →", fr: "Question suivante →" },
   see_results: { en: "See results →", fr: "Voir les résultats →" },
+  scientific_source: { en: "Scientific source", fr: "Source scientifique" },
+  open_pubmed: { en: "Open on PubMed ↗", fr: "Ouvrir sur PubMed ↗" },
+  seconds_label: { en: "sec", fr: "s" },
 
   // Results
   results_title: { en: "Results", fr: "Résultats" },
@@ -101,6 +106,26 @@ export function LangProvider({ children }: { children: ReactNode }) {
 
 export function useLang() {
   return useContext(LangCtx);
+}
+
+export function localizeCategory(category: string, lang: Lang) {
+  const labels: Record<string, { en: string; fr: string }> = {
+    All: { en: "All", fr: "Tout" },
+    Nutrition: { en: "Nutrition", fr: "Nutrition" },
+    Biomechanics: { en: "Biomechanics", fr: "Biomécanique" },
+    Hypertrophy: { en: "Hypertrophy", fr: "Hypertrophie" },
+    Physiology: { en: "Physiology", fr: "Physiologie" },
+  };
+  return labels[category]?.[lang] ?? category;
+}
+
+export function localizeDifficulty(difficulty: string, lang: Lang) {
+  const labels: Record<string, { en: string; fr: string }> = {
+    easy: { en: "Easy", fr: "Facile" },
+    medium: { en: "Medium", fr: "Moyen" },
+    hardcore: { en: "Hardcore", fr: "Hardcore" },
+  };
+  return labels[difficulty]?.[lang] ?? difficulty;
 }
 
 // Question-level localizer
