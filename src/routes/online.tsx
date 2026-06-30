@@ -220,7 +220,22 @@ function OnlineApp() {
       setAnswerEvent(payload as AnswerEvent);
     });
 
+    // Presence "sync" already reflects isReady once it fires, but ready-up is a
+    // one-shot signal we don't want to depend on presence-diff timing for — a
+    // broadcast is a simpler, more direct guarantee that the other player's
+    // screen flips to "ready" immediately.
+    channel.on("broadcast", { event: "player_ready" }, ({ payload }) => {
+      const readyId = payload?.playerId as string | undefined;
+      if (!readyId || readyId === selfId) return;
+      setOpponent((prev) => (prev && prev.playerId === readyId ? { ...prev, isReady: true } : prev));
+    });
+
     return channel;
+  }, []);
+
+  const handleLobbyCountdown = useCallback((qs: Question[]) => {
+    setQuestions(qs);
+    setScreen("countdown");
   }, []);
 
   if (screen === "setup") {
@@ -256,10 +271,7 @@ function OnlineApp() {
         isHost={isHost}
         channelRef={channelRef}
         opponent={opponent}
-        onCountdown={(qs) => {
-          setQuestions(qs);
-          setScreen("countdown");
-        }}
+        onCountdown={handleLobbyCountdown}
         onBack={() => {
           leaveChannel();
           setScreen("setup");
@@ -508,8 +520,11 @@ function LobbyScreen({
   const [iAmReady, setIAmReady] = useState(false);
   const [copied, setCopied] = useState(false);
   const opponentReady = opponent?.isReady ?? false;
+  const gameStartedRef = useRef(false);
 
   const startGame = useCallback((channel: RealtimeChannel) => {
+    if (gameStartedRef.current) return;
+    gameStartedRef.current = true;
     const qs = pickQuestions(5);
     channel.send({
       type: "broadcast",
@@ -526,6 +541,9 @@ function LobbyScreen({
     try {
       await channel.track({ playerId, playerName, isReady: true, rating: myRating });
     } catch {}
+    // Broadcast is a direct, immediate signal — doesn't depend on presence-diff
+    // timing the way relying solely on track() + "sync" would.
+    channel.send({ type: "broadcast", event: "player_ready", payload: { playerId } });
 
     if (isHost && opponentReady) {
       startGame(channel);
