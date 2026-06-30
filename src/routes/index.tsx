@@ -2553,24 +2553,52 @@ function Results({
   onHome: () => void;
   onAgain: () => void;
 }) {
+  const { t, lang } = useLang();
   const myScore = results.filter((r) => r.correct).length;
   const oppScore = results.filter((r) => r.opponentCorrect).length;
   const total = results.length;
   const won = mode === "bot" ? myScore > oppScore : myScore >= Math.ceil(total / 2);
   const [reviewing, setReviewing] = useState(false);
+  const [shared, setShared] = useState(false);
   const mistakes = results.filter((r) => !r.correct);
+
+  const shareText =
+    mode === "bot"
+      ? (lang === "fr"
+          ? `J'ai marqué ${myScore}-${oppScore} contre ${bot.name} sur Science Based Quiz !`
+          : `I scored ${myScore}-${oppScore} vs ${bot.name} on Science Based Quiz!`)
+      : (lang === "fr"
+          ? `J'ai obtenu ${myScore}/${total} sur Science Based Quiz !`
+          : `I scored ${myScore}/${total} on Science Based Quiz!`);
+
+  const shareUrl = typeof window !== "undefined" ? window.location.origin : "";
+
+  const handleShare = async () => {
+    const payload = { title: "Science Based Quiz", text: shareText, url: shareUrl };
+    try {
+      if (typeof navigator !== "undefined" && (navigator as any).share) {
+        await (navigator as any).share(payload);
+        return;
+      }
+    } catch {}
+    try {
+      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`.trim());
+      setShared(true);
+      setTimeout(() => setShared(false), 2200);
+    } catch {}
+  };
 
   return (
     <div className="space-y-6 fade-in-up">
       <div className="text-center">
         <div className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-          {mode === "bot" ? "Match result" : "Quiz complete"}
+          {mode === "bot" ? t("match_result") : t("quiz_complete")}
         </div>
         <h2
           className={"mt-2 font-display text-5xl font-bold tracking-tight sm:text-6xl count-pop " + (won ? "text-neon" : "text-danger")}
           style={!won ? { color: "var(--danger)", textShadow: "0 0 18px color-mix(in oklab, var(--danger) 60%, transparent)" } : {}}
         >
-          {mode === "bot" ? (won ? "VICTORY" : "DEFEAT") : "DONE"}
+          {mode === "bot" ? (won ? t("victory") : t("defeat")) : t("done")}
         </h2>
       </div>
 
@@ -2585,7 +2613,7 @@ function Results({
           <div className="text-center">
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{username}</div>
             <div className="mt-1 font-display text-6xl font-bold text-neon">{myScore}<span className="text-muted-foreground text-3xl">/{total}</span></div>
-            <div className="mt-1 text-xs text-muted-foreground">Correct answers</div>
+            <div className="mt-1 text-xs text-muted-foreground">{t("correct_answers")}</div>
           </div>
         )}
       </section>
@@ -2597,46 +2625,55 @@ function Results({
               onClick={() => setReviewing(true)}
               className="rounded-xl border border-accent/50 bg-accent/10 px-4 py-3 text-sm font-semibold text-cyan-glow"
             >
-              🔬 Review my {mistakes.length} mistake{mistakes.length > 1 ? "s" : ""}
+              🔬 {mistakes.length === 1 ? t("review_one") : t("review_many").replace("{n}", String(mistakes.length))}
             </button>
           )}
           <button onClick={onAgain} className="rounded-xl bg-primary px-4 py-3 font-display text-sm font-bold text-primary-foreground neon-glow">
-            Play again
+            {t("play_again")}
+          </button>
+          <button
+            onClick={handleShare}
+            className="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm font-semibold text-neon sm:col-span-2"
+          >
+            {shared ? `✓ ${t("share_copied")}` : `↗ ${t("share")}`}
           </button>
           <button onClick={onHome} className="rounded-xl bg-secondary px-4 py-3 text-sm font-semibold text-foreground sm:col-span-2">
-            ← Back to dashboard
+            {t("back_dashboard")}
           </button>
         </div>
       ) : (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="font-display text-lg font-bold">Mistake review</h3>
+            <h3 className="font-display text-lg font-bold">{t("mistake_review")}</h3>
             <button onClick={() => setReviewing(false)} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">
-              Close
+              {t("close")}
             </button>
           </div>
-          {mistakes.map((m) => (
-            <div key={m.question.id} className="glass rounded-2xl p-4">
-              <div className="mb-2 flex flex-wrap gap-2">
-                <Badge>{m.question.difficulty}</Badge>
-                <Badge variant="cyan">{m.question.category}</Badge>
+          {mistakes.map((m) => {
+            const ml = localizeQuestion(m.question, lang);
+            return (
+              <div key={m.question.id} className="glass rounded-2xl p-4">
+                <div className="mb-2 flex flex-wrap gap-2">
+                  <Badge>{m.question.difficulty}</Badge>
+                  <Badge variant="cyan">{m.question.category}</Badge>
+                </div>
+                <div className="text-sm font-semibold">{ml.question}</div>
+                <div className="mt-3 rounded-lg bg-secondary p-3 text-xs">
+                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{t("correct_answer_label")}</div>
+                  <div className="mt-1 font-semibold text-primary">{ml.correct_answer}</div>
+                </div>
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{ml.explanation}</p>
+                <a
+                  href={m.question.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-block text-xs font-semibold text-cyan-glow hover:underline"
+                >
+                  PMID: {m.question.source_pmid} ↗
+                </a>
               </div>
-              <div className="text-sm font-semibold">{m.question.question}</div>
-              <div className="mt-3 rounded-lg bg-secondary p-3 text-xs">
-                <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Correct answer</div>
-                <div className="mt-1 font-semibold text-primary">{m.question.correct_answer}</div>
-              </div>
-              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{m.question.explanation}</p>
-              <a
-                href={m.question.source_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 inline-block text-xs font-semibold text-cyan-glow hover:underline"
-              >
-                PMID: {m.question.source_pmid} ↗
-              </a>
-            </div>
-          ))}
+            );
+          })}
         </section>
       )}
     </div>
