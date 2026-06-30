@@ -57,6 +57,7 @@ function LeaderboardFooter() {
         <Link to="/privacy" className="hover:text-foreground transition-colors">{t("privacy")}</Link>
       </nav>
       <div className="mt-6 text-center text-[10px] uppercase tracking-widest opacity-60">{t("copyright")}</div>
+      <div className="mt-1.5 text-center text-[9px] tracking-wide opacity-35">{t("made_by")}</div>
     </footer>
   );
 }

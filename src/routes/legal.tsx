@@ -21,36 +21,35 @@ function LegalPage() {
       <StaticPage title="Mentions légales" eyebrow="Légal">
         <h2>Éditeur</h2>
         <p>
-          Ce site est édité par <strong>[Nom de la société]</strong>, [forme juridique], dont
-          le siège social est situé au <strong>[Adresse du siège]</strong>.<br />
-          Numéro d'immatriculation : <strong>[N° RCS / SIREN]</strong><br />
-          Numéro de TVA : <strong>[N° TVA]</strong>
+          Science Based Quiz est un projet indépendant, éducatif et à but non lucratif, créé et
+          maintenu par <strong>Raythan</strong>. Il n'est pas opéré par une société commerciale enregistrée.
         </p>
-        <h2>Directeur de la publication</h2>
-        <p><strong>[Nom du directeur de la publication]</strong></p>
         <h2>Contact</h2>
-        <p>Pour toute demande : <strong>contact@[votre-domaine].com</strong></p>
+        <p>Pour toute question, suggestion ou signalement, vous pouvez écrire à : <strong>contact@sciencebasedquiz.app</strong></p>
         <h2>Hébergement</h2>
         <p>
-          Ce site est hébergé par <strong>[Nom de l'hébergeur]</strong>, dont le siège est situé au
-          <strong> [Adresse de l'hébergeur]</strong>.
+          Ce site est hébergé sur l'infrastructure de <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133,
+          Walnut, CA 91789, États-Unis. La fonctionnalité de jeu en ligne (mode 1v1 et classement) utilise
+          en complément les services d'infrastructure de <strong>Supabase</strong> pour la synchronisation en temps réel.
         </p>
         <h2>Propriété intellectuelle</h2>
         <p>
-          L'ensemble des contenus (textes, questions, graphismes, logos, code) est la propriété
-          exclusive de l'éditeur, sauf mention contraire. Toute reproduction, représentation ou
-          diffusion, totale ou partielle, sans autorisation écrite préalable est strictement interdite.
+          L'ensemble du code, du design, de la sélection et de la formulation des questions est la
+          propriété de l'éditeur, sauf mention contraire. Les données scientifiques citées proviennent
+          de publications tierces accessibles publiquement via PubMed et restent la propriété de leurs
+          auteurs respectifs. Toute reproduction substantielle du contenu sans autorisation est interdite.
         </p>
-        <h2>Responsabilité</h2>
+        <h2>Avertissement</h2>
         <p>
-          Les contenus de Science Based Quiz sont fournis à titre éducatif uniquement et ne
-          constituent ni un avis médical, ni nutritionnel, ni d'entraînement. Consultez toujours un
-          professionnel qualifié avant d'appliquer une information à votre entraînement, votre
-          alimentation ou votre santé.
+          Les contenus de Science Based Quiz sont fournis à titre éducatif et informatif uniquement et ne
+          constituent ni un avis médical, ni nutritionnel, ni d'entraînement personnalisé. Consultez
+          toujours un professionnel de santé qualifié avant d'appliquer une information de cette
+          plateforme à votre entraînement, votre alimentation ou votre santé.
         </p>
-        <h2>Droit applicable</h2>
+        <h2>Disponibilité du service</h2>
         <p>
-          Les présentes mentions légales sont régies par le droit <strong>[juridiction]</strong>.
+          Le site est fourni « tel quel », sans garantie de disponibilité continue. Des interruptions
+          temporaires peuvent survenir pour maintenance ou en raison de facteurs hors de notre contrôle.
         </p>
       </StaticPage>
     );
@@ -59,36 +58,35 @@ function LegalPage() {
     <StaticPage title="Legal Notice" eyebrow="Legal">
       <h2>Publisher</h2>
       <p>
-        This website is published by <strong>[Company Name]</strong>, [legal form], with
-        registered office at <strong>[Registered Address]</strong>.<br />
-        Registration number: <strong>[Company Registration Number]</strong><br />
-        VAT number: <strong>[VAT Number]</strong>
+        Science Based Quiz is an independent, non-commercial educational project created and
+        maintained by <strong>Raythan</strong>. It is not operated by a registered company.
       </p>
-      <h2>Publication director</h2>
-      <p><strong>[Name of Publication Director]</strong></p>
       <h2>Contact</h2>
-      <p>For any inquiry: <strong>contact@[your-domain].com</strong></p>
+      <p>For any question, suggestion or report, you can reach out at: <strong>contact@sciencebasedquiz.app</strong></p>
       <h2>Hosting</h2>
       <p>
-        This website is hosted by <strong>[Hosting Provider Name]</strong>, located at
-        <strong> [Hosting Provider Address]</strong>.
+        This website is hosted on infrastructure provided by <strong>Vercel Inc.</strong>, 340 S Lemon
+        Ave #4133, Walnut, CA 91789, USA. The online multiplayer feature (1v1 mode and leaderboard) additionally
+        uses <strong>Supabase</strong> infrastructure for real-time synchronization.
       </p>
       <h2>Intellectual property</h2>
       <p>
-        All content (texts, questions, graphics, logos, code) is the exclusive property of the
-        publisher unless otherwise stated. Any reproduction, representation or distribution,
-        in whole or in part, without prior written consent is strictly prohibited.
+        All code, design, question selection and wording are the property of the publisher unless
+        otherwise stated. Cited scientific data originates from third-party publications publicly
+        available via PubMed and remains the property of their respective authors. Substantial
+        reproduction of the content without authorization is prohibited.
       </p>
-      <h2>Liability</h2>
+      <h2>Disclaimer</h2>
       <p>
-        The content of Science Based Quiz is provided for educational purposes only and does not
-        constitute medical, nutritional or training advice. Always consult a qualified
-        professional before applying any information from this platform to your training,
-        diet or health.
+        The content of Science Based Quiz is provided for educational and informational purposes only
+        and does not constitute medical, nutritional or personalized training advice. Always consult a
+        qualified healthcare professional before applying any information from this platform to your
+        training, diet or health.
       </p>
-      <h2>Applicable law</h2>
+      <h2>Service availability</h2>
       <p>
-        This legal notice is governed by the laws of <strong>[Jurisdiction]</strong>.
+        The site is provided "as is" without any guarantee of continuous availability. Temporary
+        interruptions may occur for maintenance or due to factors outside our control.
       </p>
     </StaticPage>
   );

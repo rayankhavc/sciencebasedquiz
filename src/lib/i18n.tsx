@@ -132,6 +132,9 @@ const DICT: Dict = {
   losses_short: { en: "L", fr: "D" },
   ties_short: { en: "T", fr: "N" },
   win_rate: { en: "win rate", fr: "victoires" },
+
+  // Footer credit
+  made_by: { en: "Made by Raythan", fr: "Fait par Raythan" },
 };
 
 const LangCtx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof DICT) => string }>({

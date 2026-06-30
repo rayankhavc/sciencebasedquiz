@@ -26,6 +26,9 @@ export function StaticPage({
         <div className="mt-12 border-t border-border pt-5 text-center text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">
           © Science Based Quiz
         </div>
+        <div className="mt-1.5 text-center text-[9px] tracking-wide text-muted-foreground opacity-35">
+          {lang === "fr" ? "Fait par Raythan" : "Made by Raythan"}
+        </div>
       </div>
     </div>
   );

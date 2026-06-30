@@ -86,15 +86,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "keywords", content: "science based quiz, hypertrophy, biomechanics, sports nutrition, PubMed, bodybuilding, evidence based" },
       { name: "robots", content: "index, follow" },
+      { name: "author", content: "Raythan" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "Science Based Quiz" },
+      { name: "mobile-web-app-capable", content: "yes" },
       { property: "og:title", content: "Science Based Quiz" },
       {
         property: "og:description",
-        content: "Test your knowledge of hypertrophy, biomechanics and sports nutrition with PubMed-cited questions.",
+        content: "Test your knowledge of hypertrophy, biomechanics and sports nutrition with PubMed-cited questions. Challenge a friend live in 1v1.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Science Based Quiz" },
       { property: "og:locale", content: "en_US" },
       { property: "og:locale:alternate", content: "fr_FR" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: "Science Based Quiz" },
       {
         name: "twitter:description",
@@ -103,6 +109,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "manifest", href: "/site.webmanifest" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
