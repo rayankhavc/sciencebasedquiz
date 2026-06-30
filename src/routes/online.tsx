@@ -178,6 +178,7 @@ function OnlineApp() {
   const [roundResults, setRoundResults] = useState<RoundResult[]>([]);
   const [countdownSecs, setCountdownSecs] = useState(3);
   const channelRef = useRef<RealtimeChannel | null>(null);
+  const hadOpponentRef = useRef(false);
 
   useEffect(() => {
     ensureAnonSession().then(setPlayerId).catch(() => {});
@@ -199,11 +200,20 @@ function OnlineApp() {
     channel.on("presence", { event: "sync" }, () => {
       const state = channel.presenceState<PlayerInfo>();
       const others = Object.values(state).flat().filter((p) => p.playerId !== selfId);
-      setOpponent(others.length > 0 ? { ...others[0], rating: others[0].rating ?? 1000 } : null);
-    });
-
-    channel.on("presence", { event: "leave" }, () => {
-      setOpponentLeft(true);
+      if (others.length > 0) {
+        hadOpponentRef.current = true;
+        setOpponent({ ...others[0], rating: others[0].rating ?? 1000 });
+      } else {
+        setOpponent(null);
+        // Only a real disconnect if we previously had someone and the fully
+        // resolved state now shows nobody — a track() update (e.g. readying
+        // up) can emit a transient leave+join pair for the same still-connected
+        // key, so we deliberately don't react to the raw "leave" event itself,
+        // only to the settled state having nobody left in it.
+        if (hadOpponentRef.current) {
+          setOpponentLeft(true);
+        }
+      }
     });
 
     channel.on("broadcast", { event: "game_start" }, ({ payload }) => {
@@ -328,6 +338,7 @@ function OnlineApp() {
         setOpponent(null);
         setOpponentLeft(false);
         setAnswerEvent(null);
+        hadOpponentRef.current = false;
         setScreen("setup");
       }}
       onHome={() => {}}
