@@ -179,17 +179,26 @@ function OnlineApp() {
   const [countdownSecs, setCountdownSecs] = useState(3);
   const channelRef = useRef<RealtimeChannel | null>(null);
   const hadOpponentRef = useRef(false);
+  const disconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     ensureAnonSession().then(setPlayerId).catch(() => {});
   }, []);
 
+  const clearDisconnectTimer = useCallback(() => {
+    if (disconnectTimerRef.current) {
+      clearTimeout(disconnectTimerRef.current);
+      disconnectTimerRef.current = null;
+    }
+  }, []);
+
   const leaveChannel = useCallback(() => {
+    clearDisconnectTimer();
     if (channelRef.current) {
       supabase.removeChannel(channelRef.current);
       channelRef.current = null;
     }
-  }, []);
+  }, [clearDisconnectTimer]);
 
   useEffect(() => () => leaveChannel(), [leaveChannel]);
 
@@ -203,15 +212,22 @@ function OnlineApp() {
       if (others.length > 0) {
         hadOpponentRef.current = true;
         setOpponent({ ...others[0], rating: others[0].rating ?? 1000 });
+        // They're back — a pending "are they really gone" check no longer applies.
+        clearDisconnectTimer();
       } else {
         setOpponent(null);
-        // Only a real disconnect if we previously had someone and the fully
-        // resolved state now shows nobody — a track() update (e.g. readying
-        // up) can emit a transient leave+join pair for the same still-connected
-        // key, so we deliberately don't react to the raw "leave" event itself,
-        // only to the settled state having nobody left in it.
-        if (hadOpponentRef.current) {
-          setOpponentLeft(true);
+        // A track() update (e.g. readying up) or a brief mobile-network blip
+        // (tab backgrounded, wifi/cellular handoff) can momentarily show an
+        // empty presence diff for a still-connected player. Don't treat the
+        // very first empty sync as a disconnect — wait a few seconds and
+        // recheck the *current* state; only flag it if they're still gone.
+        if (hadOpponentRef.current && !disconnectTimerRef.current) {
+          disconnectTimerRef.current = setTimeout(() => {
+            disconnectTimerRef.current = null;
+            const latest = channel.presenceState<PlayerInfo>();
+            const stillGone = Object.values(latest).flat().filter((p) => p.playerId !== selfId).length === 0;
+            if (stillGone) setOpponentLeft(true);
+          }, 6000);
         }
       }
     });
@@ -241,7 +257,7 @@ function OnlineApp() {
     });
 
     return channel;
-  }, []);
+  }, [clearDisconnectTimer]);
 
   const handleLobbyCountdown = useCallback((qs: Question[]) => {
     setQuestions(qs);
@@ -339,6 +355,7 @@ function OnlineApp() {
         setOpponentLeft(false);
         setAnswerEvent(null);
         hadOpponentRef.current = false;
+        clearDisconnectTimer();
         setScreen("setup");
       }}
       onHome={() => {}}
@@ -698,6 +715,8 @@ function ArenaScreen({
   const [timeLeft, setTimeLeft] = useState(ROUND_DURATION);
   const [roundResults, setRoundResults] = useState<RoundResult[]>([]);
   const firstCorrectRef = useRef<string | null>(null);
+  const resolvedRef = useRef(false);
+  const roundDeadlineRef = useRef(Date.now() + ROUND_DURATION * 1000);
 
   const q = questions[round];
   const loc = localizeQuestion(q, lang);
@@ -705,6 +724,8 @@ function ArenaScreen({
   const correctIndex = locQ.options.indexOf(locQ.correct_answer);
 
   const resolveRound = useCallback((myC: boolean, oppC: boolean, winnerPlayerId: string | null) => {
+    if (resolvedRef.current) return;
+    resolvedRef.current = true;
     const iWon = winnerPlayerId === playerId;
     if (iWon) setMyScore((s) => s + 1);
     else if (winnerPlayerId !== null) setOpponentScore((s) => s + 1);
@@ -721,19 +742,30 @@ function ArenaScreen({
     ]);
   }, [playerId, q]);
 
+  // Reset the round clock whenever a new round starts. Using a wall-clock
+  // deadline (rather than decrementing a counter every 1s) means a tab that
+  // gets backgrounded/throttled (very common switching between two phones,
+  // or phone + desktop, mid-test) self-corrects on the next tick instead of
+  // the displayed timer just freezing while time keeps passing underneath.
+  useEffect(() => {
+    roundDeadlineRef.current = Date.now() + ROUND_DURATION * 1000;
+    resolvedRef.current = false;
+  }, [round]);
+
   // Timer
   useEffect(() => {
     if (selected !== null || roundWinner !== null) return;
-    if (timeLeft <= 0) {
-      // Time up — if no one answered correctly, it's a tie
-      if (firstCorrectRef.current === null) {
+    const tick = () => {
+      const remaining = Math.max(0, Math.ceil((roundDeadlineRef.current - Date.now()) / 1000));
+      setTimeLeft(remaining);
+      if (remaining <= 0 && firstCorrectRef.current === null) {
         resolveRound(false, opponentCorrect, null);
       }
-      return;
-    }
-    const tid = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
-    return () => clearTimeout(tid);
-  }, [timeLeft, selected, roundWinner, resolveRound, opponentCorrect]);
+    };
+    tick();
+    const tid = setInterval(tick, 1000);
+    return () => clearInterval(tid);
+  }, [round, selected, roundWinner, resolveRound, opponentCorrect]);
 
   // React to the opponent's broadcasted answer (event is owned/subscribed at the OnlineApp level).
   useEffect(() => {
