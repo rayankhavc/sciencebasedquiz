@@ -58,6 +58,20 @@ const DICT: Dict = {
   results_title: { en: "Results", fr: "Résultats" },
   play_again: { en: "Play again", fr: "Rejouer" },
   home: { en: "Home", fr: "Accueil" },
+  match_result: { en: "Match result", fr: "Résultat du match" },
+  quiz_complete: { en: "Quiz complete", fr: "Quiz terminé" },
+  victory: { en: "VICTORY", fr: "VICTOIRE" },
+  defeat: { en: "DEFEAT", fr: "DÉFAITE" },
+  done: { en: "DONE", fr: "TERMINÉ" },
+  correct_answers: { en: "Correct answers", fr: "Bonnes réponses" },
+  review_one: { en: "Review my mistake", fr: "Revoir mon erreur" },
+  review_many: { en: "Review my {n} mistakes", fr: "Revoir mes {n} erreurs" },
+  back_dashboard: { en: "← Back to dashboard", fr: "← Retour au tableau de bord" },
+  mistake_review: { en: "Mistake review", fr: "Revue des erreurs" },
+  close: { en: "Close", fr: "Fermer" },
+  correct_answer_label: { en: "Correct answer", fr: "Bonne réponse" },
+  share: { en: "Share my result", fr: "Partager mon résultat" },
+  share_copied: { en: "Result copied to clipboard", fr: "Résultat copié dans le presse-papier" },
 };
 
 const LangCtx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof DICT) => string }>({
