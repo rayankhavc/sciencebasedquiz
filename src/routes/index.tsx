@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { LangProvider, useLang, localizeQuestion } from "@/lib/i18n";
+import { LangProvider, useLang, localizeCategory, localizeDifficulty, localizeQuestion } from "@/lib/i18n";
 
 
 export const Route = createFileRoute("/")({
@@ -1624,16 +1624,18 @@ type Bot = {
   id: BotId;
   name: string;
   tag: string;
+  tagFr: string;
   accuracy: number;
   minDelay: number; // ms
   maxDelay: number;
   blurb: string;
+  blurbFr: string;
 };
 
 const BOTS: Bot[] = [
-  { id: "novice", name: "Novice Bot", tag: "Easy", accuracy: 0.5, minDelay: 5000, maxDelay: 8000, blurb: "Just discovered the gym. Slow and unsure." },
-  { id: "researcher", name: "Researcher Bot", tag: "Medium", accuracy: 0.75, minDelay: 3000, maxDelay: 5000, blurb: "Reads abstracts on weekends. Solid opponent." },
-  { id: "hypertrophy", name: "Dr. Hypertrophy", tag: "Hardcore", accuracy: 0.95, minDelay: 1000, maxDelay: 3000, blurb: "PhD in muscle science. Brutal accuracy." },
+  { id: "novice", name: "Novice Bot", tag: "Easy", tagFr: "Facile", accuracy: 0.5, minDelay: 5000, maxDelay: 8000, blurb: "Just discovered the gym. Slow and unsure.", blurbFr: "Vient de découvrir la salle. Lent et hésitant." },
+  { id: "researcher", name: "Researcher Bot", tag: "Medium", tagFr: "Moyen", accuracy: 0.75, minDelay: 3000, maxDelay: 5000, blurb: "Reads abstracts on weekends. Solid opponent.", blurbFr: "Lit des abstracts le week-end. Adversaire solide." },
+  { id: "hypertrophy", name: "Dr. Hypertrophy", tag: "Hardcore", tagFr: "Hardcore", accuracy: 0.95, minDelay: 1000, maxDelay: 3000, blurb: "PhD in muscle science. Brutal accuracy.", blurbFr: "Doctorat en science du muscle. Précision brutale." },
 ];
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1665,7 +1667,15 @@ function App() {
   const [category, setCategory] = useState<Category>("All");
   const [quizLength, setQuizLength] = useState<number>(10);
   const [questionDuration, setQuestionDuration] = useState<number>(DEFAULT_DURATION);
+  const [quizSeed, setQuizSeed] = useState(0);
   const [results, setResults] = useState<RoundResult[]>([]);
+
+  const newQuizSeed = () => {
+    if (typeof crypto !== "undefined" && "getRandomValues" in crypto) {
+      return crypto.getRandomValues(new Uint32Array(1))[0];
+    }
+    return Date.now() + Math.floor(Math.random() * 1_000_000);
+  };
 
   const startSolo = () => {
     setMode("solo");
@@ -1723,6 +1733,7 @@ function App() {
               onBack={() => setScreen(mode === "solo" ? "username" : "botSelect")}
               onStart={() => {
                 setResults([]);
+                setQuizSeed(newQuizSeed());
                 setScreen("arena");
               }}
             />
@@ -1730,11 +1741,13 @@ function App() {
 
           {screen === "arena" && (
             <Arena
+              key={quizSeed}
               mode={mode}
               bot={bot}
               category={category}
               quizLength={quizLength}
               questionDuration={questionDuration}
+              quizSeed={quizSeed}
               onFinish={finishGame}
               onQuit={() => setScreen("dashboard")}
             />
