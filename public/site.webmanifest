@@ -1,0 +1,12 @@
+{
+  "name": "Science Based Quiz",
+  "short_name": "SBQ",
+  "description": "Evidence-based quiz on hypertrophy, biomechanics and sports nutrition.",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "theme_color": "#0a0a0a",
+  "background_color": "#0a0a0a",
+  "display": "standalone",
+  "start_url": "/"
+}

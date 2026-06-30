@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LangProvider, useLang, localizeCategory, localizeDifficulty, localizeQuestion } from "@/lib/i18n";
 
@@ -20,10 +20,10 @@ export const Route = createFileRoute("/")({
 // Question database
 // ──────────────────────────────────────────────────────────────────────────────
 
-type Difficulty = "easy" | "medium" | "hardcore";
-type Category = "All" | "Nutrition" | "Biomechanics" | "Hypertrophy" | "Physiology";
+export type Difficulty = "easy" | "medium" | "hardcore";
+export type Category = "All" | "Nutrition" | "Biomechanics" | "Hypertrophy" | "Physiology";
 
-type Question = {
+export type Question = {
   id: string;
   difficulty: Difficulty;
   category: Exclude<Category, "All">;
@@ -40,7 +40,7 @@ type Question = {
 };
 
 
-const QUESTIONS: Question[] = [
+export const QUESTIONS: Question[] = [
   // ── EASY ──
   {
     id: "e1",
@@ -243,29 +243,39 @@ const QUESTIONS: Question[] = [
     id: "e6",
     difficulty: "easy",
     category: "Physiology",
-    question: "What is the primary fuel for muscle contraction during a 1-rep max effort?",
-    options: ["Free fatty acids", "ATP–phosphocreatine system", "Aerobic glycolysis", "Ketone bodies"],
-    correct_answer: "ATP–phosphocreatine system",
-    explanation: "Maximal efforts under ~10 seconds rely almost entirely on stored ATP and phosphocreatine (the alactic anaerobic system).",
-    source_pmid: "11583104",
-    source_url: "https://pubmed.ncbi.nlm.nih.gov/11583104/",
-    question_fr: "Quel est le carburant principal de la contraction musculaire lors d'un effort à 1RM ?",
-    options_fr: ["Acides gras libres", "Système ATP–phosphocréatine", "Glycolyse aérobie", "Corps cétoniques"],
-    explanation_fr: "Les efforts maximaux de moins de ~10 s reposent presque entièrement sur l'ATP stocké et la phosphocréatine (système anaérobie alactique).",
+    question: "How many hours of sleep per night are most consistently associated with optimal muscle recovery and athletic performance?",
+    options: ["4–5 hours", "7–9 hours", "10–12 hours", "Sleep duration does not affect recovery"],
+    correct_answer: "7–9 hours",
+    explanation: "Research and sports-science guidelines link 7–9 hours of sleep per night with optimal GH and testosterone profiles, reduced injury risk, and superior training adaptation in athletes.",
+    source_pmid: "24814782",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/24814782/",
+    question_fr: "Combien d'heures de sommeil par nuit sont le plus systématiquement associées à une récupération musculaire et une performance athlétique optimales ?",
+    options_fr: ["4–5 heures", "7–9 heures", "10–12 heures", "La durée du sommeil n'affecte pas la récupération"],
+    explanation_fr: "La recherche et les recommandations en science du sport associent 7–9 h/nuit à un profil hormonal optimal (GH, testostérone), un risque de blessure moindre et de meilleures adaptations à l'entraînement.",
   },
   {
     id: "e7",
     difficulty: "easy",
-    category: "Nutrition",
-    question: "What protein intake range (g/kg bodyweight/day) is recommended to maximize muscle protein synthesis in resistance-trained individuals?",
-    options: ["0.4–0.8", "1.6–2.2", "3.0–4.0", "5.0+"],
-    correct_answer: "1.6–2.2",
-    explanation: "Morton et al.'s 2018 meta-analysis identified ~1.6 g/kg/day as the plateau, with little added benefit beyond ~2.2 g/kg.",
-    source_pmid: "28698222",
-    source_url: "https://pubmed.ncbi.nlm.nih.gov/28698222/",
-    question_fr: "Quelle fourchette d'apport protéique (g/kg/jour) est recommandée pour maximiser la synthèse protéique musculaire chez les pratiquants entraînés ?",
-    options_fr: ["0,4–0,8", "1,6–2,2", "3,0–4,0", "5,0+"],
-    explanation_fr: "La méta-analyse de Morton et al. (2018) identifie ~1,6 g/kg/jour comme plateau, avec peu de bénéfices au-delà de ~2,2 g/kg.",
+    category: "Hypertrophy",
+    question: "What is the primary purpose of a planned deload week in a resistance training program?",
+    options: [
+      "To rapidly gain new strength during that week",
+      "To reduce accumulated fatigue and restore full fitness expression before the next block",
+      "To practice new movement patterns only",
+      "To increase training volume to a new personal record",
+    ],
+    correct_answer: "To reduce accumulated fatigue and restore full fitness expression before the next block",
+    explanation: "Deload periods (typically 40–60% volume reduction) allow accumulated fatigue to dissipate so that fitness gains earned during the previous block are fully expressed and injury risk is reduced.",
+    source_pmid: "27182422",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/27182422/",
+    question_fr: "Quel est l'objectif principal d'une semaine de décharge (deload) planifiée dans un programme de musculation ?",
+    options_fr: [
+      "Gagner rapidement en force pendant cette semaine",
+      "Réduire la fatigue accumulée et restaurer la pleine expression de la condition physique avant le prochain bloc",
+      "Ne pratiquer que de nouveaux patrons de mouvement",
+      "Augmenter le volume jusqu'à un nouveau record personnel",
+    ],
+    explanation_fr: "Les semaines de décharge (réduction de volume ~40–60%) permettent à la fatigue de se dissiper pour exprimer pleinement les gains du bloc précédent et réduire le risque de blessure.",
   },
   {
     id: "e8",
@@ -464,15 +474,15 @@ const QUESTIONS: Question[] = [
     id: "e6_2",
     difficulty: "easy",
     category: "Physiology",
-    question: "Which energy system is the primary contributor to a maximal effort lasting roughly 5–10 seconds?",
-    options: ["Oxidative phosphorylation", "Phosphagen (ATP–PCr) system", "Anaerobic glycolysis (lactate)", "Beta-oxidation"],
-    correct_answer: "Phosphagen (ATP–PCr) system",
-    explanation: "Phosphocreatine breakdown provides the fastest ATP resynthesis pathway and dominates very short, maximal efforts before glycolysis takes over.",
-    source_pmid: "24791915",
-    source_url: "https://pubmed.ncbi.nlm.nih.gov/24791915/",
-    question_fr: "Quel système énergétique contribue principalement à un effort maximal d'environ 5–10 secondes ?",
-    options_fr: ["Phosphorylation oxydative", "Système phosphagène (ATP–PCr)", "Glycolyse anaérobie (lactate)", "Bêta-oxydation"],
-    explanation_fr: "La dégradation de la phosphocréatine fournit la voie la plus rapide de resynthèse d'ATP et domine les efforts maximaux très courts.",
+    question: "On the 0–10 RPE (Rate of Perceived Exertion) resistance-training scale, RPE 8 corresponds approximately to:",
+    options: ["Maximum effort — true muscular failure", "2 reps in reserve (could do ~2 more)", "A very easy warm-up set", "Sprint-interval intensity"],
+    correct_answer: "2 reps in reserve (could do ~2 more)",
+    explanation: "In the resistance-training RPE/RIR system: RPE 10 = failure (0 RIR), RPE 9 = 1 RIR, RPE 8 = 2 RIR, RPE 7 = 3 RIR. Sets at RPE ≥7 represent the effective hypertrophy stimulus zone.",
+    source_pmid: "28658936",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/28658936/",
+    question_fr: "Sur l'échelle RPE 0–10 utilisée en musculation, un RPE de 8 correspond approximativement à :",
+    options_fr: ["Effort maximal — échec musculaire vrai", "2 répétitions en réserve (pourrait en faire ~2 de plus)", "Une série d'échauffement très légère", "Une intensité d'intervalle de sprint"],
+    explanation_fr: "Dans le système RPE/RIR musculaire : RPE 10 = échec (0 RIR), RPE 9 = 1 RIR, RPE 8 = 2 RIR, RPE 7 = 3 RIR. Les séries à RPE ≥7 représentent la zone de stimulus hypertrophique efficace.",
   },
   {
     id: "e7_2",
@@ -654,16 +664,26 @@ const QUESTIONS: Question[] = [
   {
     id: "m7_2",
     difficulty: "medium",
-    category: "Nutrition",
-    question: "What is the approximate per-meal leucine threshold thought to maximally trigger muscle protein synthesis in young adults?",
-    options: ["~0.3 g", "~3 g", "~10 g", "~30 g"],
-    correct_answer: "~3 g",
-    explanation: "Roughly 2.5–3 g of leucine per meal (≈ 0.3 g/kg of high-quality protein) appears to robustly stimulate MPS in young adults.",
-    source_pmid: "22150425",
-    source_url: "https://pubmed.ncbi.nlm.nih.gov/22150425/",
-    question_fr: "Quel est le seuil approximatif de leucine par repas censé déclencher de manière maximale la synthèse protéique musculaire chez le jeune adulte ?",
-    options_fr: ["~0,3 g", "~3 g", "~10 g", "~30 g"],
-    explanation_fr: "Environ 2,5–3 g de leucine par repas (≈ 0,3 g/kg de protéines de qualité) stimulent robustement la SPM chez le jeune adulte.",
+    category: "Physiology",
+    question: "Post-exercise spikes in testosterone and growth hormone contribute to long-term hypertrophy by how much, according to current mechanistic evidence?",
+    options: [
+      "They are the primary independent driver of muscle growth",
+      "They provide a moderate, consistent boost on top of mechanical signaling",
+      "Very little — transient hormonal spikes add minimal independent anabolic stimulus beyond local mechanical tension",
+      "They are completely absent after resistance exercise",
+    ],
+    correct_answer: "Very little — transient hormonal spikes add minimal independent anabolic stimulus beyond local mechanical tension",
+    explanation: "Schoenfeld (2013) and subsequent mechanistic reviews show that acute post-exercise testosterone and GH elevations do not independently predict hypertrophy; local mechanotransduction is the dominant driver.",
+    source_pmid: "23442269",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/23442269/",
+    question_fr: "Les pics de testostérone et d'hormone de croissance post-exercice contribuent à l'hypertrophie à long terme de combien, selon les données mécanistiques actuelles ?",
+    options_fr: [
+      "Ils sont le principal moteur indépendant de la croissance musculaire",
+      "Ils apportent un coup de pouce modéré et constant au-delà de la signalisation mécanique",
+      "Très peu — les pics hormonaux transitoires ajoutent un stimulus anabolique indépendant minime au-delà de la tension mécanique locale",
+      "Ils sont totalement absents après la musculation",
+    ],
+    explanation_fr: "Schoenfeld (2013) et les revues mécanistiques ultérieures montrent que les élévations aiguës de testostérone et GH post-exercice ne prédisent pas indépendamment l'hypertrophie ; la mécanotransduction locale est le moteur dominant.",
   },
   {
     id: "m8_2",
@@ -763,21 +783,26 @@ const QUESTIONS: Question[] = [
   {
     id: "m13",
     difficulty: "medium",
-    category: "Hypertrophy",
-    question: "How does training to (or very near) momentary failure compare to stopping with reps in reserve for hypertrophy?",
+    category: "Nutrition",
+    question: "Regarding the post-exercise 'anabolic window', which statement best reflects current evidence?",
     options: [
-      "Failure is required for any hypertrophy",
-      "Stopping a few reps short generally produces similar hypertrophy with less fatigue",
-      "Stopping short produces zero hypertrophy",
-      "Only failure training builds type I fibers",
+      "Protein must be consumed within 30 minutes or muscle gains are minimal",
+      "A broader ~2-hour peri-workout window is adequate; total daily protein intake is a stronger predictor of hypertrophy than strict timing",
+      "Post-exercise protein timing is completely irrelevant under all conditions",
+      "Only fast-digesting proteins consumed immediately post-workout trigger MPS",
     ],
-    correct_answer: "Stopping a few reps short generally produces similar hypertrophy with less fatigue",
-    explanation: "Recent meta-analyses (Grgic et al.) show that stopping 1–3 reps short of failure yields hypertrophy outcomes broadly comparable to training to failure with lower fatigue cost.",
-    source_pmid: "34669519",
-    source_url: "https://pubmed.ncbi.nlm.nih.gov/34669519/",
-    question_fr: "Comment se compare l'entraînement à (ou très près de) l'échec momentané vs s'arrêter avec des reps en réserve pour l'hypertrophie ?",
-    options_fr: ["L'échec est requis pour toute hypertrophie", "S'arrêter quelques reps avant produit généralement une hypertrophie similaire avec moins de fatigue", "S'arrêter avant produit zéro hypertrophie", "Seul l'entraînement à l'échec construit les fibres de type I"],
-    explanation_fr: "Les méta-analyses récentes (Grgic et al.) montrent que s'arrêter 1–3 reps avant l'échec donne une hypertrophie comparable à l'échec avec moins de coût de fatigue.",
+    correct_answer: "A broader ~2-hour peri-workout window is adequate; total daily protein intake is a stronger predictor of hypertrophy than strict timing",
+    explanation: "Aragon & Schoenfeld's review shows that a ~2-hour peri-workout protein window is sufficient, and that total daily protein quality and quantity are stronger determinants of hypertrophy than timing alone.",
+    source_pmid: "23343679",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/23343679/",
+    question_fr: "Concernant la « fenêtre anabolique » post-exercice, quelle affirmation reflète le mieux les données actuelles ?",
+    options_fr: [
+      "Les protéines doivent être consommées dans les 30 minutes ou les gains musculaires sont minimes",
+      "Une fenêtre péri-exercice de ~2 h est suffisante ; l'apport protéique total quotidien est un prédicteur plus fort de l'hypertrophie que le timing strict",
+      "Le timing des protéines post-exercice est totalement sans importance dans toutes les situations",
+      "Seules les protéines à digestion rapide consommées immédiatement post-séance déclenchent la SPM",
+    ],
+    explanation_fr: "La revue d'Aragon & Schoenfeld montre qu'une fenêtre péri-exercice de ~2 h est suffisante, et que la quantité et qualité totales de protéines journalières prédisent mieux l'hypertrophie que le seul timing.",
   },
   {
     id: "m14",
@@ -1436,26 +1461,26 @@ const QUESTIONS: Question[] = [
     explanation_fr: "Bandes et chaînes ajoutent de la résistance en remontant, lissant la courbe de force et surchargeant le haut de l'amplitude où l'avantage mécanique est maximal.",
   },
   {
-    id: "h22", difficulty: "hardcore", category: "Hypertrophy",
-    question: "Recent evidence on partial-range training at long muscle lengths suggests:",
+    id: "h22", difficulty: "hardcore", category: "Biomechanics",
+    question: "In a barbell back squat, lumbar spine compressive and shear forces are most effectively managed by:",
     options: [
-      "Long-length partials can match or exceed full-ROM hypertrophy in several muscles",
-      "Long-length partials produce no hypertrophy",
-      "Only full ROM at any length produces hypertrophy",
-      "Long-length partials are exclusively for tendon adaptation",
+      "Maximizing forward trunk lean throughout the entire lift",
+      "Maintaining a neutral spine and creating intra-abdominal pressure via a valsalva brace to transfer load through the core",
+      "Performing the lift with a deliberately rounded lower back",
+      "Eliminating hip hinge and relying only on knee extension",
     ],
-    correct_answer: "Long-length partials can match or exceed full-ROM hypertrophy in several muscles",
-    explanation: "Maeo, Pedrosa and others report long-length partial reps producing hypertrophy at least equal to full ROM in several muscle groups, supporting tension-at-long-length as a key stimulus.",
-    source_pmid: "36029271",
-    source_url: "https://pubmed.ncbi.nlm.nih.gov/36029271/",
-    question_fr: "Les données récentes sur les partielles en position allongée suggèrent :",
+    correct_answer: "Maintaining a neutral spine and creating intra-abdominal pressure via a valsalva brace to transfer load through the core",
+    explanation: "IAP from a valsalva/braced core acts as a hydraulic column that substantially reduces lumbar compressive and anterior shear forces. A neutral spine further minimizes disc stress during the squat.",
+    source_pmid: "11299667",
+    source_url: "https://pubmed.ncbi.nlm.nih.gov/11299667/",
+    question_fr: "Dans un squat barre haute, les forces de compression et de cisaillement lombaires sont le plus efficacement gérées par :",
     options_fr: [
-      "Les partielles en position allongée peuvent égaler ou dépasser l'hypertrophie en ROM complète",
-      "Les partielles en position allongée ne produisent aucune hypertrophie",
-      "Seule la ROM complète à n'importe quelle longueur produit de l'hypertrophie",
-      "Les partielles en position allongée ne servent qu'au tendon",
+      "Maximiser l'inclinaison du tronc vers l'avant pendant tout le mouvement",
+      "Maintenir une colonne neutre et créer une pression intra-abdominale via un gainage valsalva pour transférer la charge par le tronc",
+      "Effectuer le mouvement avec le bas du dos délibérément arrondi",
+      "Éliminer la charnière de hanche et reposer uniquement sur l'extension du genou",
     ],
-    explanation_fr: "Maeo, Pedrosa et al. rapportent une hypertrophie au moins équivalente à la ROM complète avec des partielles en position allongée, confortant l'idée de la tension en position longue comme stimulus clé.",
+    explanation_fr: "La PIA d'un gainage/valsalva agit comme un cylindre hydraulique réduisant significativement les forces de compression et de cisaillement antérieur lombaires. Une colonne neutre minimise davantage le stress discal pendant le squat.",
   },
   {
     id: "h23", difficulty: "hardcore", category: "Physiology",
@@ -1678,6 +1703,7 @@ function shuffleArray<T>(items: T[]) {
 // ──────────────────────────────────────────────────────────────────────────────
 
 function App() {
+  const navigate = useNavigate();
   const [screen, setScreen] = useState<Screen>("dashboard");
   const [mode, setMode] = useState<Mode>("solo");
   const [username, setUsername] = useState("");
@@ -1705,6 +1731,10 @@ function App() {
     setScreen("botSelect");
   };
 
+  const startOnline = () => {
+    navigate({ to: "/online" });
+  };
+
   const finishGame = (finalResults: RoundResult[]) => {
     setResults(finalResults);
     setScreen("results");
@@ -1717,7 +1747,7 @@ function App() {
           <TopBar />
 
           {screen === "dashboard" && (
-            <Dashboard onSolo={startSolo} onBot={startBot} />
+            <Dashboard onSolo={startSolo} onBot={startBot} onOnline={startOnline} />
           )}
 
           {screen === "username" && (
@@ -1867,9 +1897,10 @@ function Footer() {
       <div className="mt-6 text-center text-[10px] uppercase tracking-widest opacity-60">
         {t("copyright")}
       </div>
+      <div className="mt-1.5 text-center text-[9px] tracking-wide opacity-35">
+        {t("made_by")}
+      </div>
     </footer>
-
-
   );
 }
 
@@ -1877,7 +1908,7 @@ function Footer() {
 // Dashboard
 // ──────────────────────────────────────────────────────────────────────────────
 
-function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void }) {
+function Dashboard({ onSolo, onBot, onOnline }: { onSolo: () => void; onBot: () => void; onOnline: () => void }) {
   const { t } = useLang();
   return (
     <div className="space-y-6 fade-in-up">
@@ -1904,6 +1935,13 @@ function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void })
           icon={<SwordsIcon />}
         />
         <CTAButton
+          variant="secondary"
+          onClick={onOnline}
+          title={t("online_mode")}
+          subtitle={t("online_mode_sub")}
+          icon={<GlobeIcon />}
+        />
+        <CTAButton
           variant="ghost"
           onClick={onSolo}
           title={t("solo_mode")}
@@ -1911,6 +1949,13 @@ function Dashboard({ onSolo, onBot }: { onSolo: () => void; onBot: () => void })
           icon={<UserIcon />}
         />
       </section>
+
+      <Link
+        to="/leaderboard"
+        className="block rounded-xl border border-border bg-secondary/40 px-4 py-3 text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground hover:border-accent/60 hover:text-cyan-glow"
+      >
+        {t("view_leaderboard")}
+      </Link>
     </div>
   );
 }
@@ -1926,10 +1971,11 @@ function CTAButton({
   title: string;
   subtitle: string;
   icon: React.ReactNode;
-  variant: "primary" | "ghost";
+  variant: "primary" | "secondary" | "ghost";
   onClick: () => void;
 }) {
   const isPrimary = variant === "primary";
+  const isSecondary = variant === "secondary";
   return (
     <button
       onClick={onClick}
@@ -1937,10 +1983,12 @@ function CTAButton({
         "group relative flex w-full items-center gap-4 rounded-2xl p-5 text-left transition-all duration-300 " +
         (isPrimary
           ? "bg-primary text-primary-foreground neon-glow hover:scale-[1.02]"
+          : isSecondary
+          ? "bg-accent/15 border border-accent/50 text-foreground hover:border-accent hover:scale-[1.01]"
           : "glass hover:border-primary/60 hover:scale-[1.01]")
       }
     >
-      <div className={"grid h-12 w-12 shrink-0 place-items-center rounded-xl " + (isPrimary ? "bg-black/15" : "bg-primary/15 text-primary")}>
+      <div className={"grid h-12 w-12 shrink-0 place-items-center rounded-xl " + (isPrimary ? "bg-black/15" : isSecondary ? "bg-accent/20 text-cyan-glow" : "bg-primary/15 text-primary")}>
         {icon}
       </div>
       <div className="min-w-0 flex-1">
@@ -2764,6 +2812,15 @@ function ArrowIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+    </svg>
+  );
+}
+function GlobeIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
     </svg>
   );
 }

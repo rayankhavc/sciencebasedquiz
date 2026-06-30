@@ -77,6 +77,64 @@ const DICT: Dict = {
   correct_answer_label: { en: "Correct answer", fr: "Bonne réponse" },
   share: { en: "Share my result", fr: "Partager mon résultat" },
   share_copied: { en: "Result copied to clipboard", fr: "Résultat copié dans le presse-papier" },
+
+  // Online mode - Dashboard
+  online_mode: { en: "1v1 Online", fr: "1v1 En ligne" },
+  online_mode_sub: { en: "Challenge a real player in real time", fr: "Défiez un vrai joueur en temps réel" },
+
+  // Online mode - Setup
+  enter_username_online: { en: "Enter your username to play online", fr: "Entrez votre pseudo pour jouer en ligne" },
+  create_room: { en: "Create a room", fr: "Créer une salle" },
+  join_room: { en: "Join a room", fr: "Rejoindre une salle" },
+  room_code: { en: "Room code", fr: "Code de salle" },
+  room_code_placeholder: { en: "e.g. ABCD", fr: "ex : ABCD" },
+  join: { en: "Join →", fr: "Rejoindre →" },
+  creating_room: { en: "Creating room…", fr: "Création de la salle…" },
+  joining_room: { en: "Joining room…", fr: "Rejoindre la salle…" },
+  room_not_found: { en: "Room not found or already started", fr: "Salle introuvable ou déjà démarrée" },
+
+  // Online mode - Lobby
+  lobby_title: { en: "Lobby", fr: "Salon" },
+  your_room_code: { en: "Your room code", fr: "Votre code de salle" },
+  share_code: { en: "Share this code with your opponent", fr: "Partagez ce code avec votre adversaire" },
+  waiting_opponent: { en: "Waiting for opponent…", fr: "En attente de l'adversaire…" },
+  opponent_joined: { en: "Opponent joined!", fr: "L'adversaire a rejoint !" },
+  ready_up: { en: "I'm ready!", fr: "Je suis prêt !" },
+  waiting_ready: { en: "Waiting for both players to be ready…", fr: "En attente que les deux joueurs soient prêts…" },
+  starting_in: { en: "Starting in", fr: "Démarrage dans" },
+  copied: { en: "Copied!", fr: "Copié !" },
+
+  // Online mode - Arena
+  opponent: { en: "Opponent", fr: "Adversaire" },
+  round_of: { en: "Round", fr: "Round" },
+  first_correct_wins: { en: "First correct answer wins the round", fr: "La première bonne réponse remporte le round" },
+  you_won_round: { en: "You won this round!", fr: "Vous avez remporté ce round !" },
+  opponent_won_round: { en: "Opponent won this round!", fr: "L'adversaire a remporté ce round !" },
+  tie_round: { en: "Tie — no point", fr: "Égalité — aucun point" },
+  opponent_disconnected: { en: "Opponent disconnected", fr: "L'adversaire s'est déconnecté" },
+  connection_lost: { en: "Connection lost", fr: "Connexion perdue" },
+
+  // Online mode - Results
+  online_victory: { en: "YOU WIN!", fr: "VOUS GAGNEZ !" },
+  online_defeat: { en: "YOU LOSE", fr: "VOUS PERDEZ" },
+  online_tie: { en: "TIE GAME", fr: "MATCH NUL" },
+  final_score: { en: "Final Score", fr: "Score final" },
+  play_again_online: { en: "Play again online", fr: "Rejouer en ligne" },
+  new_rating: { en: "New rating", fr: "Nouveau rating" },
+
+  // Leaderboard
+  leaderboard_title: { en: "Global Leaderboard", fr: "Classement global" },
+  leaderboard_sub: { en: "Live rankings updated in real time across all players", fr: "Classement en direct, mis à jour en temps réel pour tous les joueurs" },
+  view_leaderboard: { en: "🏆 Leaderboard", fr: "🏆 Classement" },
+  live: { en: "LIVE", fr: "EN DIRECT" },
+  no_data: { en: "No ranked matches yet. Be the first!", fr: "Aucun match classé pour l'instant. Soyez le premier !" },
+  wins_short: { en: "W", fr: "V" },
+  losses_short: { en: "L", fr: "D" },
+  ties_short: { en: "T", fr: "N" },
+  win_rate: { en: "win rate", fr: "victoires" },
+
+  // Footer credit
+  made_by: { en: "Made by Raythan", fr: "Fait par Raythan" },
 };
 
 const LangCtx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof DICT) => string }>({

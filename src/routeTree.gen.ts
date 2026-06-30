@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as OnlineRouteImport } from './routes/online'
 import { Route as LegalRouteImport } from './routes/legal'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -19,9 +21,19 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnlineRoute = OnlineRouteImport.update({
+  id: '/online',
+  path: '/online',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LegalRoute = LegalRouteImport.update({
   id: '/legal',
   path: '/legal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -38,34 +50,49 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/legal': typeof LegalRoute
+  '/online': typeof OnlineRoute
   '/privacy': typeof PrivacyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/legal': typeof LegalRoute
+  '/online': typeof OnlineRoute
   '/privacy': typeof PrivacyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/legal': typeof LegalRoute
+  '/online': typeof OnlineRoute
   '/privacy': typeof PrivacyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/legal' | '/privacy'
+  fullPaths: '/' | '/about' | '/leaderboard' | '/legal' | '/online' | '/privacy'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/legal' | '/privacy'
-  id: '__root__' | '/' | '/about' | '/legal' | '/privacy'
+  to: '/' | '/about' | '/leaderboard' | '/legal' | '/online' | '/privacy'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/leaderboard'
+    | '/legal'
+    | '/online'
+    | '/privacy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  LeaderboardRoute: typeof LeaderboardRoute
   LegalRoute: typeof LegalRoute
+  OnlineRoute: typeof OnlineRoute
   PrivacyRoute: typeof PrivacyRoute
 }
 
@@ -78,11 +105,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/online': {
+      id: '/online'
+      path: '/online'
+      fullPath: '/online'
+      preLoaderRoute: typeof OnlineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal': {
       id: '/legal'
       path: '/legal'
       fullPath: '/legal'
       preLoaderRoute: typeof LegalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -105,9 +146,21 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  LeaderboardRoute: LeaderboardRoute,
   LegalRoute: LegalRoute,
+  OnlineRoute: OnlineRoute,
   PrivacyRoute: PrivacyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
