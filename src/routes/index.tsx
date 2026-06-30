@@ -2016,7 +2016,7 @@ function BotSelect({
   onBack: () => void;
   onContinue: () => void;
 }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   return (
     <div className="space-y-6 fade-in-up">
       <button onClick={onBack} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">{t("back")}</button>
@@ -2042,17 +2042,17 @@ function BotSelect({
               <div className="flex items-center justify-between">
                 <div className="font-display text-lg font-bold">{b.name}</div>
                 <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-cyan-glow">
-                  {b.tag}
+                  {lang === "fr" ? b.tagFr : b.tag}
                 </span>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">{b.blurb}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{lang === "fr" ? b.blurbFr : b.blurb}</p>
               <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
                 <div className="rounded-lg bg-secondary/60 p-2">
-                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Accuracy</div>
+                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">{t("accuracy")}</div>
                   <div className="font-display font-bold text-neon">{Math.round(b.accuracy * 100)}%</div>
                 </div>
                 <div className="rounded-lg bg-secondary/60 p-2">
-                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Response</div>
+                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">{t("response")}</div>
                   <div className="font-display font-bold text-cyan-glow">{b.minDelay / 1000}-{b.maxDelay / 1000}s</div>
                 </div>
               </div>
@@ -2098,7 +2098,7 @@ function CategorySelect({
   onBack: () => void;
   onStart: () => void;
 }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const cats: Category[] = ["All", "Nutrition", "Biomechanics", "Hypertrophy", "Physiology"];
   const lengths = [5, 10, 15, 20, 25, 30, 40, 50];
   const available = useMemo(
@@ -2129,7 +2129,7 @@ function CategorySelect({
                   : "border border-border bg-secondary/60 text-muted-foreground hover:text-foreground")
               }
             >
-              {c}
+              {localizeCategory(c, lang)}
             </button>
           ))}
         </div>
@@ -2210,6 +2210,7 @@ function Arena({
   category,
   quizLength,
   questionDuration,
+  quizSeed,
   onFinish,
   onQuit,
 }: {
@@ -2218,6 +2219,7 @@ function Arena({
   category: Category;
   quizLength: number;
   questionDuration: number;
+  quizSeed: number;
   onFinish: (r: RoundResult[]) => void;
   onQuit: () => void;
 }) {
@@ -2226,46 +2228,37 @@ function Arena({
     const pool = category === "All" ? QUESTIONS : QUESTIONS.filter((q) => q.category === category);
     const source = pool.length > 0 ? pool : QUESTIONS;
 
-    // Fisher–Yates shuffle
-    const shuffled = [...source];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
+    const shuffled = shuffleArray(source);
 
     // Category interleave: avoid two consecutive questions from the same category when possible
-    const buckets = new Map<string, typeof shuffled>();
+    const buckets = new Map<string, Question[]>();
     for (const q of shuffled) {
       const k = q.category;
       if (!buckets.has(k)) buckets.set(k, []);
       buckets.get(k)!.push(q);
     }
-    const ordered: typeof shuffled = [];
+    const ordered: Question[] = [];
     let lastCat = "";
     while (ordered.length < shuffled.length) {
-      // pick the largest bucket whose category differs from lastCat
       const candidates = [...buckets.entries()].filter(([c, arr]) => arr.length > 0 && c !== lastCat);
       const pickFrom = candidates.length > 0 ? candidates : [...buckets.entries()].filter(([, arr]) => arr.length > 0);
-      pickFrom.sort((a, b) => b[1].length - a[1].length);
-      const [cat, arr] = pickFrom[0];
+      const maxRemaining = Math.max(...pickFrom.map(([, arr]) => arr.length));
+      const strongestBuckets = pickFrom.filter(([, arr]) => arr.length === maxRemaining);
+      const [cat, arr] = strongestBuckets[randomIndex(strongestBuckets.length)];
       ordered.push(arr.shift()!);
       lastCat = cat;
     }
 
-    // Shuffle answer options per question (keep both languages aligned via shared index permutation)
+    // Shuffle answer options per question, keeping both languages aligned with the same permutation.
     const finalList = ordered.slice(0, Math.min(quizLength, ordered.length)).map((q) => {
       const n = q.options.length;
-      const perm = Array.from({ length: n }, (_, i) => i);
-      for (let i = perm.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [perm[i], perm[j]] = [perm[j], perm[i]];
-      }
+      const perm = shuffleArray(Array.from({ length: n }, (_, i) => i));
       const newOptions = perm.map((i) => q.options[i]);
       const newOptionsFr = q.options_fr ? perm.map((i) => q.options_fr![i]) : undefined;
       return { ...q, options: newOptions, options_fr: newOptionsFr };
     });
     return finalList;
-  }, [category, quizLength]);
+  }, [category, quizLength, quizSeed]);
 
 
   const [idx, setIdx] = useState(0);
@@ -2389,8 +2382,8 @@ function Arena({
 
       <section className="glass rounded-2xl p-5">
         <div className="mb-3 flex flex-wrap gap-2">
-          <Badge>{q.difficulty}</Badge>
-          <Badge variant="cyan">{q.category}</Badge>
+          <Badge>{localizeDifficulty(q.difficulty, lang)}</Badge>
+          <Badge variant="cyan">{localizeCategory(q.category, lang)}</Badge>
         </div>
         <h3 className="text-xl font-semibold leading-snug sm:text-2xl">{q.question}</h3>
       </section>
@@ -2432,13 +2425,13 @@ function Arena({
             onClick={() => setShowSource(true)}
             className="flex-1 rounded-xl border border-accent/50 bg-accent/10 px-4 py-3 text-sm font-semibold text-cyan-glow transition-colors hover:bg-accent/20"
           >
-            📚 View scientific source (PMID)
+            {t("view_source")}
           </button>
           <button
             onClick={next}
             className="flex-1 rounded-xl bg-primary px-4 py-3 font-display text-sm font-bold text-primary-foreground neon-glow transition-transform hover:scale-[1.02]"
           >
-            {idx + 1 >= total ? "See results →" : "Next question →"}
+            {idx + 1 >= total ? t("see_results") : t("next_question")}
           </button>
         </div>
       )}
@@ -2461,6 +2454,7 @@ function ScoreBar({
   accent: "primary" | "cyan";
   indicator?: "thinking" | "answered";
 }) {
+  const { t } = useLang();
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between text-xs">
@@ -2468,11 +2462,11 @@ function ScoreBar({
           <span className="font-semibold">{label}</span>
           {indicator === "thinking" && (
             <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground">
-              <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-accent" /> thinking…
+              <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-accent" /> {t("thinking")}
             </span>
           )}
           {indicator === "answered" && (
-            <span className="text-[10px] uppercase tracking-wider text-cyan-glow">answered</span>
+            <span className="text-[10px] uppercase tracking-wider text-cyan-glow">{t("answered")}</span>
           )}
         </div>
         <span className="font-display font-bold">{score}</span>
@@ -2493,6 +2487,7 @@ function ScoreBar({
 }
 
 function CountdownRing({ seconds, total, critical }: { seconds: number; total: number; critical: boolean }) {
+  const { t } = useLang();
   const radius = 38;
   const circ = 2 * Math.PI * radius;
   const pct = seconds / total;
@@ -2518,7 +2513,7 @@ function CountdownRing({ seconds, total, critical }: { seconds: number; total: n
         <div className="font-display text-2xl font-bold" style={{ color: critical ? "var(--danger)" : "var(--neon)" }}>
           {seconds}
         </div>
-        <div className="text-[9px] uppercase tracking-widest text-muted-foreground">sec</div>
+        <div className="text-[9px] uppercase tracking-widest text-muted-foreground">{t("seconds_label")}</div>
       </div>
     </div>
   );
@@ -2538,18 +2533,19 @@ function Badge({ children, variant = "primary" }: { children: React.ReactNode; v
 }
 
 function SourceModal({ q, onClose }: { q: Question; onClose: () => void }) {
+  const { t } = useLang();
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center">
       <div className="slide-up w-full max-w-lg rounded-t-3xl bg-card p-6 sm:rounded-3xl">
         <div className="mx-auto mb-4 h-1 w-12 rounded-full bg-border sm:hidden" />
         <div className="mb-2 flex items-center justify-between">
-          <div className="text-[10px] uppercase tracking-widest text-cyan-glow">Scientific source</div>
+          <div className="text-[10px] uppercase tracking-widest text-cyan-glow">{t("scientific_source")}</div>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">✕</button>
         </div>
         <h4 className="font-display text-lg font-bold">PMID: {q.source_pmid}</h4>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{q.explanation}</p>
         <div className="mt-5 rounded-xl bg-secondary p-3 text-xs">
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Correct answer</div>
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{t("correct_answer_label")}</div>
           <div className="mt-1 font-semibold text-primary">{q.correct_answer}</div>
         </div>
         <a
@@ -2558,7 +2554,7 @@ function SourceModal({ q, onClose }: { q: Question; onClose: () => void }) {
           rel="noopener noreferrer"
           className="mt-5 block w-full rounded-xl bg-primary px-4 py-3 text-center font-display text-sm font-bold text-primary-foreground neon-glow"
         >
-          Open on PubMed ↗
+          {t("open_pubmed")}
         </a>
       </div>
     </div>
@@ -2685,8 +2681,8 @@ function Results({
             return (
               <div key={m.question.id} className="glass rounded-2xl p-4">
                 <div className="mb-2 flex flex-wrap gap-2">
-                  <Badge>{m.question.difficulty}</Badge>
-                  <Badge variant="cyan">{m.question.category}</Badge>
+                  <Badge>{localizeDifficulty(m.question.difficulty, lang)}</Badge>
+                  <Badge variant="cyan">{localizeCategory(m.question.category, lang)}</Badge>
                 </div>
                 <div className="text-sm font-semibold">{ml.question}</div>
                 <div className="mt-3 rounded-lg bg-secondary p-3 text-xs">
