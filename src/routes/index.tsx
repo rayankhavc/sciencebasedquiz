@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { LangProvider, useLang, localizeCategory, localizeDifficulty, localizeQuestion } from "@/lib/i18n";
+import { useLang, localizeCategory, localizeDifficulty, localizeQuestion, RAYTHAN_PORTFOLIO_URL } from "@/lib/i18n";
 
 
 export const Route = createFileRoute("/")({
@@ -1741,7 +1741,6 @@ function App() {
   };
 
   return (
-    <LangProvider>
       <div className="min-h-screen text-foreground">
         <div className="mx-auto max-w-2xl px-4 py-6 sm:py-10">
           <TopBar />
@@ -1815,7 +1814,6 @@ function App() {
           <Footer />
         </div>
       </div>
-    </LangProvider>
   );
 }
 
@@ -1897,9 +1895,14 @@ function Footer() {
       <div className="mt-6 text-center text-[10px] uppercase tracking-widest opacity-60">
         {t("copyright")}
       </div>
-      <div className="mt-1.5 text-center text-[9px] tracking-wide opacity-35">
+      <a
+        href={RAYTHAN_PORTFOLIO_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-1.5 block text-center text-[9px] tracking-wide opacity-35 hover:opacity-70 transition-opacity"
+      >
         {t("made_by")}
-      </div>
+      </a>
     </footer>
   );
 }

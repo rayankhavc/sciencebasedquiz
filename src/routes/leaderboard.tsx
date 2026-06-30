@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LangProvider, useLang } from "@/lib/i18n";
+import { useLang, RAYTHAN_PORTFOLIO_URL } from "@/lib/i18n";
 import { supabase } from "@/lib/supabase";
 import { ensureAnonSession, fetchTopPlayers, type LeaderboardRow } from "@/lib/leaderboard";
 
@@ -16,7 +16,6 @@ export const Route = createFileRoute("/leaderboard")({
 
 function LeaderboardPage() {
   return (
-    <LangProvider>
       <div className="min-h-screen text-foreground">
         <div className="mx-auto max-w-2xl px-4 py-6 sm:py-10">
           <LeaderboardTopBar />
@@ -24,7 +23,6 @@ function LeaderboardPage() {
           <LeaderboardFooter />
         </div>
       </div>
-    </LangProvider>
   );
 }
 
@@ -57,7 +55,14 @@ function LeaderboardFooter() {
         <Link to="/privacy" className="hover:text-foreground transition-colors">{t("privacy")}</Link>
       </nav>
       <div className="mt-6 text-center text-[10px] uppercase tracking-widest opacity-60">{t("copyright")}</div>
-      <div className="mt-1.5 text-center text-[9px] tracking-wide opacity-35">{t("made_by")}</div>
+      <a
+        href={RAYTHAN_PORTFOLIO_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-1.5 block text-center text-[9px] tracking-wide opacity-35 hover:opacity-70 transition-opacity"
+      >
+        {t("made_by")}
+      </a>
     </footer>
   );
 }
