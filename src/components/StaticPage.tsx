@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useLang } from "../lib/i18n";
+import { useLang, RAYTHAN_PORTFOLIO_URL } from "../lib/i18n";
 
 export function StaticPage({
   title,
@@ -10,7 +10,7 @@ export function StaticPage({
   eyebrow: string;
   children: React.ReactNode;
 }) {
-  const { lang } = useLang();
+  const { lang, t } = useLang();
   const backLabel = lang === "fr" ? "← Retour à l'app" : "← Back to app";
   return (
     <div className="min-h-screen text-foreground">
@@ -26,9 +26,14 @@ export function StaticPage({
         <div className="mt-12 border-t border-border pt-5 text-center text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">
           © Science Based Quiz
         </div>
-        <div className="mt-1.5 text-center text-[9px] tracking-wide text-muted-foreground opacity-35">
-          {lang === "fr" ? "Fait par Raythan" : "Made by Raythan"}
-        </div>
+        <a
+          href={RAYTHAN_PORTFOLIO_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-1.5 block text-center text-[9px] tracking-wide text-muted-foreground opacity-35 hover:opacity-70 transition-opacity"
+        >
+          {t("made_by")}
+        </a>
       </div>
     </div>
   );

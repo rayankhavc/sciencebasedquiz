@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { LangProvider, useLang, localizeCategory, localizeDifficulty, localizeQuestion } from "@/lib/i18n";
+import { useLang, localizeCategory, localizeDifficulty, localizeQuestion, RAYTHAN_PORTFOLIO_URL } from "@/lib/i18n";
 import { supabase } from "@/lib/supabase";
 import { ensureAnonSession, getOrCreateProfile, recordMatchResult, type MatchOutcome } from "@/lib/leaderboard";
 import { QUESTIONS, type Question } from "./index";
@@ -25,6 +25,12 @@ type PlayerInfo = {
   playerName: string;
   isReady: boolean;
   rating: number;
+};
+
+type AnswerEvent = {
+  round: number;
+  playerId: string;
+  correct: boolean;
 };
 
 type RoundResult = {
@@ -69,7 +75,6 @@ function pickQuestions(count: number): Question[] {
 
 function OnlinePage() {
   return (
-    <LangProvider>
       <div className="min-h-screen text-foreground">
         <div className="mx-auto max-w-2xl px-4 py-6 sm:py-10">
           <OnlineTopBar />
@@ -77,7 +82,6 @@ function OnlinePage() {
           <OnlineFooter />
         </div>
       </div>
-    </LangProvider>
   );
 }
 
@@ -139,12 +143,26 @@ function OnlineFooter() {
         <Link to="/privacy" className="hover:text-foreground transition-colors">{t("privacy")}</Link>
       </nav>
       <div className="mt-6 text-center text-[10px] uppercase tracking-widest opacity-60">{t("copyright")}</div>
-      <div className="mt-1.5 text-center text-[9px] tracking-wide opacity-35">{t("made_by")}</div>
+      <a
+        href={RAYTHAN_PORTFOLIO_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-1.5 block text-center text-[9px] tracking-wide opacity-35 hover:opacity-70 transition-opacity"
+      >
+        {t("made_by")}
+      </a>
     </footer>
   );
 }
 
 // ─── App state machine ────────────────────────────────────────────────────────
+//
+// One Realtime channel is shared across the whole match (lobby + arena). Every
+// listener it will ever need is registered ONCE, here, before the channel is
+// ever subscribed — Supabase Realtime requires .on() to be called before
+// .subscribe(), otherwise events silently never reach the client. Child
+// screens (Lobby/Arena) only read state lifted here; they never call
+// channel.on() themselves.
 
 function OnlineApp() {
   const [screen, setScreen] = useState<OnlineScreen>("setup");
@@ -154,6 +172,8 @@ function OnlineApp() {
   const [playerId, setPlayerId] = useState<string>(() => generateFallbackId());
   const [myRating, setMyRating] = useState(1000);
   const [opponent, setOpponent] = useState<PlayerInfo | null>(null);
+  const [opponentLeft, setOpponentLeft] = useState(false);
+  const [answerEvent, setAnswerEvent] = useState<AnswerEvent | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [roundResults, setRoundResults] = useState<RoundResult[]>([]);
   const [countdownSecs, setCountdownSecs] = useState(3);
@@ -172,6 +192,37 @@ function OnlineApp() {
 
   useEffect(() => () => leaveChannel(), [leaveChannel]);
 
+  const openChannel = useCallback((code: string, selfId: string): RealtimeChannel => {
+    const channel = supabase.channel(`game-room:${code}`, { config: { presence: { key: selfId } } });
+    channelRef.current = channel;
+
+    channel.on("presence", { event: "sync" }, () => {
+      const state = channel.presenceState<PlayerInfo>();
+      const others = Object.values(state).flat().filter((p) => p.playerId !== selfId);
+      setOpponent(others.length > 0 ? { ...others[0], rating: others[0].rating ?? 1000 } : null);
+    });
+
+    channel.on("presence", { event: "leave" }, () => {
+      setOpponentLeft(true);
+    });
+
+    channel.on("broadcast", { event: "game_start" }, ({ payload }) => {
+      const ids = payload?.questionIds as string[] | undefined;
+      if (!ids) return;
+      const qs = ids.map((id) => QUESTIONS.find((q) => q.id === id)).filter(Boolean) as Question[];
+      if (qs.length > 0) {
+        setQuestions(qs);
+        setScreen("countdown");
+      }
+    });
+
+    channel.on("broadcast", { event: "player_answer" }, ({ payload }) => {
+      setAnswerEvent(payload as AnswerEvent);
+    });
+
+    return channel;
+  }, []);
+
   if (screen === "setup") {
     return (
       <SetupScreen
@@ -179,6 +230,7 @@ function OnlineApp() {
         setPlayerName={setPlayerName}
         playerId={playerId}
         channelRef={channelRef}
+        openChannel={openChannel}
         onProfileReady={(rating) => setMyRating(rating)}
         onRoomCreated={(code) => {
           setRoomCode(code);
@@ -204,7 +256,6 @@ function OnlineApp() {
         isHost={isHost}
         channelRef={channelRef}
         opponent={opponent}
-        setOpponent={setOpponent}
         onCountdown={(qs) => {
           setQuestions(qs);
           setScreen("countdown");
@@ -237,6 +288,8 @@ function OnlineApp() {
         playerId={playerId}
         playerName={playerName}
         opponent={opponent}
+        opponentLeft={opponentLeft}
+        answerEvent={answerEvent}
         channelRef={channelRef}
         onFinish={(results) => {
           setRoundResults(results);
@@ -261,6 +314,8 @@ function OnlineApp() {
       onPlayAgain={() => {
         setRoundResults([]);
         setOpponent(null);
+        setOpponentLeft(false);
+        setAnswerEvent(null);
         setScreen("setup");
       }}
       onHome={() => {}}
@@ -275,6 +330,7 @@ function SetupScreen({
   setPlayerName,
   playerId,
   channelRef,
+  openChannel,
   onProfileReady,
   onRoomCreated,
   onRoomJoined,
@@ -283,6 +339,7 @@ function SetupScreen({
   setPlayerName: (v: string) => void;
   playerId: string;
   channelRef: React.MutableRefObject<RealtimeChannel | null>;
+  openChannel: (code: string, selfId: string) => RealtimeChannel;
   onProfileReady: (rating: number) => void;
   onRoomCreated: (code: string) => void;
   onRoomJoined: (code: string) => void;
@@ -292,17 +349,6 @@ function SetupScreen({
   const [loading, setLoading] = useState<"create" | "join" | null>(null);
   const [error, setError] = useState("");
   const valid = playerName.trim().length >= 2;
-
-  const createChannel = (code: string, payload: PlayerInfo): RealtimeChannel => {
-    const channel = supabase.channel(`game-room:${code}`, { config: { presence: { key: payload.playerId } } });
-    channelRef.current = channel;
-    channel.subscribe(async (status) => {
-      if (status === "SUBSCRIBED") {
-        await channel.track(payload);
-      }
-    });
-    return channel;
-  };
 
   const resolveProfile = async (): Promise<{ id: string; rating: number }> => {
     try {
@@ -317,51 +363,66 @@ function SetupScreen({
   };
 
   const handleCreate = async () => {
-    if (!valid) return;
+    if (!valid || loading !== null) return;
     setLoading("create");
     setError("");
-    const profile = await resolveProfile();
-    const code = generateRoomCode();
-    createChannel(code, { playerId: profile.id, playerName: playerName.trim(), isReady: false, rating: profile.rating });
-    onRoomCreated(code);
-    setLoading(null);
+    try {
+      const profile = await resolveProfile();
+      const code = generateRoomCode();
+      const channel = openChannel(code, profile.id);
+      channel.subscribe(async (status) => {
+        if (status === "SUBSCRIBED") {
+          try {
+            await channel.track({ playerId: profile.id, playerName: playerName.trim(), isReady: false, rating: profile.rating });
+          } catch {}
+        }
+      });
+      onRoomCreated(code);
+    } catch {
+      setError(t("room_not_found"));
+    } finally {
+      setLoading(null);
+    }
   };
 
   const handleJoin = async () => {
-    if (!valid || joinCode.trim().length !== 4) return;
+    if (!valid || joinCode.trim().length !== 4 || loading !== null) return;
     setLoading("join");
     setError("");
-    const code = joinCode.trim().toUpperCase();
-    const profile = await resolveProfile();
+    try {
+      const code = joinCode.trim().toUpperCase();
+      const profile = await resolveProfile();
+      const channel = openChannel(code, profile.id);
 
-    const tempChannel = supabase.channel(`game-room:${code}`, { config: { presence: { key: profile.id } } });
-    channelRef.current = tempChannel;
-
-    let resolved = false;
-    const timeout = setTimeout(() => {
-      if (!resolved) {
+      let resolved = false;
+      const timeout = setTimeout(() => {
+        if (resolved) return;
         resolved = true;
         setError(t("room_not_found"));
         setLoading(null);
-        supabase.removeChannel(tempChannel);
+        supabase.removeChannel(channel);
         channelRef.current = null;
-      }
-    }, 6000);
+      }, 6000);
 
-    tempChannel.on("presence", { event: "sync" }, () => {
-      if (resolved) return;
-      const state = tempChannel.presenceState<PlayerInfo>();
-      const others = Object.values(state).flat().filter((p) => p.playerId !== profile.id);
-      if (others.length > 0) {
-        resolved = true;
-        clearTimeout(timeout);
-        tempChannel.track({ playerId: profile.id, playerName: playerName.trim(), isReady: false, rating: profile.rating });
-        onRoomJoined(code);
-        setLoading(null);
-      }
-    });
+      // Room-existence check, registered before subscribe alongside openChannel's own listeners.
+      channel.on("presence", { event: "sync" }, () => {
+        if (resolved) return;
+        const state = channel.presenceState<PlayerInfo>();
+        const others = Object.values(state).flat().filter((p) => p.playerId !== profile.id);
+        if (others.length > 0) {
+          resolved = true;
+          clearTimeout(timeout);
+          channel.track({ playerId: profile.id, playerName: playerName.trim(), isReady: false, rating: profile.rating });
+          onRoomJoined(code);
+          setLoading(null);
+        }
+      });
 
-    tempChannel.subscribe();
+      channel.subscribe();
+    } catch {
+      setError(t("room_not_found"));
+      setLoading(null);
+    }
   };
 
   return (
@@ -430,7 +491,6 @@ function LobbyScreen({
   isHost,
   channelRef,
   opponent,
-  setOpponent,
   onCountdown,
   onBack,
 }: {
@@ -441,47 +501,31 @@ function LobbyScreen({
   isHost: boolean;
   channelRef: React.MutableRefObject<RealtimeChannel | null>;
   opponent: PlayerInfo | null;
-  setOpponent: (p: PlayerInfo | null) => void;
   onCountdown: (qs: Question[]) => void;
   onBack: () => void;
 }) {
   const { t } = useLang();
   const [iAmReady, setIAmReady] = useState(false);
-  const [opponentReady, setOpponentReady] = useState(false);
   const [copied, setCopied] = useState(false);
+  const opponentReady = opponent?.isReady ?? false;
 
-  useEffect(() => {
-    const channel = channelRef.current;
-    if (!channel) return;
-
-    channel.on("presence", { event: "sync" }, () => {
-      const state = channel.presenceState<PlayerInfo>();
-      const others = Object.values(state).flat().filter((p) => p.playerId !== playerId);
-      if (others.length > 0) {
-        const opp = others[0];
-        setOpponent({ playerId: opp.playerId, playerName: opp.playerName, isReady: opp.isReady, rating: opp.rating ?? 1000 });
-        setOpponentReady(opp.isReady);
-      } else {
-        setOpponent(null);
-        setOpponentReady(false);
-      }
+  const startGame = useCallback((channel: RealtimeChannel) => {
+    const qs = pickQuestions(5);
+    channel.send({
+      type: "broadcast",
+      event: "game_start",
+      payload: { questionIds: qs.map((q) => q.id) },
     });
-
-    channel.on("broadcast", { event: "game_start" }, ({ payload }) => {
-      if (payload?.questionIds) {
-        const qs = (payload.questionIds as string[])
-          .map((id: string) => QUESTIONS.find((q) => q.id === id))
-          .filter(Boolean) as Question[];
-        onCountdown(qs);
-      }
-    });
-  }, [channelRef, playerId, setOpponent, onCountdown]);
+    onCountdown(qs);
+  }, [onCountdown]);
 
   const handleReady = async () => {
     const channel = channelRef.current;
     if (!channel) return;
     setIAmReady(true);
-    await channel.track({ playerId, playerName, isReady: true, rating: myRating });
+    try {
+      await channel.track({ playerId, playerName, isReady: true, rating: myRating });
+    } catch {}
 
     if (isHost && opponentReady) {
       startGame(channel);
@@ -492,17 +536,7 @@ function LobbyScreen({
     const channel = channelRef.current;
     if (!channel || !isHost || !iAmReady || !opponentReady) return;
     startGame(channel);
-  }, [isHost, iAmReady, opponentReady, channelRef]);
-
-  const startGame = (channel: RealtimeChannel) => {
-    const qs = pickQuestions(5);
-    channel.send({
-      type: "broadcast",
-      event: "game_start",
-      payload: { questionIds: qs.map((q) => q.id) },
-    });
-    onCountdown(qs);
-  };
+  }, [isHost, iAmReady, opponentReady, channelRef, startGame]);
 
   const copyCode = async () => {
     try {
@@ -608,6 +642,8 @@ function ArenaScreen({
   playerId,
   playerName,
   opponent,
+  opponentLeft,
+  answerEvent,
   channelRef,
   onFinish,
   onDisconnect,
@@ -616,6 +652,8 @@ function ArenaScreen({
   playerId: string;
   playerName: string;
   opponent: PlayerInfo | null;
+  opponentLeft: boolean;
+  answerEvent: AnswerEvent | null;
   channelRef: React.MutableRefObject<RealtimeChannel | null>;
   onFinish: (results: RoundResult[]) => void;
   onDisconnect: () => void;
@@ -668,30 +706,24 @@ function ArenaScreen({
     return () => clearTimeout(tid);
   }, [timeLeft, selected, roundWinner, resolveRound, opponentCorrect]);
 
-  // Listen for opponent answers
+  // React to the opponent's broadcasted answer (event is owned/subscribed at the OnlineApp level).
   useEffect(() => {
-    const channel = channelRef.current;
-    if (!channel) return;
+    if (!answerEvent) return;
+    if (answerEvent.playerId === playerId || answerEvent.round !== round) return;
+    setOpponentAnswered(true);
+    setOpponentCorrect(answerEvent.correct);
+    if (answerEvent.correct && firstCorrectRef.current === null) {
+      firstCorrectRef.current = answerEvent.playerId;
+      resolveRound(selected !== null && selected === correctIndex, true, answerEvent.playerId);
+    }
+  }, [answerEvent, playerId, round, selected, correctIndex, resolveRound]);
 
-    const handler = ({ payload }: { payload: { playerId: string; round: number; correct: boolean } }) => {
-      if (payload.playerId === playerId || payload.round !== round) return;
-      setOpponentAnswered(true);
-      setOpponentCorrect(payload.correct);
-      if (payload.correct && firstCorrectRef.current === null) {
-        firstCorrectRef.current = payload.playerId;
-        resolveRound(selected !== null && selected === correctIndex, true, payload.playerId);
-      }
-    };
-
-    channel.on("broadcast", { event: "player_answer" }, handler);
-
-    // Listen for disconnect
-    channel.on("presence", { event: "leave" }, () => {
-      if (roundWinner === null) onDisconnect();
-    });
-
-    return () => {};
-  }, [channelRef, playerId, round, selected, correctIndex, resolveRound, roundWinner, onDisconnect]);
+  // React to opponent disconnect (presence "leave" tracked at the OnlineApp level).
+  useEffect(() => {
+    if (opponentLeft && roundWinner === null) {
+      onDisconnect();
+    }
+  }, [opponentLeft, roundWinner, onDisconnect]);
 
   const handleAnswer = (i: number) => {
     if (selected !== null || roundWinner !== null) return;
@@ -708,10 +740,6 @@ function ArenaScreen({
     if (correct && firstCorrectRef.current === null) {
       firstCorrectRef.current = playerId;
       resolveRound(true, opponentCorrect, playerId);
-    } else if (!correct && opponentCorrect && firstCorrectRef.current !== null) {
-      // Opponent already answered correctly
-    } else if (!correct && !opponentAnswered) {
-      // Wrong answer, wait for opponent or timeout
     }
   };
 

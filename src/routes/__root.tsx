@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { LangProvider } from "../lib/i18n";
 
 function NotFoundComponent() {
   return (
@@ -86,7 +87,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "keywords", content: "science based quiz, hypertrophy, biomechanics, sports nutrition, PubMed, bodybuilding, evidence based" },
       { name: "robots", content: "index, follow" },
-      { name: "author", content: "Raythan" },
+      { name: "author", content: "Raythan Web Design" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { name: "apple-mobile-web-app-title", content: "Science Based Quiz" },
@@ -144,8 +145,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      {/* Shared across every route so the language toggle persists on navigation
+          and pages like /legal, /privacy, /about actually pick up the saved language. */}
+      <LangProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+      </LangProvider>
     </QueryClientProvider>
   );
 }

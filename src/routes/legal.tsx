@@ -22,7 +22,7 @@ function LegalPage() {
         <h2>Éditeur</h2>
         <p>
           Science Based Quiz est un projet indépendant, éducatif et à but non lucratif, créé et
-          maintenu par <strong>Raythan</strong>. Il n'est pas opéré par une société commerciale enregistrée.
+          maintenu par <strong>Raythan Web Design</strong>. Il n'est pas opéré par une société commerciale enregistrée.
         </p>
         <h2>Contact</h2>
         <p>Pour toute question, suggestion ou signalement, vous pouvez écrire à : <strong>raythanwebdesign@gmail.com</strong></p>
@@ -59,7 +59,7 @@ function LegalPage() {
       <h2>Publisher</h2>
       <p>
         Science Based Quiz is an independent, non-commercial educational project created and
-        maintained by <strong>Raythan</strong>. It is not operated by a registered company.
+        maintained by <strong>Raythan Web Design</strong>. It is not operated by a registered company.
       </p>
       <h2>Contact</h2>
       <p>For any question, suggestion or report, you can reach out at: <strong>raythanwebdesign@gmail.com</strong></p>

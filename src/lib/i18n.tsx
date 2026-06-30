@@ -134,8 +134,10 @@ const DICT: Dict = {
   win_rate: { en: "win rate", fr: "victoires" },
 
   // Footer credit
-  made_by: { en: "Made by Raythan", fr: "Fait par Raythan" },
+  made_by: { en: "Made by Raythan Web Design", fr: "Fait par Raythan Web Design" },
 };
+
+export const RAYTHAN_PORTFOLIO_URL = "https://portfolioraythanwebdesign.vercel.app";
 
 const LangCtx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof DICT) => string }>({
   lang: "en",
