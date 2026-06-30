@@ -1655,6 +1655,24 @@ type RoundResult = {
 const DURATION_OPTIONS = [10, 15, 20, 30, 45, 60] as const;
 const DEFAULT_DURATION = 15;
 
+function randomIndex(maxExclusive: number) {
+  if (maxExclusive <= 1) return 0;
+  if (typeof crypto !== "undefined" && "getRandomValues" in crypto) {
+    const value = crypto.getRandomValues(new Uint32Array(1))[0];
+    return value % maxExclusive;
+  }
+  return Math.floor(Math.random() * maxExclusive);
+}
+
+function shuffleArray<T>(items: T[]) {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = randomIndex(i + 1);
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Root
 // ──────────────────────────────────────────────────────────────────────────────
