@@ -25,7 +25,7 @@ function LegalPage() {
           maintenu par <strong>Raythan</strong>. Il n'est pas opéré par une société commerciale enregistrée.
         </p>
         <h2>Contact</h2>
-        <p>Pour toute question, suggestion ou signalement, vous pouvez écrire à : <strong>contact@sciencebasedquiz.app</strong></p>
+        <p>Pour toute question, suggestion ou signalement, vous pouvez écrire à : <strong>raythanwebdesign@gmail.com</strong></p>
         <h2>Hébergement</h2>
         <p>
           Ce site est hébergé sur l'infrastructure de <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133,
@@ -62,7 +62,7 @@ function LegalPage() {
         maintained by <strong>Raythan</strong>. It is not operated by a registered company.
       </p>
       <h2>Contact</h2>
-      <p>For any question, suggestion or report, you can reach out at: <strong>contact@sciencebasedquiz.app</strong></p>
+      <p>For any question, suggestion or report, you can reach out at: <strong>raythanwebdesign@gmail.com</strong></p>
       <h2>Hosting</h2>
       <p>
         This website is hosted on infrastructure provided by <strong>Vercel Inc.</strong>, 340 S Lemon

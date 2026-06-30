@@ -62,7 +62,7 @@ function PrivacyPage() {
           Selon votre juridiction (RGPD, CCPA, etc.), vous disposez d'un droit d'accès, de
           rectification, de suppression ou de limitation du traitement de vos données personnelles,
           ainsi que d'un droit d'opposition et de portabilité. Pour les exercer, contactez
-          <strong> contact@sciencebasedquiz.app</strong>.
+          <strong> raythanwebdesign@gmail.com</strong>.
         </p>
         <h2>Conservation</h2>
         <p>
@@ -122,7 +122,7 @@ function PrivacyPage() {
         Depending on your jurisdiction (GDPR, CCPA, etc.), you have the right to access,
         rectify, delete or restrict the processing of your personal data, and to object to
         processing or request portability. To exercise these rights, contact
-        <strong> contact@sciencebasedquiz.app</strong>.
+        <strong> raythanwebdesign@gmail.com</strong>.
       </p>
       <h2>Data retention</h2>
       <p>
