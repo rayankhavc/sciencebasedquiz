@@ -79,11 +79,11 @@ function LeaderboardBody() {
 
     ensureAnonSession()
       .then((id) => { if (!cancelled) setMyId(id); })
-      .catch(() => {});
+      .catch((err) => console.error("[leaderboard] anonymous session failed:", err));
 
     fetchTopPlayers(50)
       .then((data) => { if (!cancelled) setRows(data); })
-      .catch(() => {})
+      .catch((err) => console.error("[leaderboard] failed to load rankings:", err))
       .finally(() => { if (!cancelled) setLoading(false); });
 
     const channel = supabase
@@ -91,9 +91,13 @@ function LeaderboardBody() {
       .on("postgres_changes", { event: "*", schema: "public", table: "leaderboard" }, () => {
         setLive(true);
         setTimeout(() => setLive(false), 1200);
-        fetchTopPlayers(50).then((data) => { if (!cancelled) setRows(data); }).catch(() => {});
+        fetchTopPlayers(50).then((data) => { if (!cancelled) setRows(data); }).catch((err) => console.error("[leaderboard] live refresh failed:", err));
       })
-      .subscribe();
+      .subscribe((status, err) => {
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          console.error("[leaderboard] realtime subscription issue:", status, err);
+        }
+      });
 
     return () => {
       cancelled = true;

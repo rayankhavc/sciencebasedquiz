@@ -425,8 +425,12 @@ function SetupScreen({
       const profile = await getOrCreateProfile(playerName.trim());
       onProfileReady(profile.rating);
       return { id: profile.player_id, rating: profile.rating };
-    } catch {
-      // Leaderboard unavailable (e.g. Supabase not configured) — fall back to a local id, no ranking.
+    } catch (err) {
+      // Leaderboard unavailable (e.g. Supabase not configured, RLS rejecting
+      // the write) — the match still plays fine locally, but this player's
+      // result will never reach the leaderboard. Log loudly so it's visible
+      // in the browser console instead of silently vanishing.
+      console.error("[online] could not create/load leaderboard profile, playing unranked:", err);
       onProfileReady(1000);
       return { id: playerId, rating: 1000 };
     }
@@ -976,7 +980,7 @@ function ResultsScreen({
     const outcome: MatchOutcome = tie ? 0.5 : won ? 1 : 0;
     recordMatchResult(playerId, myRating, opponent.rating, outcome)
       .then((newRating) => setRatingDelta(newRating - myRating))
-      .catch(() => {});
+      .catch((err) => console.error("[online] recordMatchResult failed, leaderboard not updated:", err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

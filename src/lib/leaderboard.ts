@@ -17,21 +17,29 @@ export async function ensureAnonSession(): Promise<string> {
   const { data: sessionData } = await supabase.auth.getSession();
   if (sessionData.session?.user) return sessionData.session.user.id;
   const { data, error } = await supabase.auth.signInAnonymously();
-  if (error || !data.user) throw error ?? new Error("Anonymous sign-in failed");
+  if (error || !data.user) {
+    console.error("[leaderboard] anonymous sign-in failed:", error);
+    throw error ?? new Error("Anonymous sign-in failed");
+  }
   return data.user.id;
 }
 
 export async function getOrCreateProfile(username: string): Promise<LeaderboardRow> {
   const playerId = await ensureAnonSession();
-  const { data: existing } = await supabase
+  const { data: existing, error: selectError } = await supabase
     .from("leaderboard")
     .select("*")
     .eq("player_id", playerId)
     .maybeSingle();
+  if (selectError) {
+    console.error("[leaderboard] failed to look up existing profile:", selectError);
+    throw selectError;
+  }
 
   if (existing) {
     if (existing.username !== username) {
-      await supabase.from("leaderboard").update({ username }).eq("player_id", playerId);
+      const { error: updateError } = await supabase.from("leaderboard").update({ username }).eq("player_id", playerId);
+      if (updateError) console.error("[leaderboard] failed to update username:", updateError);
       return { ...existing, username } as LeaderboardRow;
     }
     return existing as LeaderboardRow;
@@ -47,7 +55,10 @@ export async function getOrCreateProfile(username: string): Promise<LeaderboardR
     games_played: 0,
   };
   const { data: inserted, error } = await supabase.from("leaderboard").insert(fresh).select().single();
-  if (error) throw error;
+  if (error) {
+    console.error("[leaderboard] failed to create profile:", error);
+    throw error;
+  }
   return inserted as LeaderboardRow;
 }
 
@@ -63,21 +74,40 @@ export async function recordMatchResult(
   result: MatchOutcome,
 ): Promise<number> {
   const newRating = computeElo(myRating, oppRating, result);
-  const { data: current } = await supabase
+  const { data: current, error: selectError } = await supabase
     .from("leaderboard")
     .select("wins, losses, ties, games_played")
     .eq("player_id", playerId)
     .maybeSingle();
+  if (selectError) {
+    console.error("[leaderboard] failed to read current stats before recording result:", selectError);
+    throw selectError;
+  }
 
   const wins = (current?.wins ?? 0) + (result === 1 ? 1 : 0);
   const losses = (current?.losses ?? 0) + (result === 0 ? 1 : 0);
   const ties = (current?.ties ?? 0) + (result === 0.5 ? 1 : 0);
   const games_played = (current?.games_played ?? 0) + 1;
 
-  await supabase
+  const { error: updateError, count } = await supabase
     .from("leaderboard")
-    .update({ rating: newRating, wins, losses, ties, games_played, updated_at: new Date().toISOString() })
+    .update(
+      { rating: newRating, wins, losses, ties, games_played, updated_at: new Date().toISOString() },
+      { count: "exact" },
+    )
     .eq("player_id", playerId);
+  if (updateError) {
+    console.error("[leaderboard] failed to write match result:", updateError);
+    throw updateError;
+  }
+  if (!count) {
+    // The update matched zero rows — the profile row was never actually
+    // created (getOrCreateProfile must have failed earlier and been
+    // swallowed), so there is nothing to update. Surface this loudly
+    // instead of pretending the result was recorded.
+    console.error("[leaderboard] no profile row found for player_id, result was not recorded:", playerId);
+    throw new Error("No leaderboard profile to update");
+  }
 
   return newRating;
 }
@@ -88,6 +118,9 @@ export async function fetchTopPlayers(limit = 50): Promise<LeaderboardRow[]> {
     .select("*")
     .order("rating", { ascending: false })
     .limit(limit);
-  if (error) throw error;
+  if (error) {
+    console.error("[leaderboard] failed to fetch top players:", error);
+    throw error;
+  }
   return (data ?? []) as LeaderboardRow[];
 }
