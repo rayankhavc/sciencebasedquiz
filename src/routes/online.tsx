@@ -181,10 +181,21 @@ function OnlineApp() {
   const hadOpponentRef = useRef(false);
   const disconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const screenRef = useRef(screen);
+  // Snapshot of the opponent's name/rating taken once the match actually
+  // starts. The leaderboard write at the end of the match needs this, but by
+  // then a late presence blip can leave the *live* `opponent` state null —
+  // that must not silently skip recording a result (this was losing both wins
+  // and losses off the leaderboard depending on which side hit the blip).
+  const matchOpponentRef = useRef<{ playerName: string; rating: number } | null>(null);
+  const opponentRef = useRef<PlayerInfo | null>(null);
 
   useEffect(() => {
     screenRef.current = screen;
   }, [screen]);
+
+  useEffect(() => {
+    opponentRef.current = opponent;
+  }, [opponent]);
 
   useEffect(() => {
     ensureAnonSession().then(setPlayerId).catch(() => {});
@@ -249,6 +260,9 @@ function OnlineApp() {
       if (!ids) return;
       const qs = ids.map((id) => QUESTIONS.find((q) => q.id === id)).filter(Boolean) as Question[];
       if (qs.length > 0) {
+        if (opponentRef.current) {
+          matchOpponentRef.current = { playerName: opponentRef.current.playerName, rating: opponentRef.current.rating };
+        }
         setQuestions(qs);
         setScreen("countdown");
       }
@@ -272,6 +286,9 @@ function OnlineApp() {
   }, [clearDisconnectTimer]);
 
   const handleLobbyCountdown = useCallback((qs: Question[]) => {
+    if (opponentRef.current) {
+      matchOpponentRef.current = { playerName: opponentRef.current.playerName, rating: opponentRef.current.rating };
+    }
     setQuestions(qs);
     setScreen("countdown");
   }, []);
@@ -360,13 +377,14 @@ function OnlineApp() {
       playerId={playerId}
       playerName={playerName}
       myRating={myRating}
-      opponent={opponent}
+      opponent={opponent ?? (matchOpponentRef.current ? { ...matchOpponentRef.current, playerId: "", isReady: true } : null)}
       onPlayAgain={() => {
         setRoundResults([]);
         setOpponent(null);
         setOpponentLeft(false);
         setAnswerEvent(null);
         hadOpponentRef.current = false;
+        matchOpponentRef.current = null;
         clearDisconnectTimer();
         setScreen("setup");
       }}
