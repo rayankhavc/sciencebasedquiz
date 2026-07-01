@@ -800,6 +800,12 @@ function ArenaScreen({
     if (answerEvent.correct && firstCorrectRef.current === null) {
       firstCorrectRef.current = answerEvent.playerId;
       resolveRound(selected !== null && selected === correctIndex, true, answerEvent.playerId);
+    } else if (!answerEvent.correct && selected !== null && selected !== correctIndex) {
+      // I'd already answered wrong, and now so did they — both are done for
+      // this round with nobody correct. The timer effect stops ticking once
+      // `selected` is set, so nothing else will ever resolve this: do it now
+      // instead of leaving the round stuck waiting for a timeout that can't fire.
+      resolveRound(false, false, null);
     }
   }, [answerEvent, playerId, round, selected, correctIndex, resolveRound]);
 
@@ -825,6 +831,11 @@ function ArenaScreen({
     if (correct && firstCorrectRef.current === null) {
       firstCorrectRef.current = playerId;
       resolveRound(true, opponentCorrect, playerId);
+    } else if (!correct && opponentAnswered && !opponentCorrect) {
+      // They'd already answered wrong, and now so did I — both done, nobody
+      // correct. Resolve now rather than relying on the timer, which stops
+      // ticking as soon as `selected` is set on either side.
+      resolveRound(false, false, null);
     }
   };
 
