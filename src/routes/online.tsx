@@ -180,6 +180,11 @@ function OnlineApp() {
   const channelRef = useRef<RealtimeChannel | null>(null);
   const hadOpponentRef = useRef(false);
   const disconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const screenRef = useRef(screen);
+
+  useEffect(() => {
+    screenRef.current = screen;
+  }, [screen]);
 
   useEffect(() => {
     ensureAnonSession().then(setPlayerId).catch(() => {});
@@ -214,25 +219,32 @@ function OnlineApp() {
         setOpponent({ ...others[0], rating: others[0].rating ?? 1000 });
         // They're back — a pending "are they really gone" check no longer applies.
         clearDisconnectTimer();
-      } else {
-        setOpponent(null);
+      } else if (hadOpponentRef.current && !disconnectTimerRef.current) {
         // A track() update (e.g. readying up) or a brief mobile-network blip
         // (tab backgrounded, wifi/cellular handoff) can momentarily show an
-        // empty presence diff for a still-connected player. Don't treat the
-        // very first empty sync as a disconnect — wait a few seconds and
-        // recheck the *current* state; only flag it if they're still gone.
-        if (hadOpponentRef.current && !disconnectTimerRef.current) {
-          disconnectTimerRef.current = setTimeout(() => {
-            disconnectTimerRef.current = null;
-            const latest = channel.presenceState<PlayerInfo>();
-            const stillGone = Object.values(latest).flat().filter((p) => p.playerId !== selfId).length === 0;
-            if (stillGone) setOpponentLeft(true);
-          }, 6000);
-        }
+        // empty presence diff for a still-connected player. Don't clear
+        // `opponent` on the very first empty sync — keeping their last-known
+        // info around means an in-flight ready/answer broadcast from them can
+        // still be matched and applied during the blip. Only actually clear
+        // it (together with flagging the disconnect) once a recheck a few
+        // seconds later confirms they're still gone.
+        disconnectTimerRef.current = setTimeout(() => {
+          disconnectTimerRef.current = null;
+          const latest = channel.presenceState<PlayerInfo>();
+          const stillGone = Object.values(latest).flat().filter((p) => p.playerId !== selfId).length === 0;
+          if (stillGone) {
+            setOpponent(null);
+            setOpponentLeft(true);
+          }
+        }, 6000);
       }
     });
 
     channel.on("broadcast", { event: "game_start" }, ({ payload }) => {
+      // The host resends this a couple of times in case the first delivery is
+      // lost — ignore it once we've already moved past the lobby so a late
+      // duplicate can't yank an in-progress match back to the countdown.
+      if (screenRef.current !== "lobby") return;
       const ids = payload?.questionIds as string[] | undefined;
       if (!ids) return;
       const qs = ids.map((id) => QUESTIONS.find((q) => q.id === id)).filter(Boolean) as Question[];
@@ -554,10 +566,16 @@ function LobbyScreen({
     if (gameStartedRef.current) return;
     gameStartedRef.current = true;
     const qs = pickQuestions(5);
-    channel.send({
-      type: "broadcast",
-      event: "game_start",
-      payload: { questionIds: qs.map((q) => q.id) },
+    const questionIds = qs.map((q) => q.id);
+    // Broadcast has no delivery guarantee and no ack — resend a couple of
+    // times over the next ~2.5s so a single lost packet (flaky mobile
+    // connection) doesn't strand the other player in the lobby forever.
+    // Harmless if all three arrive: the receiving side ignores it once past
+    // the lobby (see the game_start listener in openChannel).
+    [0, 800, 2000].forEach((delay) => {
+      setTimeout(() => {
+        try { channel.send({ type: "broadcast", event: "game_start", payload: { questionIds } }); } catch {}
+      }, delay);
     });
     onCountdown(qs);
   }, [onCountdown]);
@@ -570,8 +588,14 @@ function LobbyScreen({
       await channel.track({ playerId, playerName, isReady: true, rating: myRating });
     } catch {}
     // Broadcast is a direct, immediate signal — doesn't depend on presence-diff
-    // timing the way relying solely on track() + "sync" would.
-    channel.send({ type: "broadcast", event: "player_ready", payload: { playerId } });
+    // timing the way relying solely on track() + "sync" would. Resent a couple
+    // of times in case the first one is dropped; applying "isReady: true"
+    // twice is harmless.
+    [0, 800, 2000].forEach((delay) => {
+      setTimeout(() => {
+        try { channel.send({ type: "broadcast", event: "player_ready", payload: { playerId } }); } catch {}
+      }, delay);
+    });
 
     if (isHost && opponentReady) {
       startGame(channel);
