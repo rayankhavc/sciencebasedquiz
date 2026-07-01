@@ -105,6 +105,15 @@ function LeaderboardBody() {
     };
   }, []);
 
+  // Ratings/stats are always keyed by the unique player_id, never by
+  // username — two different people picking the same name never merges
+  // their data. But it can still look confusing side by side on the public
+  // list, so tag duplicate names with a short id suffix to tell them apart.
+  const nameCounts = rows.reduce<Record<string, number>>((acc, r) => {
+    acc[r.username] = (acc[r.username] ?? 0) + 1;
+    return acc;
+  }, {});
+
   return (
     <div className="space-y-6 fade-in-up">
       <div>
@@ -127,6 +136,7 @@ function LeaderboardBody() {
               const total = r.wins + r.losses + r.ties;
               const winRate = total > 0 ? Math.round((r.wins / total) * 100) : 0;
               const isMe = r.player_id === myId;
+              const isDuplicateName = nameCounts[r.username] > 1;
               return (
                 <div
                   key={r.player_id}
@@ -140,7 +150,9 @@ function LeaderboardBody() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm font-semibold">
-                      {r.username} {isMe && <span className="text-[10px] text-muted-foreground">({t("you")})</span>}
+                      {r.username}
+                      {isDuplicateName && <span className="ml-1 font-mono text-[10px] font-normal text-muted-foreground">#{r.player_id.slice(0, 4).toUpperCase()}</span>}
+                      {" "}{isMe && <span className="text-[10px] text-muted-foreground">({t("you")})</span>}
                     </div>
                     <div className="text-[11px] text-muted-foreground">
                       {r.wins}{t("wins_short")} · {r.losses}{t("losses_short")} · {r.ties}{t("ties_short")} · {winRate}% {t("win_rate")}

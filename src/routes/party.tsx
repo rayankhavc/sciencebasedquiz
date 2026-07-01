@@ -47,7 +47,7 @@ type PartyPlayer = {
 
 type AnswerEvent = { playerId: string; round: number; correct: boolean };
 
-const MAX_PLAYERS_OPTIONS = [3, 4] as const;
+const MAX_PLAYERS_OPTIONS = [2, 3, 4] as const;
 const QUESTION_COUNT_OPTIONS = [10, 15, 20] as const;
 const ROUND_DURATION_OPTIONS = [10, 15, 20, 30] as const;
 
@@ -180,8 +180,14 @@ function PartyApp() {
 
     channel.on("presence", { event: "sync" }, () => {
       const state = channel.presenceState<RosterEntry>();
-      const list = Object.values(state).flat();
-      setRoster(list);
+      const all = Object.values(state).flat();
+      // Defensive dedupe by the player's own declared id, not just the
+      // presence key: a stale tab from before a refresh/reconnect can
+      // briefly linger under a different key while Realtime notices it's
+      // gone, which would otherwise double-count the same real person.
+      const byId = new Map<string, RosterEntry>();
+      for (const p of all) byId.set(p.playerId, p);
+      setRoster(Array.from(byId.values()));
     });
 
     channel.on("broadcast", { event: "player_ready" }, ({ payload }) => {
@@ -239,15 +245,25 @@ function PartyApp() {
         playerName={playerName}
         setPlayerName={setPlayerName}
         playerId={playerId}
-        onCreate={(code, config) => {
-          openChannel(code, playerId, playerName.trim(), true, config);
+        onCreate={async (code, config) => {
+          // Resolve the real (stable) anonymous-auth id before ever opening
+          // the channel — the presence key is fixed at channel-creation time,
+          // so if we opened it with the random fallback id and only found
+          // out the real id afterwards, this player's own roster row would
+          // keep the fallback id forever while `playerId` state moved on,
+          // breaking "is this me" checks and the ready-up name lookup.
+          const id = await ensureAnonSession().catch(() => playerId);
+          setPlayerId(id);
+          openChannel(code, id, playerName.trim(), true, config);
           setRoomCode(code);
           setIsHost(true);
           setRoomConfig(config);
           setScreen("lobby");
         }}
-        onJoin={(code) => {
-          openChannel(code, playerId, playerName.trim(), false, null);
+        onJoin={async (code) => {
+          const id = await ensureAnonSession().catch(() => playerId);
+          setPlayerId(id);
+          openChannel(code, id, playerName.trim(), false, null);
           setRoomCode(code);
           setIsHost(false);
           setScreen("lobby");
@@ -261,6 +277,7 @@ function PartyApp() {
       <LobbyScreen
         roomCode={roomCode}
         playerId={playerId}
+        playerName={playerName}
         isHost={isHost}
         roster={roster}
         roomConfig={roomConfig}
@@ -452,6 +469,7 @@ function SetupScreen({
 function LobbyScreen({
   roomCode,
   playerId,
+  playerName,
   isHost,
   roster,
   roomConfig,
@@ -461,6 +479,7 @@ function LobbyScreen({
 }: {
   roomCode: string;
   playerId: string;
+  playerName: string;
   isHost: boolean;
   roster: RosterEntry[];
   roomConfig: RoomConfig | null;
@@ -481,7 +500,7 @@ function LobbyScreen({
     if (!channel) return;
     setIAmReady(true);
     try {
-      await channel.track({ playerId, playerName: roster.find((p) => p.playerId === playerId)?.playerName ?? "", isReady: true, isHost });
+      await channel.track({ playerId, playerName, isReady: true, isHost });
     } catch {}
     [0, 800, 2000].forEach((delay) => {
       setTimeout(() => {

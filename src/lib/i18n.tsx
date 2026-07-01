@@ -136,8 +136,13 @@ const DICT: Dict = {
   // Footer credit
   made_by: { en: "Made by Raythan Web Design", fr: "Fait par Raythan Web Design" },
 
-  // Party mode (3-4 players)
-  party_mode: { en: "Party Mode (3-4)", fr: "Mode Groupe (3-4)" },
+  // Quick match (1v1)
+  quick_match: { en: "Quick Match", fr: "Match rapide" },
+  searching_opponent: { en: "Searching for an opponent…", fr: "Recherche d'un adversaire…" },
+  cancel_search: { en: "Cancel", fr: "Annuler" },
+
+  // Party mode (2-4 players)
+  party_mode: { en: "Party Mode (2-4)", fr: "Mode Groupe (2-4)" },
   party_mode_sub: { en: "Free-for-all with friends, custom room settings", fr: "Tous contre tous entre amis, paramètres personnalisables" },
   party_setup_title: { en: "Enter your username for Party Mode", fr: "Entrez votre pseudo pour le Mode Groupe" },
   num_players_label: { en: "Number of players", fr: "Nombre de joueurs" },

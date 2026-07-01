@@ -18,7 +18,7 @@ export const Route = createFileRoute("/online")({
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type OnlineScreen = "setup" | "lobby" | "countdown" | "arena" | "results";
+type OnlineScreen = "setup" | "matchmaking" | "lobby" | "countdown" | "arena" | "results";
 
 type PlayerInfo = {
   playerId: string;
@@ -317,6 +317,7 @@ function OnlineApp() {
         channelRef={channelRef}
         openChannel={openChannel}
         onProfileReady={(rating) => setMyRating(rating)}
+        onQuickMatch={() => setScreen("matchmaking")}
         onRoomCreated={(code) => {
           setRoomCode(code);
           setIsHost(true);
@@ -327,6 +328,22 @@ function OnlineApp() {
           setIsHost(false);
           setScreen("lobby");
         }}
+      />
+    );
+  }
+
+  if (screen === "matchmaking") {
+    return (
+      <MatchmakingScreen
+        playerName={playerName}
+        openChannel={openChannel}
+        onProfileReady={(rating) => setMyRating(rating)}
+        onMatched={(code, hosting) => {
+          setRoomCode(code);
+          setIsHost(hosting);
+          setScreen("lobby");
+        }}
+        onCancel={() => setScreen("setup")}
       />
     );
   }
@@ -417,6 +434,7 @@ function SetupScreen({
   channelRef,
   openChannel,
   onProfileReady,
+  onQuickMatch,
   onRoomCreated,
   onRoomJoined,
 }: {
@@ -426,6 +444,7 @@ function SetupScreen({
   channelRef: React.MutableRefObject<RealtimeChannel | null>;
   openChannel: (code: string, selfId: string) => RealtimeChannel;
   onProfileReady: (rating: number) => void;
+  onQuickMatch: () => void;
   onRoomCreated: (code: string) => void;
   onRoomJoined: (code: string) => void;
 }) {
@@ -532,31 +551,42 @@ function SetupScreen({
           maxLength={24}
         />
 
-        <div className="grid gap-3">
-          <button
-            onClick={handleCreate}
-            disabled={!valid || loading !== null}
-            className="w-full rounded-xl bg-primary px-4 py-3 font-display font-bold text-primary-foreground neon-glow disabled:opacity-40"
-          >
-            {loading === "create" ? t("creating_room") : t("create_room")}
-          </button>
+        <button
+          onClick={onQuickMatch}
+          disabled={!valid || loading !== null}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-5 font-display text-lg font-bold text-primary-foreground neon-glow transition-transform hover:scale-[1.02] disabled:opacity-40 disabled:hover:scale-100"
+        >
+          <BoltIcon />
+          {t("quick_match")}
+        </button>
 
-          <div className="flex gap-2">
-            <input
-              value={joinCode}
-              onChange={(e) => setJoinCode(e.target.value.toUpperCase().slice(0, 4))}
-              placeholder={t("room_code_placeholder")}
-              className="flex-1 rounded-xl border border-border bg-secondary/60 px-4 py-3 text-base font-medium uppercase tracking-widest outline-none focus:border-accent"
-              maxLength={4}
-              onKeyDown={(e) => { if (e.key === "Enter" && valid && joinCode.length === 4) handleJoin(); }}
-            />
+        <div className="border-t border-border pt-4">
+          <div className="grid gap-3">
             <button
-              onClick={handleJoin}
-              disabled={!valid || joinCode.trim().length !== 4 || loading !== null}
-              className="rounded-xl border border-accent/50 bg-accent/15 px-4 py-3 font-display font-bold text-cyan-glow disabled:opacity-40"
+              onClick={handleCreate}
+              disabled={!valid || loading !== null}
+              className="w-full rounded-xl bg-secondary px-4 py-3 font-display font-bold text-foreground disabled:opacity-40"
             >
-              {loading === "join" ? t("joining_room") : t("join")}
+              {loading === "create" ? t("creating_room") : t("create_room")}
             </button>
+
+            <div className="flex gap-2">
+              <input
+                value={joinCode}
+                onChange={(e) => setJoinCode(e.target.value.toUpperCase().slice(0, 4))}
+                placeholder={t("room_code_placeholder")}
+                className="flex-1 rounded-xl border border-border bg-secondary/60 px-4 py-3 text-base font-medium uppercase tracking-widest outline-none focus:border-accent"
+                maxLength={4}
+                onKeyDown={(e) => { if (e.key === "Enter" && valid && joinCode.length === 4) handleJoin(); }}
+              />
+              <button
+                onClick={handleJoin}
+                disabled={!valid || joinCode.trim().length !== 4 || loading !== null}
+                className="rounded-xl border border-accent/50 bg-accent/15 px-4 py-3 font-display font-bold text-cyan-glow disabled:opacity-40"
+              >
+                {loading === "join" ? t("joining_room") : t("join")}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -565,6 +595,174 @@ function SetupScreen({
             {error}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Matchmaking screen (Quick Match) ─────────────────────────────────────────
+//
+// A separate, well-known "waiting room" channel where players looking for a
+// random opponent park their presence. On every presence sync, whoever's
+// playerId sorts first among the currently-visible waiting players proposes
+// the pairing: it creates the real game room (via the exact same openChannel
+// used by the code-based flow) and broadcasts that room's code to the chosen
+// partner. Everyone else just waits for a "matched" broadcast addressed to
+// them. Once paired, both sides leave this queue and hand off into the
+// unchanged lobby/countdown/arena/results flow — nothing about an actual
+// match differs from one found via a room code, including the leaderboard
+// write at the end.
+
+function MatchmakingScreen({
+  playerName,
+  openChannel,
+  onProfileReady,
+  onMatched,
+  onCancel,
+}: {
+  playerName: string;
+  openChannel: (code: string, selfId: string) => RealtimeChannel;
+  onProfileReady: (rating: number) => void;
+  onMatched: (code: string, isHost: boolean) => void;
+  onCancel: () => void;
+}) {
+  const { t } = useLang();
+  const [error, setError] = useState("");
+  const matchedRef = useRef(false);
+  const queueRef = useRef<RealtimeChannel | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const cleanupQueue = () => {
+      if (queueRef.current) {
+        supabase.removeChannel(queueRef.current);
+        queueRef.current = null;
+      }
+    };
+
+    (async () => {
+      let selfId: string;
+      let rating: number;
+      try {
+        const profile = await getOrCreateProfile(playerName.trim());
+        selfId = profile.player_id;
+        rating = profile.rating;
+      } catch (err) {
+        console.error("[online] quick match: could not resolve leaderboard profile, playing unranked:", err);
+        try {
+          selfId = await ensureAnonSession();
+        } catch {
+          selfId = generateFallbackId();
+        }
+        rating = 1000;
+      }
+      if (cancelled) return;
+      onProfileReady(rating);
+
+      const queue = supabase.channel("quickmatch-lobby", { config: { presence: { key: selfId } } });
+      queueRef.current = queue;
+
+      const proposeIfEligible = () => {
+        if (matchedRef.current) return;
+        const state = queue.presenceState<{ playerId: string; playerName: string; rating: number }>();
+        const others = Object.values(state).flat().filter((p) => p.playerId !== selfId);
+        if (others.length === 0) return;
+        const iAmFirst = !others.some((p) => p.playerId < selfId);
+        if (!iAmFirst) return;
+        const partner = [...others].sort((a, b) => (a.playerId < b.playerId ? -1 : 1))[0];
+
+        matchedRef.current = true;
+        const code = generateRoomCode();
+        try {
+          queue.send({ type: "broadcast", event: "matched", payload: { targetId: partner.playerId, code } });
+        } catch {}
+        cleanupQueue();
+
+        const channel = openChannel(code, selfId);
+        channel.subscribe(async (status) => {
+          if (status === "SUBSCRIBED") {
+            try {
+              await channel.track({ playerId: selfId, playerName: playerName.trim(), isReady: false, rating });
+            } catch {}
+          }
+        });
+        onMatched(code, true);
+      };
+
+      queue.on("broadcast", { event: "matched" }, ({ payload }) => {
+        if (matchedRef.current) return;
+        if (payload?.targetId !== selfId) return;
+        const code = payload?.code as string | undefined;
+        if (!code) return;
+        matchedRef.current = true;
+        cleanupQueue();
+
+        const channel = openChannel(code, selfId);
+        let resolved = false;
+        const timeout = setTimeout(() => {
+          if (resolved) return;
+          resolved = true;
+          setError(t("room_not_found"));
+        }, 8000);
+        channel.on("presence", { event: "sync" }, () => {
+          if (resolved) return;
+          const st = channel.presenceState<{ playerId: string }>();
+          const hostPresent = Object.values(st).flat().some((p) => p.playerId !== selfId);
+          if (hostPresent) {
+            resolved = true;
+            clearTimeout(timeout);
+          }
+        });
+        channel.subscribe(async (status) => {
+          if (status === "SUBSCRIBED") {
+            try {
+              await channel.track({ playerId: selfId, playerName: playerName.trim(), isReady: false, rating });
+            } catch {}
+          }
+        });
+        onMatched(code, false);
+      });
+
+      queue.on("presence", { event: "sync" }, proposeIfEligible);
+      queue.subscribe(async (status) => {
+        if (status === "SUBSCRIBED") {
+          try {
+            await queue.track({ playerId: selfId, playerName: playerName.trim(), rating });
+          } catch {}
+          proposeIfEligible();
+        }
+      });
+    })().catch((err) => {
+      console.error("[online] quick match setup failed:", err);
+      if (!cancelled) setError(t("room_not_found"));
+    });
+
+    return () => {
+      cancelled = true;
+      matchedRef.current = true;
+      cleanupQueue();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div className="space-y-6 fade-in-up">
+      <button onClick={onCancel} className="text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground">{t("back")}</button>
+      <div className="flex flex-col items-center justify-center space-y-6 py-16 text-center">
+        <div className="relative grid h-20 w-20 place-items-center rounded-full border-2 border-primary/40 pulse-ring text-neon">
+          <BoltIcon />
+        </div>
+        <div>
+          <div className="text-[11px] uppercase tracking-widest text-cyan-glow">{t("online_mode")}</div>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight">{t("searching_opponent")}</h2>
+        </div>
+        {error && (
+          <div className="rounded-xl bg-destructive/15 border border-destructive/40 px-4 py-3 text-sm text-destructive">{error}</div>
+        )}
+        <button onClick={onCancel} className="rounded-xl border border-border bg-secondary/60 px-5 py-2.5 text-sm font-semibold hover:border-primary/60">
+          {t("cancel_search")}
+        </button>
       </div>
     </div>
   );
