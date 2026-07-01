@@ -135,6 +135,29 @@ const DICT: Dict = {
 
   // Footer credit
   made_by: { en: "Made by Raythan Web Design", fr: "Fait par Raythan Web Design" },
+
+  // Party mode (3-4 players)
+  party_mode: { en: "Party Mode (3-4)", fr: "Mode Groupe (3-4)" },
+  party_mode_sub: { en: "Free-for-all with friends, custom room settings", fr: "Tous contre tous entre amis, paramètres personnalisables" },
+  party_setup_title: { en: "Enter your username for Party Mode", fr: "Entrez votre pseudo pour le Mode Groupe" },
+  num_players_label: { en: "Number of players", fr: "Nombre de joueurs" },
+  question_count_label: { en: "Number of questions", fr: "Nombre de questions" },
+  round_duration_label: { en: "Time per question", fr: "Temps par question" },
+  party_lobby_title: { en: "Party Lobby", fr: "Salon de groupe" },
+  players_joined: { en: "{current}/{max} players", fr: "{current}/{max} joueurs" },
+  waiting_for_players: { en: "Waiting for more players to join…", fr: "En attente d'autres joueurs…" },
+  start_game: { en: "Start the game", fr: "Lancer la partie" },
+  need_two_players: { en: "Need at least 2 ready players to start", fr: "Il faut au moins 2 joueurs prêts pour lancer" },
+  host_badge: { en: "Host", fr: "Hôte" },
+  waiting_host_start: { en: "Waiting for the host to start the game…", fr: "En attente que l'hôte lance la partie…" },
+  room_full: { en: "This room is full", fr: "Cette salle est complète" },
+  someone_won_round: { en: "{name} won this round!", fr: "{name} a remporté ce round !" },
+  final_rankings: { en: "Final rankings", fr: "Classement final" },
+  you_placed: { en: "You placed #{rank}", fr: "Vous avez terminé #{rank}" },
+  party_you_won: { en: "YOU WON!", fr: "VOUS GAGNEZ !" },
+  player_disconnected: { en: "A player disconnected", fr: "Un joueur s'est déconnecté" },
+  players_label: { en: "players", fr: "joueurs" },
+  questions_label: { en: "questions", fr: "questions" },
 };
 
 export const RAYTHAN_PORTFOLIO_URL = "https://portfolioraythanwebdesign.vercel.app";

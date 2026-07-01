@@ -58,11 +58,26 @@ function generateFallbackId(): string {
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-function pickQuestions(count: number): Question[] {
-  const shuffled = [...QUESTIONS].sort(() => Math.random() - 0.5);
+// `.sort(() => Math.random() - 0.5)` is a well-known biased "shuffle" — it
+// does not produce a uniform random permutation (Array.sort's comparator
+// contract isn't meant for this, and real implementations skew certain
+// elements toward certain positions). That bias is why the same handful of
+// questions kept resurfacing far more often than the rest of the bank.
+// Fisher-Yates below is the correct, uniformly-random shuffle.
+export function shuffleArray<T>(items: T[]): T[] {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+export function pickQuestions(count: number): Question[] {
+  const shuffled = shuffleArray(QUESTIONS);
   return shuffled.slice(0, Math.min(count, shuffled.length)).map((q) => {
     const n = q.options.length;
-    const perm = Array.from({ length: n }, (_, i) => i).sort(() => Math.random() - 0.5);
+    const perm = shuffleArray(Array.from({ length: n }, (_, i) => i));
     return {
       ...q,
       options: perm.map((i) => q.options[i]),

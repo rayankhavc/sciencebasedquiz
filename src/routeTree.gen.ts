@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PartyRouteImport } from './routes/party'
 import { Route as OnlineRouteImport } from './routes/online'
 import { Route as LegalRouteImport } from './routes/legal'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
@@ -19,6 +20,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartyRoute = PartyRouteImport.update({
+  id: '/party',
+  path: '/party',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnlineRoute = OnlineRouteImport.update({
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/leaderboard': typeof LeaderboardRoute
   '/legal': typeof LegalRoute
   '/online': typeof OnlineRoute
+  '/party': typeof PartyRoute
   '/privacy': typeof PrivacyRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof LeaderboardRoute
   '/legal': typeof LegalRoute
   '/online': typeof OnlineRoute
+  '/party': typeof PartyRoute
   '/privacy': typeof PrivacyRoute
 }
 export interface FileRoutesById {
@@ -70,13 +78,28 @@ export interface FileRoutesById {
   '/leaderboard': typeof LeaderboardRoute
   '/legal': typeof LegalRoute
   '/online': typeof OnlineRoute
+  '/party': typeof PartyRoute
   '/privacy': typeof PrivacyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/leaderboard' | '/legal' | '/online' | '/privacy'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/leaderboard'
+    | '/legal'
+    | '/online'
+    | '/party'
+    | '/privacy'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/leaderboard' | '/legal' | '/online' | '/privacy'
+  to:
+    | '/'
+    | '/about'
+    | '/leaderboard'
+    | '/legal'
+    | '/online'
+    | '/party'
+    | '/privacy'
   id:
     | '__root__'
     | '/'
@@ -84,6 +107,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/legal'
     | '/online'
+    | '/party'
     | '/privacy'
   fileRoutesById: FileRoutesById
 }
@@ -93,6 +117,7 @@ export interface RootRouteChildren {
   LeaderboardRoute: typeof LeaderboardRoute
   LegalRoute: typeof LegalRoute
   OnlineRoute: typeof OnlineRoute
+  PartyRoute: typeof PartyRoute
   PrivacyRoute: typeof PrivacyRoute
 }
 
@@ -103,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/party': {
+      id: '/party'
+      path: '/party'
+      fullPath: '/party'
+      preLoaderRoute: typeof PartyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/online': {
@@ -149,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   LeaderboardRoute: LeaderboardRoute,
   LegalRoute: LegalRoute,
   OnlineRoute: OnlineRoute,
+  PartyRoute: PartyRoute,
   PrivacyRoute: PrivacyRoute,
 }
 export const routeTree = rootRouteImport
